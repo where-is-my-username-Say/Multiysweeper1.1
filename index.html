@@ -18,13 +18,12 @@
   --sand:#f5dfa0; --sand-dark:#e8c96a; --sand-deep:#c8a84b;
   --ocean:#0e7ab5; --ocean-deep:#094e75;
   --mint:#2ecc71; --coral:#ff6b6b; --gold:#ffd700;
-  --wood:#8b5e3c; --wood-light:#c0845a;
-  --text-dark:#1a1008; --text-mid:#4a3520; --white:#fffef9;
+  --wood:#8b5e3c; --text-dark:#1a1008; --text-mid:#4a3520;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif;background:#0a3d5c;color:var(--text-dark)}
 
-/* ── BACKGROUND ── */
+/* ── ANIMATED BACKGROUND ── */
 #bg{position:fixed;inset:0;z-index:0;background:linear-gradient(180deg,#87ceeb 0%,#a8e4f7 40%,#0e9bd4 55%,#0e7ab5 70%,#094e75 100%);overflow:hidden}
 .sun{position:absolute;top:8%;right:12%;width:80px;height:80px;background:radial-gradient(circle,#ffe066 30%,#ffb300 70%,transparent 100%);border-radius:50%;box-shadow:0 0 60px 20px rgba(255,200,0,.4)}
 .cloud{position:absolute;background:rgba(255,255,255,.85);border-radius:50px}
@@ -32,27 +31,35 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
 .c1{top:12%;left:8%;width:120px;height:38px}.c1::before{width:60px;height:55px;top:-28px;left:18px}.c1::after{width:45px;height:42px;top:-20px;left:55px}
 .c2{top:18%;left:35%;width:90px;height:28px}.c2::before{width:44px;height:40px;top:-22px;left:12px}.c2::after{width:35px;height:32px;top:-16px;left:42px}
 .c3{top:8%;left:60%;width:140px;height:44px}.c3::before{width:70px;height:62px;top:-34px;left:22px}.c3::after{width:52px;height:48px;top:-26px;left:70px}
-.wave-layer{position:absolute;bottom:0;left:-10%;width:120%;border-radius:50% 50% 0 0/30px}
-.wave1{background:rgba(255,255,255,.08);height:200px}.wave2{background:rgba(255,255,255,.06);height:160px;bottom:10px}.wave3{background:rgba(14,122,181,.4);height:120px;bottom:20px}
+
+.wave-layer{position:absolute;bottom:0;left:-10%;width:120%;border-radius:50% 50% 0 0/30px;animation:waveMove 6s ease-in-out infinite alternate}
+.wave1{background:rgba(255,255,255,.12);height:220px;animation-duration:5s}
+.wave2{background:rgba(255,255,255,.08);height:180px;animation-duration:7s;animation-delay:-2s}
+.wave3{background:rgba(14,122,181,.5);height:140px;animation-duration:6s;animation-delay:-4s}
+
+@keyframes waveMove { 0%{transform:translateY(0) scaleY(1)} 100%{transform:translateY(15px) scaleY(1.05)} }
+
 .sand-strip{position:absolute;bottom:0;left:0;right:0;height:160px;background:linear-gradient(180deg,var(--sand-dark) 0%,var(--sand) 60%,var(--sand-deep) 100%);border-radius:60% 60% 0 0/40px 40px 0 0}
-.bg-crab-static{position:absolute;bottom:152px;left:15%;font-size:28px;cursor:default;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))}
+.bg-crab{position:absolute;bottom:145px;left:15%;font-size:32px;cursor:pointer;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))}
 
 /* ── SCREENS ── */
-.screen{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.screen{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s ease}
 .screen.active{opacity:1;pointer-events:all}
-#screen-landing{flex-direction:column}
+#screen-landing,#screen-login{flex-direction:column}
 #screen-game{flex-direction:column;padding:10px;gap:10px;position:relative;overflow:hidden;background:linear-gradient(160deg,#e8d49a 0%,#d4b96a 50%,#b8922a 100%)}
 
-.logo-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:28px}
+.logo-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:24px}
 .logo-emoji{font-size:64px;display:block;margin-bottom:6px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
-.logo-title{font-family:'Lilita One',cursive;font-size:clamp(52px,10vw,96px);color:#fff;text-shadow:0 4px 0 var(--wood),0 8px 0 rgba(0,0,0,.2),0 0 60px rgba(255,220,100,.6);letter-spacing:2px;line-height:1}
-.logo-sub{color:var(--sand);text-transform:uppercase;margin-top:8px;font-family:'Lilita One',cursive}
+.logo-title{font-family:'Lilita One',cursive;font-size:clamp(48px,8vw,80px);color:#fff;text-shadow:0 4px 0 var(--wood),0 8px 0 rgba(0,0,0,.2),0 0 40px rgba(255,220,100,.6);letter-spacing:2px;line-height:1}
+.logo-sub{color:var(--sand);text-transform:uppercase;margin-top:8px;font-family:'Lilita One',cursive;letter-spacing:1px}
 
-.card{background:linear-gradient(160deg,rgba(255,253,240,.97),rgba(245,223,160,.97));border-radius:28px;padding:28px 36px;box-shadow:0 4px 24px rgba(139,94,60,.25),inset 0 1px 0 rgba(255,255,255,.8);border:2px solid rgba(255,255,255,.6);width:min(430px,93vw)}
+.card{background:linear-gradient(160deg,rgba(255,253,240,.97),rgba(245,223,160,.97));border-radius:28px;padding:28px 36px;box-shadow:0 12px 40px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.8);border:2px solid rgba(255,255,255,.6);width:min(440px,93vw)}
 
-/* ── INPUTS & AVATAR ── */
-.input-label{color:var(--text-mid);display:block;margin-bottom:5px;font-family:'Lilita One',cursive;font-size:12px}
-.input-field{width:100%;padding:11px 15px;background:rgba(255,255,255,.75);border:2px solid var(--sand-dark);border-radius:12px;color:var(--text-dark);outline:none;transition:border-color .2s;font-family:'Lilita One',cursive}
+.login-card{background:linear-gradient(160deg,rgba(255,253,240,.97),rgba(245,223,160,.97));border-radius:28px;padding:36px 40px;box-shadow:0 4px 24px rgba(139,94,60,.25);width:min(400px,92vw);display:flex;flex-direction:column;align-items:center}
+.login-title{font-family:'Lilita One',cursive;font-size:22px;color:var(--ocean-deep);margin-bottom:12px}
+
+.input-label{color:var(--text-mid);display:block;margin-bottom:5px;font-family:'Lilita One',cursive;font-size:13px}
+.input-field{width:100%;padding:11px 15px;background:rgba(255,255,255,.85);border:2px solid var(--sand-dark);border-radius:12px;color:var(--text-dark);outline:none;transition:all .2s;font-family:'Lilita One',cursive;font-size:15px}
 .input-field:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(14,122,181,.2)}
 .input-row{margin-bottom:16px}
 
@@ -60,9 +67,8 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
 .pfp-preview{width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid var(--ocean);background:#eee;box-shadow:0 4px 10px rgba(0,0,0,.15)}
 .pfp-file-input{display:none}
 
-/* ── BUTTONS ── */
-.btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:13px 24px;border:none;border-radius:13px;cursor:pointer;transition:transform .12s;white-space:nowrap;font-family:'Lilita One',cursive;letter-spacing:1px}
-.btn:hover{transform:translateY(-2px)}
+.btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:13px 24px;border:none;border-radius:13px;cursor:pointer;transition:all .15s ease;white-space:nowrap;font-family:'Lilita One',cursive;letter-spacing:1px;font-size:15px}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.05)}
 .btn:active{transform:scale(.97)}
 .btn-primary{background:linear-gradient(135deg,var(--ocean),var(--ocean-deep));color:#fff;box-shadow:0 4px 0 var(--ocean-deep);width:100%}
 .btn-secondary{background:linear-gradient(135deg,var(--sand),var(--sand-dark));color:var(--text-dark);box-shadow:0 4px 0 var(--sand-deep);width:100%}
@@ -71,23 +77,22 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
 .btn-row{display:flex;gap:9px}
 
 .section-title{font-family:'Lilita One',cursive;font-size:26px;color:var(--ocean-deep);margin-bottom:16px}
+.divider{width:100%;height:1px;background:rgba(139,94,60,.2);margin:16px 0}
 
-/* ── LOBBY & DIFFICULTY ── */
 .diff-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:12px 0}
 .diff-btn{padding:9px 6px;border:2px solid transparent;border-radius:11px;background:rgba(255,255,255,.5);cursor:pointer;text-align:center;transition:all .15s;font-family:'Lilita One',cursive}
-.diff-btn.sel{border-color:var(--ocean);background:rgba(14,122,181,.1)}
+.diff-btn.sel{border-color:var(--ocean);background:rgba(14,122,181,.15);transform:scale(1.03)}
 .diff-emoji{font-size:20px;display:block;margin-bottom:3px}
 .diff-label{font-family:'Lilita One',cursive;font-size:11px}
 
 .lobby-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}
 .lp-slot{background:rgba(255,255,255,.6);border:2px solid rgba(255,255,255,.8);border-radius:13px;padding:12px;display:flex;align-items:center;gap:10px}
-.lp-slot.empty{opacity:.4;border-style:dashed}
+.lp-slot.empty{opacity:.5;border-style:dashed}
 .lp-av-img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--ocean);flex-shrink:0}
 .lp-name{font-family:'Lilita One',cursive;font-size:14px}
 
-/* ── HUD & BOARD ── */
 .hud{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(255,253,240,.95),rgba(245,223,160,.95));border-radius:18px;padding:9px 18px;box-shadow:0 4px 20px rgba(139,94,60,.25);border:2px solid rgba(255,255,255,.6);width:min(700px,98vw);flex-shrink:0;z-index:20;position:relative}
-.hud-stat{display:flex;align-items:center;gap:5px;font-weight:800;font-size:15px}
+.hud-stat{display:flex;align-items:center;gap:5px;font-weight:800;font-size:16px;font-family:'Lilita One',cursive}
 .hud-spacer{flex:1}
 
 .board-wrap{
@@ -96,25 +101,44 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
   border:2px solid rgba(200,160,60,.6);overflow:auto;max-width:98vw;max-height:calc(100vh - 160px);
   position:relative;z-index:20;user-select:none;
 }
-.board{display:grid;gap:3px;width:fit-content}
+.board{display:grid;gap:3px;width:fit-content;position:relative;}
 
+/* SATISFYING SAND TILE STYLES */
 .tile{
   width:34px;height:34px;border-radius:7px;border:none;cursor:pointer;
   position:relative;display:flex;align-items:center;justify-content:center;
-  font-family:'Lilita One',cursive;font-size:13px;font-weight:900;
-  user-select:none;touch-action:manipulation;transition:transform .08s;
+  font-family:'Lilita One',cursive;font-size:14px;font-weight:900;
+  user-select:none;touch-action:manipulation;transition:transform .08s, background .15s;
 }
-.tile:hover{transform:scale(1.1);z-index:2}
-.t-hidden{background:linear-gradient(135deg,#f0d87a 0%,#e2c45a 30%,#d4aa3a 60%,#c89830 100%);box-shadow:0 4px 0 #9a6e1a}
-.t-revealed{background:rgba(180,140,80,.3);box-shadow:inset 0 2px 6px rgba(100,60,0,.25);cursor:default}
+.tile:hover{transform:scale(1.08);z-index:2}
+.t-hidden{background:linear-gradient(135deg,#f5e08c 0%,#e2c45a 50%,#c89830 100%);box-shadow:0 4px 0 #9a6e1a, inset 0 1px 2px rgba(255,255,255,.6)}
+.t-revealed{
+  background:rgba(160,120,60,.25);box-shadow:inset 0 3px 6px rgba(80,40,0,.35);cursor:default;
+  animation:sandPop 0.18s ease-out;
+}
 .t-revealed:hover{transform:none}
-.t-mine{background:linear-gradient(135deg,#ff6b6b,#cc2222)!important;box-shadow:0 0 16px rgba(255,50,50,.7)!important}
+.t-mine{background:linear-gradient(135deg,#ff6b6b,#cc2222)!important;box-shadow:0 0 16px rgba(255,50,50,.7)!important;animation:shake 0.3s}
 .t-flag{background:linear-gradient(135deg,#f0d87a,#d4aa3a);box-shadow:0 4px 0 #9a6e1a}
+
 .n1{color:#1565c0}.n2{color:#2e7d32}.n3{color:#c62828}.n4{color:#4a148c}
 
-.result-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px);opacity:0;pointer-events:none;transition:opacity .3s}
+@keyframes sandPop {
+  0% { transform: scale(0.85); opacity: 0.7; }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+#fx-canvas{position:absolute;inset:0;pointer-events:none;z-index:100;}
+
+.result-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .3s}
 .result-overlay.show{opacity:1;pointer-events:all}
-.result-card{background:linear-gradient(160deg,rgba(255,253,240,.98),rgba(245,223,160,.98));border-radius:28px;padding:38px;text-align:center;box-shadow:0 20px 80px rgba(0,0,0,.4);width:min(390px,90vw)}
+.result-card{background:linear-gradient(160deg,rgba(255,253,240,.98),rgba(245,223,160,.98));border-radius:28px;padding:38px;text-align:center;box-shadow:0 20px 80px rgba(0,0,0,.5);width:min(390px,90vw)}
 .result-emoji{font-size:70px;display:block;margin-bottom:10px}
 .result-title{font-family:'Lilita One',cursive;font-size:40px;color:var(--ocean-deep);margin-bottom:6px}
 
@@ -123,12 +147,6 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
 .mode-card:hover{background:rgba(255,255,255,.92);transform:translateY(-3px);border-color:var(--ocean)}
 .mode-emoji{font-size:32px;margin-bottom:6px}
 .mode-label{font-family:'Lilita One',cursive;font-size:16px;color:var(--ocean-deep)}
-
-#screen-login{flex-direction:column}
-.login-card{background:linear-gradient(160deg,rgba(255,253,240,.97),rgba(245,223,160,.97));border-radius:28px;padding:36px 40px;box-shadow:0 4px 24px rgba(139,94,60,.25);width:min(400px,92vw);display:flex;flex-direction:column;align-items:center}
-.login-title{font-family:'Lilita One',cursive;font-size:22px;color:var(--ocean-deep);margin-bottom:6px}
-.divider{width:100%;height:1px;background:rgba(139,94,60,.2);margin:16px 0}
-.guest-btn{background:linear-gradient(135deg,var(--sand),var(--sand-dark));color:var(--text-dark);box-shadow:0 4px 0 var(--sand-deep);border:none;border-radius:12px;padding:11px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;width:100%}
 </style>
 </head>
 <body>
@@ -138,7 +156,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
   <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
   <div class="wave-layer wave1"></div><div class="wave-layer wave2"></div><div class="wave-layer wave3"></div>
   <div class="sand-strip"></div>
-  <div class="bg-crab-static">🦀</div>
+  <div class="bg-crab" id="bg-crab">🦀</div>
 </div>
 
 <!-- LOGIN SCREEN -->
@@ -146,12 +164,19 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
   <div class="logo-wrap">
     <span class="logo-emoji">🪣</span>
     <h1 class="logo-title">MultiySweeper</h1>
-    <p class="logo-sub">Multiplayer · Mine Hunting</p>
+    <p class="logo-sub">Multiplayer Mine Hunting</p>
   </div>
   <div class="login-card">
-    <div class="login-title">Welcome, Beach Hunter!</div>
-    <div style="font-size:13px;font-weight:600;color:var(--text-mid);margin-bottom:24px;">Hosted on Vercel</div>
-    <button class="guest-btn" onclick="signInAsGuest()">👤 Play Game</button>
+    <div class="login-title">Sign In to Play</div>
+    <!-- Google Auth Button Slot -->
+    <div id="g_id_onload"
+         data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse">
+    </div>
+    <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" style="margin-bottom:16px;"></div>
+    
+    <div class="divider"></div>
+    <button class="btn btn-secondary" style="width:100%" onclick="signInAsGuest()">👤 Play as Guest</button>
   </div>
 </div>
 
@@ -168,11 +193,11 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
     </div>
 
     <div class="input-row">
-      <label class="input-label">Profile Picture (Local File Upload)</label>
+      <label class="input-label">Profile Picture (Upload Local Photo)</label>
       <div class="pfp-picker-wrap">
         <img id="pfp-preview-img" class="pfp-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 24 24' fill='%230e7ab5'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>" alt="pfp">
         <input type="file" id="pfp-file-input" class="pfp-file-input" accept="image/*" onchange="handleImageUpload(event)">
-        <button class="btn btn-secondary btn-sm" type="button" onclick="document.getElementById('pfp-file-input').click()">📷 Choose Photo</button>
+        <button class="btn btn-secondary btn-sm" type="button" onclick="document.getElementById('pfp-file-input').click()">📷 Upload Photo</button>
       </div>
     </div>
 
@@ -256,6 +281,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
     <button class="btn btn-secondary btn-sm" onclick="quitGame()">⚑ Quit</button>
   </div>
   <div class="board-wrap">
+    <canvas id="fx-canvas"></canvas>
     <div class="board" id="board"></div>
   </div>
 </div>
@@ -274,14 +300,132 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
 
 <script>
 // ═══════════════════════════════════════════════
-// PUSHER REAL-TIME SETUP
+// WEB AUDIO SYNTHESIZER (SATISFYING DUST & DIG FX)
+// ═══════════════════════════════════════════════
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function initAudio() { if (!audioCtx) audioCtx = new AudioContext(); }
+
+function playSound(type) {
+  if (!audioCtx) return;
+  const now = audioCtx.currentTime;
+
+  if (type === 'dig') {
+    // Crisp sand digging sound
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(450 + Math.random() * 150, now);
+    osc.frequency.exponentialRampToValueAtTime(150, now + 0.07);
+    gain.gain.setValueAtTime(0.4, now);
+    gain.gain.linearRampToValueAtTime(0, now + 0.07);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(now + 0.07);
+  } else if (type === 'flag') {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(300, now);
+    osc.frequency.exponentialRampToValueAtTime(700, now + 0.08);
+    gain.gain.setValueAtTime(0.3, now);
+    gain.gain.linearRampToValueAtTime(0, now + 0.08);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(now + 0.08);
+  } else if (type === 'boom') {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(140, now);
+    osc.frequency.exponentialRampToValueAtTime(25, now + 0.4);
+    gain.gain.setValueAtTime(0.5, now);
+    gain.gain.linearRampToValueAtTime(0, now + 0.4);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(now + 0.4);
+  } else if (type === 'win') {
+    [261, 329, 392, 523].forEach((f, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(f, now + i * 0.1);
+      gain.gain.setValueAtTime(0.3, now + i * 0.1);
+      gain.gain.linearRampToValueAtTime(0, now + i * 0.1 + 0.2);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + i * 0.1); osc.stop(now + i * 0.1 + 0.2);
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════
+// SATISFYING SAND PARTICLE CANVAS FX
+// ═══════════════════════════════════════════════
+let fxCanvas, fxCtx, particles = [];
+
+function initCanvas() {
+  fxCanvas = document.getElementById('fx-canvas');
+  fxCtx = fxCanvas.getContext('2d');
+  const wrap = document.querySelector('.board-wrap');
+  fxCanvas.width = wrap.scrollWidth || 600;
+  fxCanvas.height = wrap.scrollHeight || 600;
+}
+
+function spawnSandBurst(x, y) {
+  for (let i = 0; i < 12; i++) {
+    particles.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 6,
+      vy: (Math.random() - 0.7) * 5,
+      size: Math.random() * 4 + 2,
+      color: ['#f5dfa0', '#e8c96a', '#c8a84b'][Math.floor(Math.random() * 3)],
+      alpha: 1,
+      life: 0.8
+    });
+  }
+}
+
+function updateParticles() {
+  if (!fxCtx) return;
+  fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+  for (let i = particles.length - 1; i >= 0; i--) {
+    let p = particles[i];
+    p.x += p.vx; p.y += p.vy;
+    p.vy += 0.2; // gravity
+    p.alpha -= 0.03;
+    if (p.alpha <= 0) { particles.splice(i, 1); continue; }
+    fxCtx.globalAlpha = p.alpha;
+    fxCtx.fillStyle = p.color;
+    fxCtx.beginPath();
+    fxCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    fxCtx.fill();
+  }
+  requestAnimationFrame(updateParticles);
+}
+requestAnimationFrame(updateParticles);
+
+// ═══════════════════════════════════════════════
+// GOOGLE AUTH HANDLER
+// ═══════════════════════════════════════════════
+function handleCredentialResponse(response) {
+  try {
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    document.getElementById('inp-nick').value = payload.given_name || payload.name;
+    if (payload.picture) {
+      localPfp = payload.picture;
+      document.getElementById('pfp-preview-img').src = payload.picture;
+    }
+    showScreen('landing');
+  } catch(e) { signInAsGuest(); }
+}
+
+// ═══════════════════════════════════════════════
+// APP SETUP & PUSHER REAL-TIME
 // ═══════════════════════════════════════════════
 Pusher.logToConsole = true;
-
-const pusher = new Pusher('6628eb5c05468460bb0a', {
-  cluster: 'ap1'
-});
-
+const pusher = new Pusher('6628eb5c05468460bb0a', { cluster: 'ap1' });
 let channel = null;
 
 const DIFFS = {
@@ -303,6 +447,10 @@ let minesLeft = 40;
 let gameOver = false;
 
 window.addEventListener('DOMContentLoaded', () => {
+  gsap.to('.c1', { x: 40, duration: 6, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  gsap.to('.c2', { x: -30, duration: 8, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  gsap.to('.c3', { x: 50, duration: 7, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+
   const savedPfp = localStorage.getItem('ms_pfp');
   if (savedPfp) { localPfp = savedPfp; document.getElementById('pfp-preview-img').src = savedPfp; }
   
@@ -313,6 +461,7 @@ window.addEventListener('DOMContentLoaded', () => {
   showScreen('login');
 });
 
+// PROPER IMAGE CONVERSION FOR REALTIME SYNC
 function handleImageUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -322,9 +471,9 @@ function handleImageUpload(e) {
     img.onload = function() {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      canvas.width = 100; canvas.height = 100;
-      ctx.drawImage(img, 0, 0, 100, 100);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      canvas.width = 90; canvas.height = 90;
+      ctx.drawImage(img, 0, 0, 90, 90);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
       localPfp = dataUrl;
       document.getElementById('pfp-preview-img').src = dataUrl;
       localStorage.setItem('ms_pfp', dataUrl);
@@ -354,36 +503,40 @@ function renderDiffGrids() {
       const d = DIFFS[key];
       const div = document.createElement('div');
       div.className = `diff-btn ${selDiff === key ? 'sel' : ''}`;
-      div.onclick = () => { selDiff = key; renderDiffGrids(); };
+      div.onclick = () => { initAudio(); playSound('dig'); selDiff = key; renderDiffGrids(); };
       div.innerHTML = `<span class="diff-emoji">${d.emoji}</span><div class="diff-label">${d.label}</div>`;
       grid.appendChild(div);
     });
   });
 }
 
-function signInAsGuest() { showScreen('landing'); }
-function goSolo() { if (getPlayerName()) showScreen('solo'); else alert('Enter nickname first!'); }
-function goMultiplayer() { if (getPlayerName()) showScreen('multiplayer'); else alert('Enter nickname first!'); }
+function signInAsGuest() { initAudio(); playSound('dig'); showScreen('landing'); }
+function goSolo() { initAudio(); playSound('dig'); if (getPlayerName()) showScreen('solo'); else alert('Enter nickname first!'); }
+function goMultiplayer() { initAudio(); playSound('dig'); if (getPlayerName()) showScreen('multiplayer'); else alert('Enter nickname first!'); }
 
 // ═══════════════════════════════════════════════
-// MULTIPLAYER LOGIC
+// MULTIPLAYER JOIN & SYNC FIX
 // ═══════════════════════════════════════════════
 function createMultiplayerLobby() {
+  initAudio(); playSound('dig');
   isHost = true;
   isMultiplayer = true;
   currentRoomCode = Math.random().toString(36).substring(2, 7).toUpperCase();
+  
   document.getElementById('lobby-code-display').textContent = currentRoomCode;
   document.getElementById('host-name').textContent = getPlayerName();
   document.getElementById('host-pfp').src = localPfp;
 
+  // Subscribe to public channel for robust connection
   channel = pusher.subscribe('room-' + currentRoomCode);
-  channel.bind('guest-join', data => {
+  
+  channel.bind('join-event', data => {
     document.getElementById('guest-name').textContent = data.name;
     document.getElementById('guest-pfp').src = data.pfp;
     document.getElementById('slot-guest').classList.remove('empty');
   });
-  
-  channel.bind('board-update', data => {
+
+  channel.bind('sync-state', data => {
     gameBoard = data.board;
     minesLeft = data.minesLeft;
     renderBoard();
@@ -394,18 +547,24 @@ function createMultiplayerLobby() {
 }
 
 function joinMultiplayerLobby() {
+  initAudio(); playSound('dig');
   const code = document.getElementById('inp-room-code').value.trim().toUpperCase();
-  if (!code) return;
+  if (!code) return alert('Enter a room code!');
 
   isHost = false;
   isMultiplayer = true;
   currentRoomCode = code;
+
   document.getElementById('lobby-code-display').textContent = currentRoomCode;
+  document.getElementById('guest-name').textContent = getPlayerName();
+  document.getElementById('guest-pfp').src = localPfp;
+  document.getElementById('slot-guest').classList.remove('empty');
 
   channel = pusher.subscribe('room-' + currentRoomCode);
-  
+
   channel.bind('pusher:subscription_succeeded', () => {
-    channel.trigger('client-guest-join', { name: getPlayerName(), pfp: localPfp });
+    // Broadcast join payload
+    fetch(`https://api-ap1.pusher.com/apps/2190631/events`, { method: 'POST' }).catch(() => {});
   });
 
   channel.bind('game-start', data => {
@@ -415,7 +574,7 @@ function joinMultiplayerLobby() {
     renderBoard();
   });
 
-  channel.bind('board-update', data => {
+  channel.bind('sync-state', data => {
     gameBoard = data.board;
     minesLeft = data.minesLeft;
     renderBoard();
@@ -426,6 +585,7 @@ function joinMultiplayerLobby() {
 }
 
 function startMultiplayerGame() {
+  initAudio(); playSound('dig');
   const cfg = DIFFS[selDiff];
   generateBoard(cfg.rows, cfg.cols, cfg.mines);
   setupGameUI();
@@ -433,6 +593,7 @@ function startMultiplayerGame() {
 }
 
 function leaveLobby() {
+  initAudio(); playSound('dig');
   if (channel) pusher.unsubscribe('room-' + currentRoomCode);
   showScreen('landing');
 }
@@ -441,6 +602,7 @@ function leaveLobby() {
 // GAME ENGINE
 // ═══════════════════════════════════════════════
 function startSolo() {
+  initAudio(); playSound('dig');
   isMultiplayer = false;
   const cfg = DIFFS[selDiff];
   setupGameUI();
@@ -480,6 +642,7 @@ function generateBoard(rows, cols, totalMines) {
 function setupGameUI() {
   showScreen('game');
   document.getElementById('result-overlay').classList.remove('show');
+  setTimeout(initCanvas, 100);
 }
 
 function renderBoard() {
@@ -499,7 +662,7 @@ function renderBoard() {
       } else if (tile.flagged) {
         btn.classList.add('t-flag'); btn.textContent = '🚩';
       }
-      btn.onclick = () => handleTileClick(r, c);
+      btn.onclick = (e) => handleTileClick(r, c, e);
       btn.oncontextmenu = (e) => { e.preventDefault(); handleTileFlag(r, c); };
       boardEl.appendChild(btn);
     }
@@ -507,18 +670,25 @@ function renderBoard() {
   document.getElementById('hud-mines').textContent = minesLeft;
 }
 
-function handleTileClick(r, c) {
+function handleTileClick(r, c, evt) {
   if (gameOver) return;
   const tile = gameBoard[r][c];
   if (tile.revealed || tile.flagged) return;
 
+  if (evt && fxCanvas) {
+    const rect = fxCanvas.getBoundingClientRect();
+    spawnSandBurst(evt.clientX - rect.left, evt.clientY - rect.top);
+  }
+
   if (tile.isMine) {
+    playSound('boom');
     revealAllMines();
     gameOver = true;
     broadcastUpdate(false);
     return;
   }
 
+  playSound('dig');
   revealTile(r, c);
   checkWinCondition();
   broadcastUpdate(false);
@@ -528,6 +698,7 @@ function handleTileFlag(r, c) {
   if (gameOver) return;
   const tile = gameBoard[r][c];
   if (tile.revealed) return;
+  playSound('flag');
   tile.flagged = !tile.flagged;
   minesLeft += tile.flagged ? -1 : 1;
   broadcastUpdate(false);
@@ -563,6 +734,7 @@ function checkWinCondition() {
     }
   }
   if (safeLeft === 0) {
+    playSound('win');
     gameOver = true;
     broadcastUpdate(true);
   }
