@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MultiySweeper</title>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<!-- Google Identity Services SDK -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<!-- Pusher JS Client -->
+<script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
+
+<style>
+:root {
+  --sand:#f5dfa0; --sand-dark:#e8c96a; --sand-deep:#c8a84b;
+  --ocean:#0e7ab5; --ocean-deep:#094e75;
+  --mint:#2ecc71; --coral:#ff6b6b; --gold:#ffd700;
+  --wood:#8b5e3c; --wood-light:#c0845a;
+  --text-dark:#1a1008; --text-mid:#4a3520; --white:#fffef9;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif;background:#0a3d5c;color:var(--text-dark)}
+
+/* ── BACKGROUND ── */
+#bg{position:fixed;inset:0;z-index:0;background:linear-gradient(180deg,#87ceeb 0%,#a8e4f7 40%,#0e9bd4 55%,#0e7ab5 70%,#094e75 100%);overflow:hidden}
+.sun{position:absolute;top:8%;right:12%;width:80px;height:80px;background:radial-gradient(circle,#ffe066 30%,#ffb300 70%,transparent 100%);border-radius:50%;box-shadow:0 0 60px 20px rgba(255,200,0,.4)}
+.cloud{position:absolute;background:rgba(255,255,255,.85);border-radius:50px}
+.cloud::before,.cloud::after{content:'';position:absolute;background:rgba(255,255,255,.85);border-radius:50%}
+.c1{top:12%;left:8%;width:120px;height:38px}.c1::before{width:60px;height:55px;top:-28px;left:18px}.c1::after{width:45px;height:42px;top:-20px;left:55px}
+.c2{top:18%;left:35%;width:90px;height:28px}.c2::before{width:44px;height:40px;top:-22px;left:12px}.c2::after{width:35px;height:32px;top:-16px;left:42px}
+.c3{top:8%;left:60%;width:140px;height:44px}.c3::before{width:70px;height:62px;top:-34px;left:22px}.c3::after{width:52px;height:48px;top:-26px;left:70px}
+.wave-layer{position:absolute;bottom:0;left:-10%;width:120%;border-radius:50% 50% 0 0/30px}
+.wave1{background:rgba(255,255,255,.08);height:200px}.wave2{background:rgba(255,255,255,.06);height:160px;bottom:10px}.wave3{background:rgba(14,122,181,.4);height:120px;bottom:20px}
+.sand-strip{position:absolute;bottom:0;left:0;right:0;height:160px;background:linear-gradient(180deg,var(--sand-dark) 0%,var(--sand) 60%,var(--sand-deep) 100%);border-radius:60% 60% 0 0/40px 40px 0 0}
+.bg-crab-static{position:absolute;bottom:152px;left:15%;font-size:28px;cursor:default;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))}
+
+/* ── SCREENS ── */
+.screen{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.screen.active{opacity:1;pointer-events:all}
+#screen-landing{flex-direction:column}
+#screen-game{flex-direction:column;padding:10px;gap:10px;position:relative;overflow:hidden;background:linear-gradient(160deg,#e8d49a 0%,#d4b96a 50%,#b8922a 100%)}
+
+.logo-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:28px}
+.logo-emoji{font-size:64px;display:block;margin-bottom:6px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
+.logo-title{font-family:'Lilita One',cursive;font-size:clamp(52px,10vw,96px);color:#fff;text-shadow:0 4px 0 var(--wood),0 8px 0 rgba(0,0,0,.2),0 0 60px rgba(255,220,100,.6);letter-spacing:2px;line-height:1}
+.logo-sub{color:var(--sand);text-transform:uppercase;margin-top:8px;font-family:'Lilita One',cursive}
+
+.card{background:linear-gradient(160deg,rgba(255,253,240,.97),rgba(245,223,160,.97));border-radius:28px;padding:28px 36px;box-shadow:0 4px 24px rgba(139,94,60,.25),inset 0 1px 0 rgba(255,255,255,.8);border:2px solid rgba(255,255,255,.6);width:min(430px,93vw)}
+
+/* ── INPUTS & AVATAR ── */
+.input-label{color:var(--text-mid);display:block;margin-bottom:5px;font-family:'Lilita One',cursive;font-size:12px}
+.input-field{width:100%;padding:11px 15px;background:rgba(255,255,255,.75);border:2px solid var(--sand-dark);border-radius:12px;color:var(--text-dark);outline:none;transition:border-color .2s;font-family:'Lilita One',cursive}
+.input-field:focus{border-color:var(--ocean);box-shadow:0 0 0 3px rgba(14,122,181,.2)}
+.input-row{margin-bottom:16px}
+
+.pfp-picker-wrap{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.pfp-preview{width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid var(--ocean);background:#eee;box-shadow:0 4px 10px rgba(0,0,0,.15)}
+.pfp-file-input{display:none}
+
+/* ── BUTTONS ── */
+.btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:13px 24px;border:none;border-radius:13px;cursor:pointer;transition:transform .12s;white-space:nowrap;font-family:'Lilita One',cursive;letter-spacing:1px}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,var(--ocean),var(--ocean-deep));color:#fff;box-shadow:0 4px 0 var(--ocean-deep);width:100%}
+.btn-secondary{background:linear-gradient(135deg,var(--sand),var(--sand-dark));color:var(--text-dark);box-shadow:0 4px 0 var(--sand-deep);width:100%}
+.btn-success{background:linear-gradient(135deg,var(--mint),#1a9e56);color:#fff;box-shadow:0 4px 0 #0d6e3a}
+.btn-sm{padding:8px 16px;font-size:13px}
+.btn-row{display:flex;gap:9px}
+
+.section-title{font-family:'Lilita One',cursive;font-size:26px;color:var(--ocean-deep);margin-bottom:16px}
+
+/* ── LOBBY & DIFFICULTY ── */
+.diff-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:12px 0}
+.diff-btn{padding:9px 6px;border:2px solid transparent;border-radius:11px;background:rgba(255,255,255,.5);cursor:pointer;text-align:center;transition:all .15s;font-family:'Lilita One',cursive}
+.diff-btn.sel{border-color:var(--ocean);background:rgba(14,122,181,.1)}
+.diff-emoji{font-size:20px;display:block;margin-bottom:3px}
+.diff-label{font-family:'Lilita One',cursive;font-size:11px}
+
+.lobby-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}
+.lp-slot{background:rgba(255,255,255,.6);border:2px solid rgba(255,255,255,.8);border-radius:13px;padding:12px;display:flex;align-items:center;gap:10px}
+.lp-slot.empty{opacity:.4;border-style:dashed}
+.lp-av-img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--ocean);flex-shrink:0}
+.lp-name{font-family:'Lilita One',cursive;font-size:14px}
+
+/* ── HUD & BOARD ── */
+.hud{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(255,253,240,.95),rgba(245,223,160,.95));border-radius:18px;padding:9px 18px;box-shadow:0 4px 20px rgba(139,94,60,.25);border:2px solid rgba(255,255,255,.6);width:min(700px,98vw);flex-shrink:0;z-index:20;position:relative}
+.hud-stat{display:flex;align-items:center;gap:5px;font-weight:800;font-size:15px}
+.hud-spacer{flex:1}
+
+.board-wrap{
+  background:radial-gradient(ellipse at 30% 20%,rgba(255,240,180,.5) 0%,transparent 60%),linear-gradient(160deg,#d4aa4a 0%,#c09030 50%,#a87820 100%);
+  border-radius:24px;padding:14px;box-shadow:0 8px 32px rgba(80,50,0,.4);
+  border:2px solid rgba(200,160,60,.6);overflow:auto;max-width:98vw;max-height:calc(100vh - 160px);
+  position:relative;z-index:20;user-select:none;
+}
+.board{display:grid;gap:3px;width:fit-content}
+
+.tile{
+  width:34px;height:34px;border-radius:7px;border:none;cursor:pointer;
+  position:relative;display:flex;align-items:center;justify-content:center;
+  font-family:'Lilita One',cursive;font-size:13px;font-weight:900;
+  user-select:none;touch-action:manipulation;transition:transform .08s;
+}
+.tile:hover{transform:scale(1.1);z-index:2}
+.t-hidden{background:linear-gradient(135deg,#f0d87a 0%,#e2c45a 30%,#d4aa3a 60%,#c89830 100%);box-shadow:0 4px 0 #9a6e1a}
+.t-revealed{background:rgba(180,140,80,.3);box-shadow:inset 0 2px 6px rgba(100,60,0,.25);cursor:default}
+.t-revealed:hover{transform:none}
+.t-mine{background:linear-gradient(135deg,#ff6b6b,#cc2222)!important;box-shadow:0 0 16px rgba(255,50,50,.7)!important}
+.t-flag{background:linear-gradient(135deg,#f0d87a,#d4aa3a);box-shadow:0 4px 0 #9a6e1a}
+.n1{color:#1565c0}.n2{color:#2e7d32}.n3{color:#c62828}.n4{color:#4a148c}
+
+.result-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px);opacity:0;pointer-events:none;transition:opacity .3s}
+.result-overlay.show{opacity:1;pointer-events:all}
+.result-card{background:linear-gradient(160deg,rgba(255,253,240,.98),rgba(245,223,160,.98));border-radius:28px;padding:38px;text-align:center;box-shadow:0 20px 80px rgba(0,0,0,.4);width:min(390px,90vw)}
+.result-emoji{font-size:70px;display:block;margin-bottom:10px}
+.result-title{font-family:'Lilita One',cursive;font-size:40px;color:var(--ocean-deep);margin-bottom:6px}
+
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode-card{background:rgba(255,255,255,.6);border:2px solid rgba(255,255,255,.8);border-radius:16px;padding:16px 12px;text-align:center;cursor:pointer;transition:all .18s}
+.mode-card:hover{background:rgba(255,255,255,.92);transform:translateY(-3px);border-color:var(--ocean)}
+.mode-emoji{font-size:32px;margin-bottom:6px}
+.mode-label{font-family:'Lilita One',cursive;font-size:16px;color:var(--ocean-deep)}
+
+#screen-login{flex-direction:column}
+.login-card{background:linear-gradient(160deg,rgba(255,253,240,.97),rgba(245,223,160,.97));border-radius:28px;padding:36px 40px;box-shadow:0 4px 24px rgba(139,94,60,.25);width:min(400px,92vw);display:flex;flex-direction:column;align-items:center}
+.login-title{font-family:'Lilita One',cursive;font-size:22px;color:var(--ocean-deep);margin-bottom:6px}
+.divider{width:100%;height:1px;background:rgba(139,94,60,.2);margin:16px 0}
+.guest-btn{background:linear-gradient(135deg,var(--sand),var(--sand-dark));color:var(--text-dark);box-shadow:0 4px 0 var(--sand-deep);border:none;border-radius:12px;padding:11px 24px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;width:100%}
+</style>
+</head>
+<body>
+
+<div id="bg">
+  <div class="sun"></div>
+  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+  <div class="wave-layer wave1"></div><div class="wave-layer wave2"></div><div class="wave-layer wave3"></div>
+  <div class="sand-strip"></div>
+  <div class="bg-crab-static">🦀</div>
+</div>
+
+<!-- LOGIN SCREEN -->
+<div id="screen-login" class="screen">
+  <div class="logo-wrap">
+    <span class="logo-emoji">🪣</span>
+    <h1 class="logo-title">MultiySweeper</h1>
+    <p class="logo-sub">Multiplayer · Mine Hunting</p>
+  </div>
+  <div class="login-card">
+    <div class="login-title">Welcome, Beach Hunter!</div>
+    <div style="font-size:13px;font-weight:600;color:var(--text-mid);margin-bottom:24px;">Hosted on Vercel</div>
+    <button class="guest-btn" onclick="signInAsGuest()">👤 Play Game</button>
+  </div>
+</div>
+
+<!-- LANDING SCREEN -->
+<div id="screen-landing" class="screen">
+  <div class="logo-wrap">
+    <span class="logo-emoji">🪣</span>
+    <h1 class="logo-title">MultiySweeper</h1>
+  </div>
+  <div class="card">
+    <div class="input-row">
+      <label class="input-label">Your Nickname (Required)</label>
+      <input class="input-field" id="inp-nick" placeholder="Enter your name..." maxlength="18">
+    </div>
+
+    <div class="input-row">
+      <label class="input-label">Profile Picture (Local File Upload)</label>
+      <div class="pfp-picker-wrap">
+        <img id="pfp-preview-img" class="pfp-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 24 24' fill='%230e7ab5'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>" alt="pfp">
+        <input type="file" id="pfp-file-input" class="pfp-file-input" accept="image/*" onchange="handleImageUpload(event)">
+        <button class="btn btn-secondary btn-sm" type="button" onclick="document.getElementById('pfp-file-input').click()">📷 Choose Photo</button>
+      </div>
+    </div>
+
+    <div class="mode-grid">
+      <div class="mode-card" onclick="goSolo()">
+        <div class="mode-emoji">🏝️</div>
+        <div class="mode-label">Solo</div>
+      </div>
+      <div class="mode-card" onclick="goMultiplayer()">
+        <div class="mode-emoji">🌊</div>
+        <div class="mode-label">Multiplayer</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SOLO DIFFICULTY -->
+<div id="screen-solo" class="screen">
+  <div class="card" style="width:min(480px,94vw)">
+    <div class="section-title">🏝️ Solo Mode</div>
+    <div class="diff-grid" id="solo-diff-grid"></div>
+    <div class="btn-row" style="margin-top:8px">
+      <button class="btn btn-secondary" onclick="showScreen('landing')">← Back</button>
+      <button class="btn btn-primary" style="flex:1" onclick="startSolo()">▶ Start Solo</button>
+    </div>
+  </div>
+</div>
+
+<!-- MULTIPLAYER MENU -->
+<div id="screen-multiplayer" class="screen">
+  <div class="card" style="width:min(440px,94vw);text-align:center">
+    <div class="section-title">🌊 Co-op Multiplayer</div>
+    <div class="btn-row" style="flex-direction:column;gap:10px;margin-bottom:18px;">
+      <button class="btn btn-primary" onclick="createMultiplayerLobby()">🏝️ Create Beach Room</button>
+      <div class="divider"></div>
+      <div style="text-align:left;">
+        <label class="input-label">Enter Beach Code</label>
+        <div style="display:flex;gap:8px;">
+          <input class="input-field" id="inp-room-code" placeholder="CODE" style="text-transform:uppercase;text-align:center;" maxlength="5">
+          <button class="btn btn-success" onclick="joinMultiplayerLobby()">Join →</button>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-secondary" onclick="showScreen('landing')">← Back</button>
+  </div>
+</div>
+
+<!-- LOBBY SCREEN -->
+<div id="screen-lobby" class="screen">
+  <div class="card" style="width:min(600px,94vw)">
+    <div class="section-title" style="text-align:center;">🌊 Room Lobby</div>
+    <div style="background:rgba(0,0,0,.06);padding:10px;border-radius:12px;margin-bottom:14px;text-align:center;">
+      <span id="lobby-code-display" style="font-family:'Lilita One';font-size:28px;color:var(--ocean)">XXXXX</span>
+    </div>
+    
+    <div class="lobby-grid">
+      <div class="lp-slot" id="slot-host">
+        <img class="lp-av-img" id="host-pfp" src="" alt="pfp">
+        <div><div class="lp-name" id="host-name">Host</div></div>
+      </div>
+      <div class="lp-slot empty" id="slot-guest">
+        <img class="lp-av-img" id="guest-pfp" src="" alt="pfp">
+        <div><div class="lp-name" id="guest-name">Waiting for guest...</div></div>
+      </div>
+    </div>
+
+    <div class="diff-grid" id="lobby-diff-grid"></div>
+
+    <div class="btn-row" style="margin-top:14px;">
+      <button class="btn btn-secondary" onclick="leaveLobby()">← Leave</button>
+      <button class="btn btn-primary" id="btn-start-multiplayer" style="flex:1" onclick="startMultiplayerGame()">▶ Start Match</button>
+    </div>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="screen-game" class="screen">
+  <div class="hud" id="hud">
+    <div class="hud-stat">💣 <span id="hud-mines">40</span></div>
+    <div class="hud-spacer"></div>
+    <button class="btn btn-secondary btn-sm" onclick="quitGame()">⚑ Quit</button>
+  </div>
+  <div class="board-wrap">
+    <div class="board" id="board"></div>
+  </div>
+</div>
+
+<!-- RESULT OVERLAY -->
+<div class="result-overlay" id="result-overlay">
+  <div class="result-card">
+    <span class="result-emoji" id="res-emoji">🏆</span>
+    <div class="result-title" id="res-title">Beach Cleared!</div>
+    <div class="btn-row" style="justify-content:center;margin-top:16px;">
+      <button class="btn btn-primary" onclick="playAgain()">🔄 Play Again</button>
+      <button class="btn btn-secondary" onclick="quitGame()">🏠 Menu</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// PUSHER REAL-TIME SETUP
+// ═══════════════════════════════════════════════
+Pusher.logToConsole = true;
+
+const pusher = new Pusher('6628eb5c05468460bb0a', {
+  cluster: 'ap1'
+});
+
+let channel = null;
+
+const DIFFS = {
+  easy:    {label:'Easy',    emoji:'🌱',rows:10,cols:10,mines:15},
+  medium:  {label:'Medium',  emoji:'🔥',rows:16,cols:16,mines:40},
+  hard:    {label:'Hard',    emoji:'💀',rows:24,cols:24,mines:99},
+  extreme: {label:'Extreme', emoji:'☢️',rows:40,cols:40,mines:300},
+};
+
+let selDiff = 'medium';
+let localPfp = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 24 24' fill='%230e7ab5'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
+
+let isMultiplayer = false;
+let currentRoomCode = null;
+let isHost = false;
+
+let gameBoard = [];
+let minesLeft = 40;
+let gameOver = false;
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedPfp = localStorage.getItem('ms_pfp');
+  if (savedPfp) { localPfp = savedPfp; document.getElementById('pfp-preview-img').src = savedPfp; }
+  
+  const savedNick = localStorage.getItem('ms_nick');
+  if (savedNick) document.getElementById('inp-nick').value = savedNick;
+
+  renderDiffGrids();
+  showScreen('login');
+});
+
+function handleImageUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = 100; canvas.height = 100;
+      ctx.drawImage(img, 0, 0, 100, 100);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      localPfp = dataUrl;
+      document.getElementById('pfp-preview-img').src = dataUrl;
+      localStorage.setItem('ms_pfp', dataUrl);
+    };
+    img.src = evt.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function getPlayerName() {
+  const input = document.getElementById('inp-nick').value.trim();
+  if (!input) return null;
+  localStorage.setItem('ms_nick', input);
+  return input;
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+function renderDiffGrids() {
+  ['solo', 'lobby'].forEach(type => {
+    const grid = document.getElementById(type + '-diff-grid');
+    grid.innerHTML = '';
+    Object.keys(DIFFS).forEach(key => {
+      const d = DIFFS[key];
+      const div = document.createElement('div');
+      div.className = `diff-btn ${selDiff === key ? 'sel' : ''}`;
+      div.onclick = () => { selDiff = key; renderDiffGrids(); };
+      div.innerHTML = `<span class="diff-emoji">${d.emoji}</span><div class="diff-label">${d.label}</div>`;
+      grid.appendChild(div);
+    });
+  });
+}
+
+function signInAsGuest() { showScreen('landing'); }
+function goSolo() { if (getPlayerName()) showScreen('solo'); else alert('Enter nickname first!'); }
+function goMultiplayer() { if (getPlayerName()) showScreen('multiplayer'); else alert('Enter nickname first!'); }
+
+// ═══════════════════════════════════════════════
+// MULTIPLAYER LOGIC
+// ═══════════════════════════════════════════════
+function createMultiplayerLobby() {
+  isHost = true;
+  isMultiplayer = true;
+  currentRoomCode = Math.random().toString(36).substring(2, 7).toUpperCase();
+  document.getElementById('lobby-code-display').textContent = currentRoomCode;
+  document.getElementById('host-name').textContent = getPlayerName();
+  document.getElementById('host-pfp').src = localPfp;
+
+  channel = pusher.subscribe('room-' + currentRoomCode);
+  channel.bind('guest-join', data => {
+    document.getElementById('guest-name').textContent = data.name;
+    document.getElementById('guest-pfp').src = data.pfp;
+    document.getElementById('slot-guest').classList.remove('empty');
+  });
+  
+  channel.bind('board-update', data => {
+    gameBoard = data.board;
+    minesLeft = data.minesLeft;
+    renderBoard();
+    if (data.gameOver) showResultOverlay(data.win);
+  });
+
+  showScreen('lobby');
+}
+
+function joinMultiplayerLobby() {
+  const code = document.getElementById('inp-room-code').value.trim().toUpperCase();
+  if (!code) return;
+
+  isHost = false;
+  isMultiplayer = true;
+  currentRoomCode = code;
+  document.getElementById('lobby-code-display').textContent = currentRoomCode;
+
+  channel = pusher.subscribe('room-' + currentRoomCode);
+  
+  channel.bind('pusher:subscription_succeeded', () => {
+    channel.trigger('client-guest-join', { name: getPlayerName(), pfp: localPfp });
+  });
+
+  channel.bind('game-start', data => {
+    gameBoard = data.board;
+    minesLeft = data.mines;
+    setupGameUI();
+    renderBoard();
+  });
+
+  channel.bind('board-update', data => {
+    gameBoard = data.board;
+    minesLeft = data.minesLeft;
+    renderBoard();
+    if (data.gameOver) showResultOverlay(data.win);
+  });
+
+  showScreen('lobby');
+}
+
+function startMultiplayerGame() {
+  const cfg = DIFFS[selDiff];
+  generateBoard(cfg.rows, cfg.cols, cfg.mines);
+  setupGameUI();
+  renderBoard();
+}
+
+function leaveLobby() {
+  if (channel) pusher.unsubscribe('room-' + currentRoomCode);
+  showScreen('landing');
+}
+
+// ═══════════════════════════════════════════════
+// GAME ENGINE
+// ═══════════════════════════════════════════════
+function startSolo() {
+  isMultiplayer = false;
+  const cfg = DIFFS[selDiff];
+  setupGameUI();
+  generateBoard(cfg.rows, cfg.cols, cfg.mines);
+  renderBoard();
+}
+
+function generateBoard(rows, cols, totalMines) {
+  gameBoard = []; minesLeft = totalMines; gameOver = false;
+  for (let r = 0; r < rows; r++) {
+    const row = [];
+    for (let c = 0; c < cols; c++) row.push({ r, c, isMine: false, revealed: false, flagged: false, count: 0 });
+    gameBoard.push(row);
+  }
+
+  let planted = 0;
+  while (planted < totalMines) {
+    let r = Math.floor(Math.random() * rows), c = Math.floor(Math.random() * cols);
+    if (!gameBoard[r][c].isMine) { gameBoard[r][c].isMine = true; planted++; }
+  }
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (gameBoard[r][c].isMine) continue;
+      let cnt = 0;
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          let nr = r + dr, nc = c + dc;
+          if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && gameBoard[nr][nc].isMine) cnt++;
+        }
+      }
+      gameBoard[r][c].count = cnt;
+    }
+  }
+}
+
+function setupGameUI() {
+  showScreen('game');
+  document.getElementById('result-overlay').classList.remove('show');
+}
+
+function renderBoard() {
+  const boardEl = document.getElementById('board');
+  boardEl.innerHTML = '';
+  const rows = gameBoard.length, cols = gameBoard[0].length;
+  boardEl.style.gridTemplateColumns = `repeat(${cols}, 34px)`;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const tile = gameBoard[r][c];
+      const btn = document.createElement('button');
+      btn.className = 'tile ' + (tile.revealed ? 't-revealed' : 't-hidden');
+      if (tile.revealed) {
+        if (tile.isMine) { btn.classList.add('t-mine'); btn.textContent = '💣'; }
+        else if (tile.count > 0) { btn.classList.add('n' + tile.count); btn.textContent = tile.count; }
+      } else if (tile.flagged) {
+        btn.classList.add('t-flag'); btn.textContent = '🚩';
+      }
+      btn.onclick = () => handleTileClick(r, c);
+      btn.oncontextmenu = (e) => { e.preventDefault(); handleTileFlag(r, c); };
+      boardEl.appendChild(btn);
+    }
+  }
+  document.getElementById('hud-mines').textContent = minesLeft;
+}
+
+function handleTileClick(r, c) {
+  if (gameOver) return;
+  const tile = gameBoard[r][c];
+  if (tile.revealed || tile.flagged) return;
+
+  if (tile.isMine) {
+    revealAllMines();
+    gameOver = true;
+    broadcastUpdate(false);
+    return;
+  }
+
+  revealTile(r, c);
+  checkWinCondition();
+  broadcastUpdate(false);
+}
+
+function handleTileFlag(r, c) {
+  if (gameOver) return;
+  const tile = gameBoard[r][c];
+  if (tile.revealed) return;
+  tile.flagged = !tile.flagged;
+  minesLeft += tile.flagged ? -1 : 1;
+  broadcastUpdate(false);
+}
+
+function revealTile(r, c) {
+  if (r < 0 || r >= gameBoard.length || c < 0 || c >= gameBoard[0].length) return;
+  const tile = gameBoard[r][c];
+  if (tile.revealed || tile.flagged || tile.isMine) return;
+  tile.revealed = true;
+  if (tile.count === 0) {
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (dr !== 0 || dc !== 0) revealTile(r + dr, c + dc);
+      }
+    }
+  }
+}
+
+function revealAllMines() {
+  for (let r = 0; r < gameBoard.length; r++) {
+    for (let c = 0; c < gameBoard[0].length; c++) {
+      if (gameBoard[r][c].isMine) gameBoard[r][c].revealed = true;
+    }
+  }
+}
+
+function checkWinCondition() {
+  let safeLeft = 0;
+  for (let r = 0; r < gameBoard.length; r++) {
+    for (let c = 0; c < gameBoard[0].length; c++) {
+      if (!gameBoard[r][c].isMine && !gameBoard[r][c].revealed) safeLeft++;
+    }
+  }
+  if (safeLeft === 0) {
+    gameOver = true;
+    broadcastUpdate(true);
+  }
+}
+
+function broadcastUpdate(win) {
+  renderBoard();
+  if (gameOver) showResultOverlay(win);
+}
+
+function showResultOverlay(win) {
+  document.getElementById('res-emoji').textContent = win ? '🏆' : '💥';
+  document.getElementById('res-title').textContent = win ? 'Beach Cleared!' : 'Boom!';
+  document.getElementById('result-overlay').classList.add('show');
+}
+
+function playAgain() { showScreen('landing'); }
+function quitGame() { leaveLobby(); }
+</script>
+</body>
+</html>
