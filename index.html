@@ -145,19 +145,25 @@ svg text{fill:#eaf6ff}
 @keyframes barGrow{to{width:min(60vw,340px)}}
 .cx2{display:block;width:100%;max-width:720px;align-self:center;border-radius:16px;border:1px solid var(--bd);box-shadow:0 10px 30px rgba(0,0,0,.35)}
 
-/* ===== merged polish: slow, soft reveals ===== */
-.s{transition:opacity 1.2s ease,visibility 1.2s}
-.on .r:not(.cname):not(.crole):not(.cdiv):not(.spark){animation:soft 1.8s cubic-bezier(.22,.7,.2,1) forwards;animation-delay:calc(var(--i)*.5s + .5s)}
-@keyframes soft{from{opacity:0;transform:translateY(24px);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
+/* ===== lighter + tighter ===== */
+.ray{filter:none;animation:none;opacity:.6}
+.s{gap:10px;transition:opacity .9s ease,visibility .9s}
+p{max-width:64ch;line-height:1.4}
+.wr{line-height:1.1}
+.on .r:not(.cname):not(.crole):not(.cdiv):not(.spark){animation:soft 1.3s cubic-bezier(.22,.7,.2,1) forwards;animation-delay:calc(var(--i)*.3s + .3s)}
+@keyframes soft{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 .wr .w2{display:inline-block;opacity:0}
-.on .wr .w2{animation:soft 1.6s cubic-bezier(.22,.7,.2,1) forwards;animation-delay:calc(var(--i)*.5s + .5s + var(--k)*.18s)}
-h1::after,h2::after{content:"";display:block;width:0;height:3px;margin-top:12px;border-radius:2px;background:linear-gradient(90deg,var(--cool),var(--hot))}
-.on h1::after,.on h2::after{animation:ul 2s ease 1.4s forwards}@keyframes ul{to{width:96px}}
-.c,.pb{backdrop-filter:blur(6px);transition:transform .5s,box-shadow .5s}.c:hover,.pb:hover{transform:translateY(-4px);box-shadow:0 14px 32px rgba(0,0,0,.45)}
-.big{animation:br 4s ease-in-out infinite alternate}@keyframes br{to{text-shadow:0 0 46px rgba(255,140,60,.9)}}
-p{max-width:64ch}
-/* ===== presenter tools ===== */
-#notes{position:fixed;left:12px;right:12px;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:6;background:rgba(3,20,38,.94);border:1px solid var(--bd);border-left:4px solid var(--hot);border-radius:12px;padding:12px 16px;font-size:clamp(1rem,2.6vw,1.2rem);line-height:1.5;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .5s,transform .5s}
+.on .wr .w2{animation:soft 1.2s cubic-bezier(.22,.7,.2,1) forwards;animation-delay:calc(var(--i)*.3s + .3s + var(--k)*.1s)}
+.c,.pb{box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.hero i,.dn svg{filter:none}
+.thanks{filter:none}
+.on .thanks{animation:shine 6s linear infinite,thIn 1.6s ease .3s forwards}
+@keyframes thIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+.thx-sub{animation-delay:1.2s}
+.on .thx-sub{animation:up 1.2s ease 1.4s forwards}
+.thx-bar{box-shadow:none}
+#bar{backdrop-filter:none;background:rgba(3,20,38,.9)}
+#notes{position:fixed;left:12px;right:12px;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:6;background:rgba(3,20,38,.96);border:1px solid var(--bd);border-left:4px solid var(--hot);border-radius:12px;padding:12px 16px;font-size:clamp(1rem,2.6vw,1.2rem);line-height:1.5;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .4s,transform .4s}
 #notes.show{opacity:1;transform:none}#notes b{color:var(--hot)}
 #hint{position:fixed;left:0;right:0;bottom:calc(66px + env(safe-area-inset-bottom,0px));z-index:4;text-align:center;font-size:.8rem;color:var(--mu);pointer-events:none;opacity:0;animation:hint 9s ease 2s forwards}
 @keyframes hint{0%,100%{opacity:0}15%,80%{opacity:1}}
@@ -174,37 +180,18 @@ p{max-width:64ch}
 <section class="s on">
 <p class="r q">What happens when the biggest ocean on Earth shifts gears?</p>
 <h1 class="r">2026 Super El Niño</h1>
-<p class="r">The documentary looks at the possible effects of the very strong 2026 El Niño on the ocean, climate, ecosystems, and people.</p>
+<p class="r">How a very strong El Niño can change the ocean, the weather, and life on Earth.</p>
 <canvas class="r cx2" id="cv0"></canvas>
-<div class="r g">
-<div class="c"><b>Developing</b>NOAA classifies 2026 as a developing El Niño</div>
-
-<div class="c h"><b>Media label</b>"Super El Niño" is common in the news, but it is not an official scientific category</div></div>
+<div class="r g"><div class="c"><b>Developing</b>NOAA says the 2026 El Niño is developing</div>
+<div class="c h"><b>Media label</b>"Super El Niño" is a news name, not an official category</div></div>
 </section>
 
 <section class="s">
-<p class="r q">Imagine you fish the cold, rich waters off Peru, and one December the sea turns warm.</p>
-<h1 class="r">El Niño: when the Pacific warms up</h1>
-<div class="r hero"><i></i></div>
-<p class="r">Peruvian fishermen noticed it long ago: around Christmas, the water off their coast warmed. They called it El Niño, "the boy", after the Christ child.</p>
-<p class="r">Scientists later found it is one phase of a much larger cycle, linking the ocean and the atmosphere across the whole tropical Pacific.</p>
-<p class="r n">This is the story of that cycle, and of a year when it grew very strong.</p>
-<p class="r sm">Source: <a href="https://texmex.mit.edu/ftp/ftp/pub/emanuel/TC_Book/Chapter%206%20ver%202.pdf" target="_blank" rel="noopener">MIT ENSO chapter</a></p>
-</section>
-
-<section class="s">
-<p class="r q">Before "super": what is an ordinary El Niño?</p>
-<h2 class="r">El Niño 101</h2>
-<div class="r tl">
-<div class="tn"><u>❄️</u><b>La Niña</b><br>cold phase</div>
-<div class="tn"><u>🌊</u><b>Neutral</b><br>in between</div>
-<div class="tn nw"><u>🔥</u><b>El Niño</b><br>warm phase</div></div>
-<p class="r">El Niño and La Niña are the two phases of ENSO, the El Niño-Southern Oscillation: one linked cycle of ocean and atmosphere in the tropical Pacific. They alternate irregularly.</p>
-<div class="r g">
-<div class="c h"><span class="ic fl">🔁</span><b><span data-n="2">0</span>-<span data-n="7">0</span> years</b>Irregular gaps between events, about 3-5 years on average</div>
-<div class="c"><span class="ic fl f3">⏳</span><b><span data-n="9">0</span>-<span data-n="12">0</span> months</b>Typical length of an El Niño or La Niña episode</div>
-<div class="c h"><span class="ic fl f2">🎚</span><b>No two alike</b>Timing and intensity vary widely from event to event</div></div>
-<p class="r sm">Sources: <a href="https://texmex.mit.edu/ftp/ftp/pub/emanuel/TC_Book/Chapter%206%20ver%202.pdf" target="_blank" rel="noopener">MIT ENSO chapter</a>, <a href="https://gml.noaa.gov/obop/mlo/educationcenter/students/brochures%20and%20diagrams/noaa%20publications/El%20Nino%20Fact%20Sheet.pdf" target="_blank" rel="noopener">NOAA El Niño fact sheet</a>, <a href="https://britannica.com/print/article/181759" target="_blank" rel="noopener">Britannica</a>.</p>
+<p class="r q">Imagine you fish off Peru, and one December the sea turns warm.</p>
+<h2 class="r">What is El Niño?</h2>
+<p class="r">Peruvian fishermen named it El Niño, "the boy", because it came near Christmas.</p>
+<div class="r tl"><div class="tn"><u>❄️</u><b>La Niña</b><br>cold phase</div><div class="tn"><u>🌊</u><b>Neutral</b><br>in between</div><div class="tn nw"><u>🔥</u><b>El Niño</b><br>warm phase</div></div>
+<div class="r g"><div class="c h"><b>Every 2-7 years</b>It comes back irregularly</div><div class="c"><b>9-12 months</b>How long one event lasts</div><div class="c h"><b>No two alike</b>Each event is different</div></div>
 </section>
 
 <section class="s">
@@ -212,118 +199,66 @@ p{max-width:64ch}
 <h2 class="r">The ocean's chain reaction</h2>
 <canvas class="r cx" id="cv" style="border-radius:14px;border:1px solid var(--bd)"></canvas>
 <div class="r tg"><button id="b1">Normal</button><button id="b2" class="on2">El Niño</button><button id="b3">Super El Niño</button></div>
-<p class="r n">Top: map of the Pacific. Bottom: side view along the equator. Light dots are surface water. Blue dots are cold, nutrient-rich water rising from deeper water (upwelling). The dashed line is the thermocline.</p>
-<p class="r n x">Normally, trade winds push warm surface water west. In El Niño they weaken, warm water moves east, the thermocline becomes deeper in the east, and upwelling is reduced. With fewer nutrients, phytoplankton may grow less, so ocean productivity can decrease.</p>
-<p class="r sm">When the shift is unusually strong, the media call it a "Super El Niño". The last view is an illustration of a stronger event.</p>
+<p class="r n x">Weaker winds let warm water move east. Less cold, rich water rises, so plankton grows less.</p>
 </section>
 
 <section class="s">
 <p class="r q">What turns an El Niño into a headline?</p>
 <h2 class="r">When "strong" becomes "super"</h2>
-<p class="r">"Super El Niño" is a media label, not an official scientific category. In practice it means NOAA's "very strong" tier: a Niño-3.4 anomaly of +2.0°C or more, as a 3-month average. That is how many degrees above normal the sea surface sits.</p>
-<div class="r sc"><div class="mk" style="--x:50%"><span>Very strong: 2°C</span></div>
-<div class="mk" style="--x:85%;border-color:#ffd36a"><span style="background:#ffd36a">Far east: 3.4°C</span></div>
+<p class="r">Scientists say "very strong" when the sea is 2.0°C or more above normal.</p>
+<div class="r sc"><div class="mk" style="--x:50%"><span>Very strong: 2°C</span></div><div class="mk" style="--x:85%;border-color:#ffd36a"><span style="background:#ffd36a">Far east: 3.4°C</span></div>
 <div class="zn" style="left:6%">Normal</div><div class="zn" style="left:26%">El Niño</div><div class="zn" style="left:72%">Very strong</div></div>
-<div class="r g">
-<div class="c h"><span class="ic fl">📜</span><b>1982-83</b>One of the two most intense El Niños of the 20th century</div>
-<div class="c h"><span class="ic fl f2">📜</span><b>1997-98</b>The other most intense of the 20th century</div>
-<div class="c"><span class="ic fl f3">📜</span><b>2015-16</b>A third unusually strong event</div></div>
-<p class="r n">Strong events are less common, so each one becomes a benchmark.</p>
-<p class="r q">Which brings us to today.</p>
-<p class="r sm">Sources: <a href="https://britannica.com/print/article/181759" target="_blank" rel="noopener">Britannica</a>, <a href="https://iri.columbia.edu/our-expertise/climate/forecasts/enso/current/" target="_blank" rel="noopener">IRI, Columbia University</a>.</p>
-</section>
-
-<section class="s">
-<p class="r q">So where does the ocean stand now?</p>
-<h2 class="r">Where the ocean stands now</h2>
-<p class="r">This documentary looks at the possible effects of the very strong 2026 El Niño on the ocean, climate, ecosystems, and people. NOAA classifies 2026 as a developing El Niño.</p>
-<div class="r g">
-<div class="pb h"><div class="big">&gt;<span data-n="90" data-u="%">0</span></div>NOAA chance of a very strong event in the Northern Hemisphere autumn and winter of 2026-27</div>
-<div class="pb"><div class="big"><span data-n="75" data-u="%">0</span></div>NOAA chance of a historic event in Oct-Dec 2026, beyond all El Niños since 1950</div>
-<div class="pb h"><div class="big">+<span data-n="3.4" data-d="1" data-u="°C">0</span></div>above normal in the far eastern Pacific (Niño-1+2), August</div></div>
-<p class="r n x">NOAA, 10 Sept 2026: August readings were +3.4°C in Niño-1+2, +2.5°C in Niño-3 and +1.8°C in Niño-3.4. IRI reported a weekly Niño-3.4 value near +3.0°C in mid-September. A historic event means +2.5°C or more as a 3-month value. NOAA's next update is 8 October.</p>
-<p class="r sm">Sources: <a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_disc_sep2026/ensodisc.shtml" target="_blank" rel="noopener">NOAA CPC discussion</a>, <a href="https://iri.columbia.edu/our-expertise/climate/forecasts/enso/current/" target="_blank" rel="noopener">IRI, Columbia University</a>.</p>
+<div class="r g"><div class="pb h"><div class="big">&gt;<span data-n="90" data-u="%">0</span></div>NOAA chance of a very strong event this winter</div>
+<div class="pb"><div class="big"><span data-n="75" data-u="%">0</span></div>chance of a historic event, Oct-Dec 2026</div>
+<div class="pb h"><div class="big">+<span data-n="3.4" data-d="1" data-u="°C">0</span></div>far eastern Pacific, August</div></div>
+<p class="r sm">Source: NOAA CPC, 10 Sept 2026. Past giants: 1982-83, 1997-98, 2015-16.</p>
 </section>
 
 <section class="s">
 <p class="r q">How can warm water far offshore end up hurting pelicans?</p>
 <h2 class="r">From plankton to pelicans</h2>
-<div class="r tl">
-<div class="tn nw"><u>🦠</u><b>Phytoplankton</b></div>
-<div class="tn"><u>🦐</u><b>Zooplankton</b></div>
-<div class="tn"><u>🐟</u><b>Small fish</b></div>
-<div class="tn"><u>🐦</u><b>Seabirds</b></div>
-<div class="tn"><u>🐋</u><b>Marine mammals</b></div></div>
-<p class="r">Phytoplankton are at the base of many marine food webs, so less growth can mean less food further up.</p>
-<div class="r g">
-<div class="c h"><span class="ic fl f2">🐟</span><b>Anchoveta</b>Peruvian anchovy (<i>Engraulis ringens</i>) is an important food fish in the Humboldt Current and the basis of one of the world's major fisheries. In strong El Niño events its suitable water can shrink, the fish may move, and numbers and access to food can decrease.</div>
-<div class="c"><span class="ic fl">🐦</span><b>Seabirds</b>Many depend on anchovies and other small fish. Past El Niño events caused major problems for seabirds in Peru, including pelicans.</div>
-<div class="c"><span class="ic fl f3">🐋</span><b>Marine mammals</b>They can change where and how they feed when prey moves.</div></div>
-<p class="r n">This does not mean the whole food chain always "collapses": El Niño can reduce and change marine food webs.</p>
-<p class="r n x">Not established: that every species, including orcas and blue whales, must travel farther because of the 2026 El Niño.</p>
+<div class="r tl"><div class="tn nw"><u>🦠</u><b>Plankton</b></div><div class="tn"><u>🦐</u><b>Zooplankton</b></div><div class="tn"><u>🐟</u><b>Small fish</b></div><div class="tn"><u>🐦</u><b>Seabirds</b></div><div class="tn"><u>🐋</u><b>Whales</b></div></div>
+<div class="r g"><div class="c h"><span class="ic fl f2">🐟</span><b>Anchoveta</b>Peru's key food fish. Its habitat can shrink and fish may move away.</div>
+<div class="c"><span class="ic fl">🐦</span><b>Seabirds</b>Pelicans lose food. Past El Niños hurt seabirds in Peru.</div>
+<div class="c"><span class="ic fl f3">🐋</span><b>Whales</b>They may change where they feed when prey moves.</div></div>
 </section>
 
 <section class="s">
-<p class="r q">Can a warming ocean help anyone?</p>
-<h2 class="r">Not everyone loses</h2>
-<div class="r sea"><span class="fi" style="--j:0">🐠</span><span class="fi" style="--j:1">🪼</span><span class="fi" style="--j:2">🐠</span></div>
-<div class="r g" style="grid-template-columns:repeat(auto-fit,minmax(250px,1fr))">
-<div class="c h"><span class="ic fl">🪼</span><b>Jellyfish</b>Some jellyfish in the Humboldt Current region have shown higher numbers during warm El Niño periods. Change can help some species while harming others. But they do not always increase just because water is warm with fewer nutrients: the response depends on the species and local conditions.</div>
-<div class="c"><span class="ic fl f3">🌴</span><b>Range shifts</b>Warm conditions can let tropical and subtropical species move into normally cooler areas. El Niño can cause this for a short time. A similar process, tropicalization, is happening over longer periods as oceans warm due to human-caused climate change.</div></div>
-<p class="r n">El Niño causes temporary changes. Long-term tropicalization is mainly linked to global warming.</p>
-</section>
-
-<section class="s">
-<p class="r q">Why do coral reefs turn white?</p>
-<h2 class="r">Reefs under heat stress</h2>
-<div class="r sea"><span class="cr" style="left:8%">🪸</span><span class="cr" style="left:28%;animation-delay:-1s">🪸</span><span class="cr" style="left:48%;animation-delay:-2s">🪸</span><span class="cr" style="left:68%;animation-delay:-1.5s">🪸</span><span class="cr" style="left:86%;animation-delay:-.5s">🪸</span><span class="fi" style="--j:0">🐠</span><span class="fi" style="--j:1">🐟</span></div>
-<p class="r">Very warm seawater causes thermal stress. Bleaching happens when corals lose the algae that give them much of their color and energy. Strong El Niño events have helped cause major bleaching events in the past.</p>
-<div class="r tl">
-<div class="tn"><u>🔥</u><b>2023</b><br>Fourth global mass bleaching event begins</div>
-<div class="tn"><u>✅</u><b>2025</b><br>NOAA said it likely ended</div>
-<div class="tn nw"><u>⚠️</u><b>2026</b><br>Local bleaching and heat stress continue</div></div>
-<p class="r n x">The developing El Niño may increase the risk of another large bleaching event.</p>
+<p class="r q">Can a warming ocean help anyone, and who suffers most?</p>
+<h2 class="r">Winners, losers &amp; reefs</h2>
+<div class="r sea"><span class="fi" style="--j:0">🐠</span><span class="fi" style="--j:1">🪼</span><span class="cr" style="left:64%">🪸</span><span class="cr" style="left:84%;animation-delay:-1.5s">🪸</span></div>
+<div class="r g"><div class="c h"><span class="ic fl">🪼</span><b>Jellyfish</b>Some increase in warm periods</div>
+<div class="c"><span class="ic fl f3">🌴</span><b>Range shifts</b>Tropical species move into cooler areas</div>
+<div class="c h"><span class="ic fl f4">🪸</span><b>Coral bleaching</b>Hot water makes corals lose their color and energy</div></div>
+<p class="r n x">A global bleaching event began in 2023. El Niño may raise the risk of another one in 2026.</p>
 </section>
 
 <section class="s">
 <p class="r q">Has the world seen something like this before?</p>
 <h2 class="r">A warning from 1877-78</h2>
-<div class="r g">
-<div class="pb h"><div class="big">&gt;<span data-n="50" data-u="M">0</span></div>deaths estimated by a major study for the related famine</div>
-<div class="c"><b>Extremely strong</b>That El Niño came during a much larger period of drought and climate extremes: the Great Drought and Global Famine of 1876-78</div>
-<div class="c h"><b>Not El Niño alone</b>Many climate and social factors were involved. The documentary's comparison is scientifically reasonable</div></div>
-<div class="r g">
-<div class="pb"><div class="big"><span data-n="278" data-u=" ppm">0</span></div>CO2 before industrialization (about)<div class="bar"><i style="--w:65%"></i></div></div>
-<div class="pb h"><div class="big"><span data-n="428" data-u=" ppm">0</span></div>CO2 in October 2026 (about)<div class="bar"><i style="--w:100%"></i></div></div>
-<div class="c"><b>A warmer Earth</b>This background can make some heat and ecological impacts more severe</div></div>
-<p class="r n x">Not scientifically correct: that climate change definitely caused or directly strengthened the 2026 El Niño, without a formal attribution study. El Niño is a natural part of the climate system.</p>
-<p class="r sm">Source: "Climate and the Global Famine of 1876-78", Journal of Climate: <a href="https://news.climate.columbia.edu/2018/10/12/the-worst-ever-known-drought-could-happen-again-says-study" target="_blank" rel="noopener">news.climate.columbia.edu</a></p>
+<div class="r g"><div class="pb h"><div class="big">&gt;<span data-n="50" data-u="M">0</span></div>deaths estimated for the famine of that time</div>
+<div class="c"><b>Not El Niño alone</b>It came with a huge drought and many social factors</div></div>
+<div class="r g"><div class="pb"><div class="big"><span data-n="278" data-u=" ppm">0</span></div>CO2 before industry<div class="bar"><i style="--w:65%"></i></div></div>
+<div class="pb h"><div class="big"><span data-n="428" data-u=" ppm">0</span></div>CO2 in October 2026<div class="bar"><i style="--w:100%"></i></div></div></div>
+<p class="r n x">A warmer Earth can make impacts more severe. But no study yet says climate change caused the 2026 El Niño.</p>
 </section>
 
 <section class="s">
 <p class="r q">Can the Pacific change the weather far away?</p>
 <h2 class="r">Weather at a distance</h2>
-<p class="r">These effects are called teleconnections: El Niño can affect weather far from the Pacific Ocean.</p>
 <canvas class="r cx2" id="cv5"></canvas>
-<div class="r g">
-<div class="c"><span class="ic fl">🌧</span><b>Rain and storms</b>Rainfall, storms, and flood risk can change in different regions</div>
-<div class="c h"><span class="ic fl f4">🌡</span><b>Temperature</b>Temperatures can change in different regions</div>
-<div class="c h"><span class="ic fl f2">🏜</span><b>Amazon</b>Drought risk can increase in some parts of the Amazon</div>
-<div class="c"><span class="ic fl f3">🐟</span><b>Salmon</b>In past events, parts of the northeastern Pacific became warmer, with changes in plankton and food for young salmon. The response is not the same for every population</div></div>
-<p class="r n">These are changes in probability, not guarantees. El Niño can make some patterns more likely, but it does not control the weather everywhere, and effects differ by region and season.</p>
+<div class="r g"><div class="c"><span class="ic fl">🌧</span><b>Rain and floods</b>Change in some regions</div>
+<div class="c h"><span class="ic fl f4">🌡</span><b>Heat</b>Temperatures shift</div>
+<div class="c h"><span class="ic fl f2">🏜</span><b>Amazon</b>Drought risk can rise</div></div>
+<p class="r n">These are changes in probability, not guarantees.</p>
 </section>
 
 <section class="s">
 <p class="r q">So who is responsible?</p>
 <h2 class="r">Nature's cycle, a warmer backdrop</h2>
-<div class="r g">
-<div class="c"><b>Natural</b>El Niño is a natural climate event</div>
-<div class="c h"><b>Human-caused</b>Global warming is changing the background conditions in which El Niño happens</div>
-<div class="c"><b>Adaptation</b>Can help reduce short-term damage</div>
-<div class="c h"><b>Emissions cuts</b>The main long-term way to limit further warming</div></div>
-<p class="r n">Most careful conclusion: not that climate change "caused" the 2026 El Niño, but that continued warming can increase background heat and make some effects of extreme climate events more serious.</p>
-<p class="r n x">Forecasts can change as new observations arrive: treat regional impacts as observations, probabilities, or forecasts, not guaranteed outcomes.</p>
-<p class="r sm">Sources: <a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml" target="_blank" rel="noopener">NOAA Climate Prediction Center</a>, <a href="https://scied.ucar.edu/" target="_blank" rel="noopener">UCAR Center for Science Education</a>, <a href="https://coralreefwatch.noaa.gov/" target="_blank" rel="noopener">NOAA Coral Reef Watch</a>, <a href="https://www.fisheries.noaa.gov/" target="_blank" rel="noopener">NOAA Fisheries</a>, <a href="https://par.nsf.gov/servlets/purl/10088875" target="_blank" rel="noopener">1876-78 famine study</a>.</p>
+<div class="r g"><div class="c"><b>Natural</b>El Niño is a natural climate event</div><div class="c h"><b>Human-caused</b>Global warming changes the background</div>
+<div class="c"><b>Adaptation</b>Reduces short-term damage</div><div class="c h"><b>Emissions cuts</b>The main long-term solution</div></div>
+<p class="r n x">Forecasts can change: treat impacts as probabilities, not certainties.</p>
 </section>
 
 <section class="s credits">
@@ -343,17 +278,9 @@ p{max-width:64ch}
 </section>
 
 <section class="s">
-<div class="thanks-wrap">
-<span class="thx-ring"></span><span class="thx-ring r2"></span><span class="thx-ring r3"></span>
-<span class="thx-emoji" style="top:6%;left:8%">🌊</span>
-<span class="thx-emoji e2" style="top:12%;right:6%">🐋</span>
-<span class="thx-emoji e3" style="bottom:14%;left:6%">🪸</span>
-<span class="thx-emoji e4" style="bottom:8%;right:10%">🐟</span>
-<div class="thanks">Thank You</div>
-<div class="thx-bar"></div>
-<p class="thx-sub">For watching · 2026 Super El Niño</p>
-<p class="thx-sub" style="animation-delay:2.4s;font-size:clamp(1.3rem,4vw,2rem);color:#fff">ً  · Any questions? </p>
-</div>
+<div class="thanks-wrap"><span class="thx-ring"></span><span class="thx-ring r2"></span>
+<div class="thanks">Thank You</div><div class="thx-bar"></div>
+<p class="thx-sub" style="font-size:clamp(1.4rem,4.5vw,2.4rem);color:#fff">Any questions?</p></div>
 </section>
 
 <div id="notes"><b id="nn"></b><span id="nt"></span></div>
@@ -361,12 +288,10 @@ p{max-width:64ch}
 <div id="bar"><div id="tr"><div id="p"></div></div><button id="pv" aria-label="Previous slide">‹</button><button id="au">Auto</button><button id="nx" aria-label="Next slide">›</button><button id="nb" title="Notes (N)">📝</button><button id="pr" title="Presenter window">🎤</button><button id="fs" title="Fullscreen (F)">⛶</button><span id="c"></span><span id="m"></span></div>
 
 <script>
-const S=[...document.querySelectorAll('.s')],T=[55,45,55,80,60,55,65,50,55,60,55,55,35,40],H=[.3,.2,.3,.75,.6,.95,.5,.5,.85,1,.85,.4,.3,.2],N=S.length,TOT=T.reduce((x,y)=>x+y,0),Q=x=>document.querySelector(x),F=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+const S=[...document.querySelectorAll('.s')],T=[45,50,70,70,55,60,55,50,45,25,30],H=[.3,.2,.75,.95,.5,.8,1,.85,.4,.3,.2],N=S.length,TOT=T.reduce((x,y)=>x+y,0),Q=x=>document.querySelector(x),F=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
 let i=0,a=0,t=0,tm;
-S.forEach(s=>{if(s.classList.contains('credits'))return;let k=0;s.querySelectorAll('.r').forEach(e=>{e.style.setProperty('--i',Math.min(k++,9));if(e.matches('h1,h2,p.q')){const tx=e.textContent.trim().split(/\s+/);e.classList.remove('r');e.classList.add('wr');e.textContent='';tx.forEach((w,j)=>{const sp=document.createElement('span');sp.className='w2';sp.style.setProperty('--k',j);sp.textContent=w;e.append(sp,' ')})}})});
-for(let k=0;k<12;k++){const b=document.createElement('i'),z=5+Math.random()*18;b.className='b';b.style.cssText=`left:${Math.random()*100}%;width:${z}px;height:${z}px;animation-duration:${9+Math.random()*12}s;animation-delay:-${Math.random()*15}s`;document.body.append(b)}
-for(let k=0;k<3;k++){const f=document.createElement('i');f.className='bf';f.textContent=k%2?'🐋':'🐟';f.style.cssText=`top:${25+k*22}%;animation-duration:${38+k*14}s;animation-delay:-${k*13}s`;document.body.append(f)}
-document.querySelectorAll('.sea').forEach(sea=>{for(let k=0;k<14;k++){const d=document.createElement('i');d.className='pk';d.style.cssText=`left:${Math.random()*95}%;top:${20+Math.random()*60}%;animation-delay:-${Math.random()*6}s`;sea.append(d)}});
+S.forEach(s=>{if(s.classList.contains('credits'))return;let k=0;s.querySelectorAll('.r').forEach(e=>{e.style.setProperty('--i',Math.min(k++,8));if(e.matches('h1,h2,p.q')){const tx=e.textContent.trim().split(/\s+/);e.classList.remove('r');e.classList.add('wr');e.textContent='';tx.forEach((w,j)=>{const sp=document.createElement('span');sp.className='w2';sp.style.setProperty('--k',j);sp.textContent=w;e.append(sp,' ')})}})});
+for(let k=0;k<6;k++){const b=document.createElement('i'),z=5+Math.random()*18;b.className='b';b.style.cssText=`left:${Math.random()*100}%;width:${z}px;height:${z}px;animation-duration:${9+Math.random()*12}s;animation-delay:-${Math.random()*15}s`;document.body.append(b)}
 const cv=Q('#cv'),cx=cv.getContext('2d'),CH=(innerHeight<740?170:215);let W=0,Mh=0,oy=0,es=0,et=0,fo=0,f2=0;
 const P=[...Array(100)].map(()=>({x:Math.random(),f:Math.random()})),U=[...Array(40)].map(()=>({x:.6+Math.random()*.38,y:Math.random()}));
 const th=(x,s)=>.86*(s<=1?(205-95*x)+((175+8*x)-(205-95*x))*s:(175+8*x)+((135+75*x)-(175+8*x))*(s-1));
@@ -385,12 +310,12 @@ const SEA=[[[272.5,18],[275,21.5],[285,21],[300,20],[300,11.5],[292,11],[286,10.
 const CUBA=[[275,22.8],[279,23.2],[283,22],[285.5,20.5],[283,19.8],[278,21.2]];
 const mx=l=>(l-105)/190*W,my=l=>(30-l)/60*Mh;
 function pl(a,fill,st){cx.beginPath();a.forEach((p,k)=>k?cx.lineTo(mx(p[0]),my(p[1])):cx.moveTo(mx(p[0]),my(p[1])));cx.closePath();cx.fillStyle=fill;cx.fill();if(st){cx.strokeStyle=st;cx.lineWidth=1;cx.stroke()}}
-function rs(){const d=devicePixelRatio||1;W=cv.clientWidth;Mh=Math.round(W*.316);oy=Mh+30;const H=oy+CH;cv.style.height=H+'px';cv.width=W*d;cv.height=H*d;cx.setTransform(d,0,0,d,0,0)}
+function rs(){const d=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;Mh=Math.round(W*.316);oy=Mh+30;const H=oy+CH;cv.style.height=H+'px';cv.width=W*d;cv.height=H*d;cx.setTransform(d,0,0,d,0,0)}
 addEventListener('resize',rs);rs();
 const ens=v=>{et=v;['#b1','#b2','#b3'].forEach((q,k)=>Q(q).classList.toggle('on2',k==v));clearTimeout(tm)};
 Q('#b3').onclick=()=>ens(2);
 function ar(x,y,l,al,d){cx.globalAlpha=al;const e=x-d*l;cx.beginPath();cx.moveTo(x,y);cx.lineTo(e,y);cx.moveTo(e+d*9,y-6);cx.lineTo(e,y);cx.lineTo(e+d*9,y+6);cx.stroke();cx.globalAlpha=1}
-function dr(){requestAnimationFrame(dr);if(i!=3||!W)return;es+=(et-es)*.022;const s=es,m=Math.min(s,1),a0=Math.max(0,1-s),a1=s<=1?s:2-s,a2=Math.max(0,s-1),f=Math.max(11,Math.min(15,W/32)),fs=Math.max(9,Math.min(12,W/38)),Y=70,eq=my(0);
+function dr(){requestAnimationFrame(dr);if(i!=2||!W)return;es+=(et-es)*.022;const s=es,m=Math.min(s,1),a0=Math.max(0,1-s),a1=s<=1?s:2-s,a2=Math.max(0,s-1),f=Math.max(11,Math.min(15,W/32)),fs=Math.max(9,Math.min(12,W/38)),Y=70,eq=my(0);
 cx.clearRect(0,0,W,oy+CH);
 cx.save();cx.beginPath();cx.rect(0,0,W,Mh);cx.clip();
 cx.fillStyle='#1b7fb0';cx.fillRect(0,0,W,Mh);
@@ -439,7 +364,7 @@ dr();
 
 // ===== Slide 1: El Niño scene =====
 const c0=Q('#cv0'),q0=c0.getContext('2d');let W0=0,H0=0;
-function rs0(){const d=devicePixelRatio||1;W0=c0.clientWidth;H0=Math.round(Math.min(300,Math.max(200,W0*.6)));c0.style.height=H0+'px';c0.width=W0*d;c0.height=H0*d;q0.setTransform(d,0,0,d,0,0)}
+function rs0(){const d=Math.min(devicePixelRatio||1,2);W0=c0.clientWidth;H0=Math.round(Math.min(300,Math.max(200,W0*.6)));c0.style.height=H0+'px';c0.width=W0*d;c0.height=H0*d;q0.setTransform(d,0,0,d,0,0)}
 addEventListener('resize',rs0);rs0();
 const lp=(a,b,t)=>a+(b-a)*t,cl=v=>Math.max(0,Math.min(1,v)),sm=v=>v*v*(3-2*v);
 const CAP=['The Pacific starts to warm','Trade winds get weaker','Warm water spreads east','Rain moves. Fish and birds leave','Corals bleach. Heat records!'];
@@ -479,7 +404,7 @@ q.fillStyle='rgba(3,20,38,.85)';q.fillRect(w/2-cw/2,h-32,cw,24);q.fillStyle='#ff
 // ===== Slide 6: teleconnection map =====
 const c5=Q('#cv5'),q5=c5.getContext('2d');let W5=0,H5=0;
 const wx=l=>(l-60)/270*W5,wy=l=>(58-l)/100*H5;
-function rs5(){const d=devicePixelRatio||1;W5=c5.clientWidth;H5=Math.round(W5*.5);c5.style.height=H5+'px';c5.width=W5*d;c5.height=H5*d;q5.setTransform(d,0,0,d,0,0)}
+function rs5(){const d=Math.min(devicePixelRatio||1,2);W5=c5.clientWidth;H5=Math.round(W5*.5);c5.style.height=H5+'px';c5.width=W5*d;c5.height=H5*d;q5.setTransform(d,0,0,d,0,0)}
 addEventListener('resize',rs5);rs5();
 const WL=[
 [[60,70],[60,25],[68,24],[73,20],[77,8],[80,13],[85,20],[90,22],[92,20],[97,16],[100,13],[100,6],[103,1.3],[104.5,3],[105,8.5],[109,11],[108,15],[110,20],[117,23],[121,26],[121,31],[126,34],[129,35],[127,38],[122,40],[128,42],[133,43],[140,50],[143,58],[150,60],[150,70]],
@@ -494,7 +419,7 @@ const WL=[
 [[190,70],[190,60],[200,56],[210,58],[220,60],[226,57],[229,54],[232,50],[235,46],[236.5,40],[236,37],[238,34.5],[243,32],[244.5,29],[246.5,25],[249.5,23],[254,23.5],[254.5,20.5],[256,19],[259,17.5],[263,16],[266,16],[268,14.5],[271,13.3],[272.5,13],[274,11],[274.5,10],[276.5,8.5],[280,7.5],[282,8],[282.5,7],[282.5,4],[281.2,1.8],[280,0.5],[279.2,-1],[279,-2.2],[280,-3.5],[278.8,-5.5],[280.5,-7.5],[282,-10],[283.5,-13],[285,-15],[288,-17.5],[289.6,-18.5],[289.7,-23],[288.5,-30],[288.5,-35],[289,-42],[290,-50],[296,-50],[298,-42],[301,-38.5],[302,-38],[303,-34],[312,-26],[319,-22],[321,-15],[325,-8],[322,-3.5],[315,-2.5],[310,0],[308,5],[300,8.5],[296,10.5],[289,12],[286,11],[282.5,9],[280.5,9.5],[277,10.8],[276.5,15],[273,15.8],[272,18],[273,21.5],[270,21],[269,18.5],[266,18],[263,20],[262.5,25],[263,28],[266,29.5],[270,29.5],[272,30.3],[276,30],[277.2,28],[278.2,26],[279.8,25.2],[280,27],[279,31],[284,35],[284,37],[286,40.5],[290,41.7],[290,43.5],[293,45],[296,44.5],[299,45.8],[300,47],[304,47.5],[307,47],[305,51],[303,52.5],[300,55],[300,70]]];
 const ZN=[[125,-8,'Indonesia','☀️','255,120,40',0],[78,21,'India','🌤','255,160,50',0],[212,47,'NE Pacific','🐟','255,110,50',0],[279,-5,'Peru','🌧','60,150,255',1],[262,31,'Southern US','🌧','60,150,255',1],[305,-6,'Amazon','🏜','255,120,40',0]];
 function pc(q,a,fill,st){q.beginPath();a.forEach((p,k)=>k?q.lineTo(wx(p[0]),wy(p[1])):q.moveTo(wx(p[0]),wy(p[1])));q.closePath();q.fillStyle=fill;q.fill();if(st){q.strokeStyle=st;q.lineWidth=1;q.stroke()}}
-function d5(now){requestAnimationFrame(d5);if(i!=10||!W5)return;
+function d5(now){requestAnimationFrame(d5);if(i!=7||!W5)return;
 const q=q5,w=W5,h=H5,tt=now/1000,u=tt%12,R=cl(u/6.5)*w*.78,fd=u>9.5?1-cl((u-9.5)/2):1,sx=wx(205),sy=wy(0),fs=Math.max(9,Math.min(12,w/34));
 q.clearRect(0,0,w,h);q.globalAlpha=1;q.shadowBlur=0;q.fillStyle='#1b7fb0';q.fillRect(0,0,w,h);
 q.save();q.translate(sx,sy);q.scale(w*.15,h*.14);let g=q.createRadialGradient(0,0,0,0,0,1);g.addColorStop(0,'rgba(255,70,20,.95)');g.addColorStop(.6,'rgba(255,140,50,.55)');g.addColorStop(1,'rgba(255,160,60,0)');q.fillStyle=g;q.fillRect(-1,-1,2,2);q.restore();
@@ -512,13 +437,13 @@ requestAnimationFrame(d0);requestAnimationFrame(d5);
 Q('#b1').onclick=()=>ens(0);Q('#b2').onclick=()=>ens(1);
 function draw(){const e=T.slice(0,i).reduce((x,y)=>x+y,0)+t;Q('#c').textContent=(i+1)+' / '+N;Q('#p').style.width=e/TOT*100+'%';Q('#m').textContent=F(e)+' / '+F(TOT);Q('#au').textContent=a?'Pause':'Auto'}
 function go(n){i=Math.max(0,Math.min(N-1,n));t=0;S.forEach((s,k)=>s.classList.toggle('on',k==i));S[i].scrollTop=0;Q('#hot').style.opacity=H[i];
-if(i==3){rs();es=0;ens(0);tm=setTimeout(()=>{ens(1);tm=setTimeout(()=>ens(2),3400)},2200)}
+if(i==2){rs();es=0;ens(0);tm=setTimeout(()=>{ens(1);tm=setTimeout(()=>ens(2),3400)},2200)}
 S[i].querySelectorAll('[data-n]').forEach(e=>{const v=+e.dataset.n,u=e.dataset.u||'',s0=performance.now();(function f(now){const p=Math.min(1,(now-s0)/1800);e.textContent=(v*(1-Math.pow(1-p,3))).toFixed(+e.dataset.d||0)+u;if(p<1)requestAnimationFrame(f)})(s0)});draw();upd()}
 Q('#nx').onclick=()=>go(i+1);Q('#pv').onclick=()=>go(i-1);Q('#au').onclick=()=>{a=!a;draw()};
 addEventListener('keydown',e=>{if(['ArrowRight',' ','PageDown'].includes(e.key)){e.preventDefault();go(i+1)}if(['ArrowLeft','PageUp'].includes(e.key))go(i-1)});
 let sx=0;addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-sx;if(Math.abs(d)>60)go(i+(d<0?1:-1))});
 setInterval(()=>{if(!a)return;t++;if(t>=T[i]){if(i<N-1)go(i+1);else{a=0;t=T[i]}}draw()},1000);
-const NOTES=["Good morning everyone. Today we talk about the 2026 Super El Niño. Watch the scene: the sea gets warmer, the wind gets weaker, and the fish and birds leave.", "Long ago, fishermen in Peru saw the sea get warm near Christmas. They called it El Niño, 'the boy'. Scientists later learned it is part of a big cycle in the Pacific Ocean.", "El Niño and La Niña are two phases of one cycle called ENSO. Events come every 2 to 7 years and last 9 to 12 months. No two events are the same.", "Press the three buttons. Normal: strong winds push warm water west. El Niño: the winds get weaker and warm water moves east. Super: winds can reverse and warm water floods the east. Less cold water comes up, so there is less food.", "'Super El Niño' is a media name, not a science name. Scientists say 'very strong' when the sea is 2 degrees warmer than normal. Big events in the past: 1982, 1997 and 2015.", "Now we look at 2026. NOAA says more than 90 percent chance of a very strong event. In August the far east Pacific was 3.4 degrees warmer than normal.", "Follow the food chain: plankton, zooplankton, small fish, seabirds, whales. Warm water brings fewer nutrients, so there is less food for everyone above. In Peru, anchovies and pelicans suffer.", "Not everyone loses. Jellyfish can increase, and tropical animals can move to new places. This is temporary. The long-term change comes from global warming.", "Corals bleach when the water is too hot: they lose the colorful algae. A global bleaching event began in 2023. El Niño can raise the risk again in 2026.", "In 1877-78 a very strong El Niño came with a huge drought and famine, with more than 50 million deaths. It was not El Niño alone. Today CO2 is higher, about 428 ppm, so heat impacts can be worse.", "El Niño can change weather far away: rain, heat and drought. Watch the waves spread on the map. These are chances, not promises.", "El Niño is natural. But global warming changes the background. We cannot say climate change caused this event. We can cut emissions and adapt.", "This documentary was made by our team. Say each name slowly and clearly.", "Thank you for listening. Do you have any questions?"],TL=S.map(s=>((s.querySelector('h1,h2,.thanks')||{}).textContent||'').trim());
+const NOTES=["Good morning everyone. Today we talk about the 2026 Super El Niño. Watch the scene: the sea gets warmer, the wind gets weaker, and fish and birds leave.", "Fishermen in Peru saw the sea get warm near Christmas, so they called it El Niño, 'the boy'. It is the warm phase of a cycle. It comes every 2 to 7 years and lasts 9 to 12 months.", "Press the three buttons. Normal: strong winds push warm water west. El Niño: the winds get weaker and warm water moves east. Super: winds can reverse. Less cold water comes up, so there is less food.", "'Super El Niño' is a media name. Scientists say 'very strong' when the sea is 2 degrees warmer than normal. NOAA says more than 90 percent chance this winter. The far east Pacific was 3.4 degrees warmer in August.", "Follow the food chain: plankton, zooplankton, small fish, seabirds, whales. Less plankton means less food for everyone above. In Peru, anchovies and pelicans suffer.", "Not everyone loses: jellyfish can increase and tropical animals move to new places. But hot water bleaches corals. They lose their color. A global bleaching event began in 2023.", "In 1877-78 a very strong El Niño came with a huge drought and famine, more than 50 million deaths. It was not El Niño alone. Today CO2 is higher, so impacts can be worse.", "El Niño can change weather far away: rain, heat and drought. Watch the waves spread on the map. These are chances, not promises.", "El Niño is natural. But global warming changes the background. We cannot say climate change caused this event. We can cut emissions and adapt.", "This documentary was made by our team. Say each name slowly and clearly.", "Thank you for listening. Do you have any questions?"],TL=S.map(s=>((s.querySelector('h1,h2,.thanks')||{}).textContent||'').trim());
 let pw=null;const st=Date.now();
 function upd(){const n=NOTES[i]||'';Q('#nt').textContent=n;Q('#nn').textContent='Slide '+(i+1)+': ';
 if(pw&&!pw.closed){const d=pw.document;d.getElementById('n').textContent=n;d.getElementById('k').textContent='Slide '+(i+1)+' / '+N+(i<N-1?'  ·  Next: '+TL[i+1]:'  ·  The end')}}
