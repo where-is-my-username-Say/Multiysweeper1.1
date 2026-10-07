@@ -23,6 +23,8 @@ body{position:relative;font-family:system-ui,-apple-system,"Segoe UI",sans-serif
 .bf{position:fixed;font-size:2.4rem;opacity:.13;pointer-events:none;animation:cross linear infinite;filter:brightness(0)}
 @keyframes cross{from{left:-12%}to{left:112%}}
 .s{position:absolute;inset:0;padding:clamp(14px,3.5vw,44px) clamp(16px,6vw,80px) 80px;display:flex;flex-direction:column;justify-content:center;gap:14px;overflow-y:auto;opacity:0;visibility:hidden;transition:opacity .7s,visibility .7s;z-index:2}
+.s>*{flex-shrink:0}
+@media (max-height:900px){.s{justify-content:flex-start}}
 .s.on{opacity:1;visibility:visible}
 .r{opacity:0}
 .on .r{animation:up .8s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i)*.15s + .2s)}
@@ -39,6 +41,7 @@ p{font-size:clamp(1rem,2.5vw,1.25rem);line-height:1.5;max-width:60ch;text-shadow
 .x{border-left-color:var(--hot)}
 .big{font:700 clamp(3.4rem,18vw,7.5rem)/1 Georgia,serif;color:var(--hot);text-shadow:0 0 30px rgba(255,140,60,.6)}
 .cx{align-self:center;width:100%;max-width:600px}
+@media (max-height:740px){.cx{max-width:420px}}
 #bar{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;align-items:center;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(3,20,38,.55);backdrop-filter:blur(10px);border-top:1px solid var(--bd);font-size:.85rem}
 #bar button,.tg button{font:inherit;color:var(--tx);background:var(--cd);border:1px solid var(--bd);border-radius:8px;padding:6px 14px;cursor:pointer}
 #bar button:focus-visible,.tg button:focus-visible{outline:2px solid var(--hot)}
@@ -59,7 +62,7 @@ svg text{fill:#eaf6ff}
 .l1{transition:opacity 1.2s}.l2{opacity:0;transition:opacity 1.2s}.en .l1{opacity:0}.en .l2{opacity:1}
 .wa{animation:wd 1.6s ease-in-out infinite}@keyframes wd{50%{transform:translateX(-8px)}}
 /* s3 */
-.sc{position:relative;height:30px;border-radius:15px;background:linear-gradient(90deg,#2a8fd0 0,#5fe3d3 22%,#ffd36a 40%,#ff8a3a 62%,#e0301a 100%);margin:34px 0 36px;box-shadow:0 0 24px rgba(255,120,50,.35)}
+.sc{position:relative;height:30px;border-radius:15px;background:linear-gradient(90deg,#2a8fd0 0,#5fe3d3 22%,#ffd36a 40%,#ff8a3a 62%,#e0301a 100%);margin:28px 0 30px;box-shadow:0 0 24px rgba(255,120,50,.35)}
 .mk{position:absolute;top:-30px;left:0;width:0;border-left:3px solid #fff;height:62px;animation:none}
 .on .mk{animation:mv 2.6s cubic-bezier(.2,.8,.2,1) .6s forwards}
 @keyframes mv{to{left:var(--x)}}
@@ -99,6 +102,47 @@ svg text{fill:#eaf6ff}
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
 .q{font:italic clamp(1rem,2.8vw,1.35rem)/1.4 Georgia,serif;color:var(--cool);text-shadow:0 1px 8px rgba(0,0,0,.4)}
 .mk span{left:0;width:auto;transform:translateX(-50%);padding:1px 8px}
+
+/* ===== Credits slide ===== */
+.credits{display:flex;flex-direction:column;gap:18px;align-items:center;text-align:center}
+.cname{font:700 clamp(1.5rem,6vw,3rem)/1.15 Georgia,serif;color:#fff;opacity:0;transform:translateY(40px) scale(.9);text-shadow:0 0 26px rgba(95,227,211,.55),0 4px 14px rgba(0,0,0,.45)}
+.on .cname{animation:pop 1s cubic-bezier(.2,.9,.2,1.2) forwards;animation-delay:calc(var(--i)*.55s + .5s)}
+@keyframes pop{0%{opacity:0;transform:translateY(40px) scale(.85);filter:blur(6px)}60%{opacity:1;filter:blur(0)}100%{opacity:1;transform:none}}
+.crole{font-size:clamp(.85rem,2.4vw,1.05rem);color:var(--mu);letter-spacing:.12em;text-transform:uppercase;opacity:0}
+.on .crole{animation:fadein 1s ease forwards;animation-delay:calc(var(--i)*.55s + 1.05s)}
+@keyframes fadein{to{opacity:1}}
+.cdiv{width:0;height:2px;background:linear-gradient(90deg,transparent,var(--cool),var(--hot),transparent);margin:2px auto}
+.on .cdiv{animation:grow 1.4s ease forwards;animation-delay:calc(var(--i)*.55s + .35s)}
+@keyframes grow{to{width:min(70vw,420px)}}
+.credits .spark{position:absolute;font-size:1.6rem;opacity:0;pointer-events:none}
+.on .spark{animation:tw 2.6s ease-in-out infinite;animation-delay:calc(var(--i)*.4s)}
+@keyframes tw{0%,100%{opacity:0;transform:scale(.6) rotate(0)}50%{opacity:.9;transform:scale(1.15) rotate(18deg)}}
+
+/* ===== Thanks slide ===== */
+.thanks-wrap{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;min-height:60vh}
+.thanks{font:800 clamp(3rem,14vw,8rem)/1 Georgia,serif;color:#fff;opacity:0;letter-spacing:.02em;
+  background:linear-gradient(90deg,var(--cool),#fff,var(--hot),#fff,var(--cool));background-size:300% 100%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 26px rgba(255,140,60,.55))}
+.on .thanks{animation:shine 5s linear infinite,thanksIn 1.4s cubic-bezier(.2,.9,.2,1.15) .3s forwards}
+@keyframes thanksIn{0%{opacity:0;transform:scale(.4) rotate(-6deg);filter:blur(14px) drop-shadow(0 0 40px rgba(255,140,60,.9))}100%{opacity:1;transform:none;filter:blur(0) drop-shadow(0 0 26px rgba(255,140,60,.55))}}
+@keyframes shine{to{background-position:300% 0}}
+.thx-sub{font-size:clamp(1rem,3vw,1.4rem);color:var(--mu);opacity:0}
+.on .thx-sub{animation:up 1s ease forwards;animation-delay:1.4s}
+.thx-ring{position:absolute;width:min(72vw,460px);height:min(72vw,460px);border-radius:50%;border:2px solid rgba(95,227,211,.4);opacity:0;pointer-events:none}
+.on .thx-ring{animation:ringOut 2.6s cubic-bezier(.2,.8,.2,1) 1.6s forwards}
+@keyframes ringOut{0%{opacity:.9;transform:scale(.2)}100%{opacity:0;transform:scale(1.6)}}
+.thx-ring.r2{border-color:rgba(255,140,60,.45);animation-delay:2.1s!important}
+.thx-ring.r3{border-color:rgba(255,255,255,.3);animation-delay:2.6s!important}
+.thx-emoji{position:absolute;font-size:clamp(1.6rem,5vw,2.6rem);opacity:0;pointer-events:none}
+.on .thx-emoji{animation:orbit 9s linear infinite, fadein .8s ease forwards;animation-delay:1.8s,1.8s}
+@keyframes orbit{from{transform:rotate(0deg) translateX(min(34vw,220px)) rotate(0deg)}to{transform:rotate(360deg) translateX(min(34vw,220px)) rotate(-360deg)}}
+.thx-emoji.e2{animation-delay:2.3s,2.3s;animation-duration:11s,1s}
+.thx-emoji.e3{animation-delay:2.8s,2.8s;animation-duration:13s,1s;animation-direction:reverse,normal}
+.thx-emoji.e4{animation-delay:3.3s,3.3s;animation-duration:10s,1s;animation-direction:reverse,normal}
+.thx-bar{width:0;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--cool),var(--hot));box-shadow:0 0 18px rgba(255,140,60,.6)}
+.on .thx-bar{animation:barGrow 1.6s cubic-bezier(.2,.8,.2,1) 1.1s forwards}
+@keyframes barGrow{to{width:min(60vw,340px)}}
 </style></head><body>
 <div id="bg"></div><div id="hot"></div>
 <div class="ray" style="left:8%"></div><div class="ray" style="left:38%;animation-delay:-4s;width:12vw"></div><div class="ray" style="left:68%;animation-delay:-8s"></div>
@@ -151,25 +195,17 @@ svg text{fill:#eaf6ff}
 </section>
 
 <section class="s">
-<p class="r q">Can a warming ocean help anyone?</p>
-<h2 class="r">Not everyone loses</h2>
-<div class="r sea"><span class="fi" style="--j:0">🐠</span><span class="fi" style="--j:1">🪼</span><span class="fi" style="--j:2">🐠</span></div>
-<div class="r g" style="grid-template-columns:repeat(auto-fit,minmax(250px,1fr))">
-<div class="c h"><span class="ic fl">🪼</span><b>Jellyfish</b>Some jellyfish in the Humboldt Current region have shown higher numbers during warm El Niño periods. Change can help some species while harming others. But they do not always increase just because water is warm with fewer nutrients: the response depends on the species and local conditions.</div>
-<div class="c"><span class="ic fl f3">🌴</span><b>Range shifts</b>Warm conditions can let tropical and subtropical species move into normally cooler areas. El Niño can cause this for a short time. A similar process, tropicalization, is happening over longer periods as oceans warm due to human-caused climate change.</div></div>
-<p class="r n">El Niño causes temporary changes. Long-term tropicalization is mainly linked to global warming.</p>
-</section>
-
-<section class="s">
-<p class="r q">Why do coral reefs turn white?</p>
-<h2 class="r">Reefs under heat stress</h2>
-<div class="r sea"><span class="cr" style="left:8%">🪸</span><span class="cr" style="left:28%;animation-delay:-1s">🪸</span><span class="cr" style="left:48%;animation-delay:-2s">🪸</span><span class="cr" style="left:68%;animation-delay:-1.5s">🪸</span><span class="cr" style="left:86%;animation-delay:-.5s">🪸</span><span class="fi" style="--j:0">🐠</span><span class="fi" style="--j:1">🐟</span></div>
-<p class="r">Very warm seawater causes thermal stress. Bleaching happens when corals lose the algae that give them much of their color and energy. Strong El Niño events have helped cause major bleaching events in the past.</p>
+<p class="r q">Can a warming ocean help anyone — and who suffers most?</p>
+<h2 class="r">Winners, losers &amp; reefs under stress</h2>
+<div class="r sea"><span class="fi" style="--j:0">🐠</span><span class="fi" style="--j:1">🪼</span><span class="fi" style="--j:2">🐠</span><span class="cr" style="left:64%">🪸</span><span class="cr" style="left:84%;animation-delay:-1.5s">🪸</span></div>
+<div class="r g">
+<div class="c h"><span class="ic fl">🪼</span><b>Jellyfish</b>Some jellyfish in the Humboldt Current region have shown higher numbers during warm El Niño periods — change can help some species while harming others.</div>
+<div class="c"><span class="ic fl f3">🌴</span><b>Range shifts</b>Warm conditions can let tropical species move into normally cooler areas. El Niño does this temporarily; long-term tropicalization is mainly linked to global warming.</div>
+<div class="c h"><span class="ic fl f4">🪸</span><b>Coral bleaching</b>Very warm water causes thermal stress: corals lose the algae that give them color and energy. Strong El Niño events have helped cause major bleaching in the past.</div></div>
 <div class="r tl">
-<div class="tn"><u>🔥</u><b>2023</b><br>Fourth global mass bleaching event begins</div>
+<div class="tn"><u>🔥</u><b>2023</b><br>Fourth global mass bleaching begins</div>
 <div class="tn"><u>✅</u><b>2025</b><br>NOAA said it likely ended</div>
-<div class="tn nw"><u>⚠️</u><b>2026</b><br>Local bleaching and heat stress continue</div></div>
-<p class="r n x">The developing El Niño may increase the risk of another large bleaching event.</p>
+<div class="tn nw"><u>⚠️</u><b>2026</b><br>Local bleaching continues; El Niño may raise the risk of another large event</div></div>
 </section>
 
 <section class="s">
@@ -199,29 +235,45 @@ svg text{fill:#eaf6ff}
 <p class="r n">These are changes in probability, not guarantees. El Niño can make some patterns more likely, but it does not control the weather everywhere, and effects differ by region and season.</p>
 </section>
 
+<section class="s credits">
+<p class="r q" style="--i:0">Behind this documentary</p>
+<h2 class="r" style="--i:1">Made by</h2>
+<div class="r cname" style="--i:2">Osama Ali Al-Blueshi</div>
+<div class="r cdiv" style="--i:2"></div>
+<div class="r cname" style="--i:3">Al-Yaman Al-Hamdani</div>
+<div class="r cdiv" style="--i:3"></div>
+<div class="r cname" style="--i:4">Eslam bin Yousuf Allamki</div>
+<div class="r cdiv" style="--i:4"></div>
+<p class="r crole" style="--i:5">Research · Design · Development</p>
+<span class="r spark" style="--i:2;top:18%;left:12%">✨</span>
+<span class="r spark" style="--i:3;top:30%;right:10%">🌊</span>
+<span class="r spark" style="--i:4;bottom:22%;left:16%">🐠</span>
+<span class="r spark" style="--i:5;bottom:16%;right:14%">☀️</span>
+</section>
+
 <section class="s">
-<p class="r q">So who is responsible?</p>
-<h2 class="r">Nature's cycle, a warmer backdrop</h2>
-<div class="r g">
-<div class="c"><b>Natural</b>El Niño is a natural climate event</div>
-<div class="c h"><b>Human-caused</b>Global warming is changing the background conditions in which El Niño happens</div>
-<div class="c"><b>Adaptation</b>Can help reduce short-term damage</div>
-<div class="c h"><b>Emissions cuts</b>The main long-term way to limit further warming</div></div>
-<p class="r n">Most careful conclusion: not that climate change "caused" the 2026 El Niño, but that continued warming can increase background heat and make some effects of extreme climate events more serious.</p>
-<p class="r n x">Forecasts can change as new observations arrive: treat regional impacts as observations, probabilities, or forecasts, not guaranteed outcomes.</p>
-<p class="r sm">Sources: <a href="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml" target="_blank" rel="noopener">NOAA Climate Prediction Center</a>, <a href="https://scied.ucar.edu/" target="_blank" rel="noopener">UCAR Center for Science Education</a>, <a href="https://coralreefwatch.noaa.gov/" target="_blank" rel="noopener">NOAA Coral Reef Watch</a>, <a href="https://www.fisheries.noaa.gov/" target="_blank" rel="noopener">NOAA Fisheries</a>, <a href="https://par.nsf.gov/servlets/purl/10088875" target="_blank" rel="noopener">1876-78 famine study</a>.</p>
+<div class="thanks-wrap">
+<span class="thx-ring"></span><span class="thx-ring r2"></span><span class="thx-ring r3"></span>
+<span class="thx-emoji" style="top:6%;left:8%">🌊</span>
+<span class="thx-emoji e2" style="top:12%;right:6%">🐋</span>
+<span class="thx-emoji e3" style="bottom:14%;left:6%">🪸</span>
+<span class="thx-emoji e4" style="bottom:8%;right:10%">🐟</span>
+<div class="thanks">Thank You</div>
+<div class="thx-bar"></div>
+<p class="thx-sub">For watching · 2026 Super El Niño</p>
+</div>
 </section>
 
 <div id="bar"><div id="tr"><div id="p"></div></div><button id="pv" aria-label="Previous slide">‹</button><button id="au">Auto</button><button id="nx" aria-label="Next slide">›</button><span id="c"></span><span id="m"></span></div>
 
 <script>
-const S=[...document.querySelectorAll('.s')],T=[45,80,75,50,55,65,60,50],H=[.3,.75,.5,.4,1,.85,.6,.35],N=S.length,TOT=T.reduce((x,y)=>x+y,0),Q=x=>document.querySelector(x),F=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+const S=[...document.querySelectorAll('.s')],T=[45,80,75,70,65,60,40,40],H=[.3,.75,.5,.55,1,.85,.45,.9],N=S.length,TOT=T.reduce((x,y)=>x+y,0),Q=x=>document.querySelector(x),F=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
 let i=0,a=0,t=0,tm;
 S.forEach(s=>s.querySelectorAll('.r').forEach((e,k)=>e.style.setProperty('--i',k)));
 for(let k=0;k<12;k++){const b=document.createElement('i'),z=5+Math.random()*18;b.className='b';b.style.cssText=`left:${Math.random()*100}%;width:${z}px;height:${z}px;animation-duration:${9+Math.random()*12}s;animation-delay:-${Math.random()*15}s`;document.body.append(b)}
 for(let k=0;k<3;k++){const f=document.createElement('i');f.className='bf';f.textContent=k%2?'🐋':'🐟';f.style.cssText=`top:${25+k*22}%;animation-duration:${38+k*14}s;animation-delay:-${k*13}s`;document.body.append(f)}
 document.querySelectorAll('.sea').forEach(sea=>{for(let k=0;k<14;k++){const d=document.createElement('i');d.className='pk';d.style.cssText=`left:${Math.random()*95}%;top:${20+Math.random()*60}%;animation-delay:-${Math.random()*6}s`;sea.append(d)}});
-const cv=Q('#cv'),cx=cv.getContext('2d'),CH=215;let W=0,Mh=0,oy=0,es=0,et=0,fo=0,f2=0;
+const cv=Q('#cv'),cx=cv.getContext('2d'),CH=(innerHeight<740?170:215);let W=0,Mh=0,oy=0,es=0,et=0,fo=0,f2=0;
 const P=[...Array(100)].map(()=>({x:Math.random(),f:Math.random()})),U=[...Array(40)].map(()=>({x:.6+Math.random()*.38,y:Math.random()}));
 const th=(x,s)=>.86*(s<=1?(205-95*x)+((175+8*x)-(205-95*x))*s:(175+8*x)+((135+75*x)-(175+8*x))*(s-1));
 const LAND=[
