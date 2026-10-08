@@ -1,9 +1,19 @@
-
 import { put, list, del } from '@vercel/blob';
 
 const rid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 const okUrl = u => typeof u === 'string' && /^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\//.test(u);
 const clean = (s, n = 300) => String(s ?? '').slice(0, n);
+const GROUPS = ['fire', 'agent', 'material', 'platform', 'condition', 'topic', 'general'];
+const cleanTags = a => {
+  const seen = new Set(), out = [];
+  for (const t of Array.isArray(a) ? a : []) {
+    const n = clean(t && t.n, 40).trim(); const k = n.toLowerCase();
+    if (!n || seen.has(k)) continue;
+    seen.add(k); out.push({ n, g: GROUPS.includes(t.g) ? t.g : 'general' });
+    if (out.length >= 12) break;
+  }
+  return out;
+};
 
 const write = (path, obj) =>
   put(path, JSON.stringify(obj), {
@@ -90,6 +100,12 @@ export default async function handler(req, res) {
         if (typeof b.title === 'string' && b.title.trim()) next.title = clean(b.title, 200);
         if (typeof b.folder === 'string') next.folder = clean(b.folder, 40);
         await write(`items/${b.id}.json`, next);
+        return res.json({ ok: true });
+      }
+      case 'setTags': {
+        const o = await readOne(`items/${b.id}.json`);
+        if (!o) return res.status(404).json({ error: 'not found' });
+        await write(`items/${b.id}.json`, { ...o.data, tags: cleanTags(b.tags) });
         return res.json({ ok: true });
       }
       case 'deleteItem': {
