@@ -63,13 +63,12 @@ input,select{min-height:40px;border:1px solid var(--bd);border-radius:9px;paddin
 <div id="m"><div class="box" id="mb"></div></div>
 <div id="toast"></div>
 <script type="module">
-import { upload } from 'https://esm.sh/@vercel/blob@1.0.0/client';
 const $=id=>document.getElementById(id);
 let folders=[],items=[],cur='all',q='',last='';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 let busy=0;
-function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600)}
+function toast(t,ms=2600){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',ms)}
 const fmt=b=>b>1048576?(b/1048576).toFixed(1)+' MB':Math.max(1,Math.round(b/1024))+' KB';
 const kind=i=>{if(i.type==='link')return'رابط';const t=i.contentType||'';return t.includes('pdf')?'PDF':t.startsWith('image/')?'صورة':t.includes('sheet')||t.includes('csv')?'جدول':'ملف'};
 const by=()=>{try{return localStorage.getItem('me')||''}catch(e){return ''}};
@@ -79,7 +78,7 @@ async function api(body){
   const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'خطأ');return j;
 }
-async function act(body){try{await api(body)}catch(e){toast('تعذّر تنفيذ العملية')}await refresh(true)}
+async function act(body){try{await api(body)}catch(e){toast('تعذّر تنفيذ العملية — '+e.message,9000)}await refresh(true)}
 async function refresh(force){
   try{const d=await api({action:'list'});const s=JSON.stringify(d);if(s===last&&!force)return;last=s;
     folders=d.folders.sort((a,b)=>(a.at||0)-(b.at||0));items=d.items;render()}catch(e){}
@@ -126,11 +125,14 @@ async function uploadFiles(fs){
   const dest=cur==='all'?'':cur;busy++;
   for(const f of fs){
     try{
+      if(f.size>4.4e6){toast('الملف «'+f.name+'» أكبر من 4 MB (الحد الأقصى)',6000);continue}
       toast('جارٍ رفع '+f.name);
-      const b=await upload('files/'+uid()+'/'+f.name,f,{access:'public',handleUploadUrl:'/api/upload',multipart:f.size>8e6,onUploadProgress:p=>toast('جارٍ رفع '+f.name+' '+Math.round(p.percentage)+'%')});
-      await api({action:'addFile',fileUrl:b.url,title:f.name,size:f.size,contentType:f.type,folder:dest,by:by()});
+      const r=await fetch('/api/upload?name='+encodeURIComponent(f.name)+'&type='+encodeURIComponent(f.type||'application/octet-stream'),{method:'POST',headers:{'Content-Type':'application/octet-stream'},body:f});
+      const j=await r.json().catch(()=>({error:'HTTP '+r.status}));
+      if(!r.ok)throw new Error(j.error||('HTTP '+r.status));
+      await api({action:'addFile',fileUrl:j.url,title:f.name,size:f.size,contentType:f.type,folder:dest,by:by()});
       toast('تم رفع '+f.name);
-    }catch(e){toast('تعذّر رفع '+f.name)}
+    }catch(e){toast('تعذّر رفع '+f.name+' — '+String((e&&e.message)||e).slice(0,160),9000)}
   }
   busy--;refresh(true);
 }
