@@ -171,8 +171,40 @@ p{max-width:64ch;line-height:1.4}
 @media(max-width:560px){#m,#pr,#hint{display:none}}
 @media(prefers-reduced-motion:reduce){.wr .w2{opacity:1!important}}
 .hero-title{letter-spacing:-.035em;max-width:11ch}
+
+/* ===== moving-light background (background only) ===== */
+.lt,.bm,.cs,.lp,.sun{position:fixed;pointer-events:none}
+.lt{border-radius:50%;will-change:transform}
+.lt.a{width:75vmax;height:75vmax;left:-25vmax;top:-30vmax;background:radial-gradient(circle,rgba(0,205,255,.30),rgba(0,120,220,.10) 45%,transparent 66%);animation:dr1 28s ease-in-out infinite alternate}
+.lt.b{width:62vmax;height:62vmax;right:-22vmax;top:-12vmax;background:radial-gradient(circle,rgba(255,125,55,.30),rgba(255,90,40,.09) 45%,transparent 66%);animation:dr2 32s ease-in-out infinite alternate}
+.lt.c{width:80vmax;height:80vmax;left:8vmax;bottom:-50vmax;background:radial-gradient(circle,rgba(120,95,255,.28),rgba(70,60,220,.08) 45%,transparent 66%);animation:dr3 36s ease-in-out infinite alternate}
+.lt.d{width:50vmax;height:50vmax;right:-8vmax;bottom:-26vmax;background:radial-gradient(circle,rgba(40,235,200,.24),transparent 64%);animation:dr4 30s ease-in-out infinite alternate}
+@keyframes dr1{to{transform:translate3d(30vw,16vh,0) scale(1.25)}}
+@keyframes dr2{to{transform:translate3d(-26vw,22vh,0) scale(1.2)}}
+@keyframes dr3{to{transform:translate3d(32vw,-14vh,0) scale(1.15)}}
+@keyframes dr4{to{transform:translate3d(-30vw,-18vh,0) scale(1.3)}}
+.sun{left:calc(82% - 17vmax);top:calc(14% - 17vmax);width:34vmax;height:34vmax;border-radius:50%;background:radial-gradient(circle,rgba(255,185,110,.42),rgba(255,120,50,.13) 40%,transparent 68%);animation:sunp 7s ease-in-out infinite alternate;will-change:transform}
+@keyframes sunp{to{transform:scale(1.2);opacity:.6}}
+.bm{top:-20%;left:-35vw;width:26vw;height:140%;background:linear-gradient(90deg,transparent,rgba(170,235,255,.07),rgba(255,255,255,.17),rgba(170,235,255,.07),transparent);transform:rotate(18deg) translate3d(0,0,0);animation:bms 18s linear infinite;will-change:transform}
+.bm.b2{width:14vw;animation-duration:26s;animation-delay:-9s;opacity:.8}
+.bm.b3{width:20vw;animation-duration:34s;animation-delay:-20s;opacity:.6;background:linear-gradient(90deg,transparent,rgba(255,200,150,.06),rgba(255,225,190,.14),rgba(255,200,150,.06),transparent)}
+@keyframes bms{to{transform:rotate(18deg) translate3d(190vw,0,0)}}
+.cs{inset:-300px;background-image:radial-gradient(ellipse 120px 60px at 30% 40%,rgba(160,230,255,.10),transparent 70%),radial-gradient(ellipse 90px 90px at 75% 75%,rgba(190,245,255,.08),transparent 70%);background-size:300px 200px;animation:cs1 40s linear infinite;will-change:transform}
+.cs.c2{background-size:420px 280px;animation:cs2 55s linear infinite;opacity:.8}
+@keyframes cs1{to{transform:translate3d(-300px,-200px,0)}}
+@keyframes cs2{to{transform:translate3d(420px,-280px,0)}}
+.lp{bottom:-12px;border-radius:50%;background:#fff;box-shadow:0 0 8px 2px rgba(170,235,255,.85);opacity:0;animation:lpr var(--du) linear infinite;animation-delay:var(--dl);will-change:transform,opacity}
+.lp.w{background:#ffe3c2;box-shadow:0 0 9px 2px rgba(255,170,90,.85)}
+@keyframes lpr{0%{transform:translate3d(0,0,0);opacity:0}10%{opacity:.95}50%{opacity:.35}90%{opacity:.8}100%{transform:translate3d(var(--dx),-112vh,0);opacity:0}}
+.ray{animation:sway 16s ease-in-out infinite alternate;opacity:.55;will-change:transform}
+@media(prefers-reduced-motion:reduce){.lt,.bm,.cs,.lp,.sun,.ray{animation:none}}
 </style></head><body>
 <div id="bg"></div><div id="hot"></div>
+<div class="lt a"></div><div class="lt b"></div><div class="lt c"></div><div class="lt d"></div><div class="sun"></div>
+<div class="cs"></div><div class="cs c2"></div>
+<div class="bm"></div><div class="bm b2"></div><div class="bm b3"></div>
+<script>(function(){var f=document.createDocumentFragment();for(var k=0;k<18;k++){var e=document.createElement('i'),s=2+Math.random()*3.5;e.className='lp'+(k%4==0?' w':'');e.style.cssText='left:'+(Math.random()*100)+'%;width:'+s+'px;height:'+s+'px;--du:'+(16+Math.random()*18)+'s;--dl:-'+(Math.random()*30)+'s;--dx:'+((Math.random()*80)-40)+'px';f.appendChild(e)}document.body.insertBefore(f,document.getElementById('vg'))})()</script>
+
 <div class="ray" style="left:8%"></div><div class="ray" style="left:38%;animation-delay:-4s;width:12vw"></div><div class="ray" style="left:68%;animation-delay:-8s"></div>
 <div id="vg"></div>
 <svg class="w w1" viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0 30Q150 0 300 30T600 30T900 30T1200 30V60H0Z"/></svg>
