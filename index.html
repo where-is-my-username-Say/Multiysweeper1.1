@@ -24,9 +24,7 @@ aside{background:var(--sf);border-inline-end:1px solid var(--ln);padding:20px 14
 .orb{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 38% 34%,#D6E4FF 0,#5B88FF 34%,#2340B8 68%,#16257A 100%);box-shadow:0 0 0 4px var(--prs),0 0 22px #3F73FF66}
 .brand b{display:block;font-weight:600;font-size:16px;line-height:1.2}.brand small{color:var(--mu);font-size:12px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:12px;font-weight:500;border:1px solid var(--ln);background:var(--sf)}
-.btn:hover{background:var(--bg)}
-.btn.pr{background:var(--pr);border-color:var(--pr);color:#fff}.btn.pr:hover{filter:brightness(1.08);background:var(--pr)}
-.btn.dg{background:var(--dg);border-color:var(--dg);color:#fff}
+.btn.pr{background:var(--pr);border-color:var(--pr);color:#fff}.btn.dg{background:var(--dg);border-color:var(--dg);color:#fff}
 .add{display:grid;gap:8px}
 .lab{display:flex;align-items:center;justify-content:space-between;color:var(--mu);font-size:13px;padding:0 8px}
 .ib{width:36px;height:36px;border-radius:10px;display:inline-grid;place-items:center;color:var(--mu)}.ib:hover{background:var(--bg);color:var(--tx)}
@@ -55,15 +53,15 @@ select.in{width:auto;min-height:40px}
 .kb{position:absolute;top:8px;inset-inline-end:8px;background:var(--sf);color:var(--tx);box-shadow:var(--sh);width:36px;height:36px;border-radius:50%;display:grid;place-items:center}
 #ls.list{grid-template-columns:1fr;gap:10px}
 .list .card{flex-direction:row;align-items:center;box-shadow:none}.list .th{width:68px;height:68px;flex:none;margin:8px;border-radius:12px}.list .th svg{width:26px;height:26px}.list .th .ext,.list .th .big{display:none}
-.list .bd{flex:1;min-width:0;padding:8px 8px 8px 0}.list .kb{position:static;box-shadow:none;margin-inline-end:10px;flex:none}
+.list .bd{flex:1;min-width:0;padding:8px 8px 8px 0}.list .kb{position:relative;box-shadow:none;margin-inline-end:10px;flex:none}
 .empty{grid-column:1/-1;border:2px dashed var(--ln);border-radius:20px;padding:56px 20px;text-align:center;color:var(--mu)}
 .empty b{display:block;color:var(--tx);font-size:18px;margin-bottom:6px}.empty .btn{margin-top:16px}
-.sk{height:200px;border-radius:16px;background:linear-gradient(90deg,var(--ln),var(--bg),var(--ln));background-size:200% 100%;animation:sk 1.3s infinite}@keyframes sk{to{background-position:-200% 0}}
+.sk{height:200px;border-radius:16px;background:var(--ln);animation:pl 1.2s ease-in-out infinite}@keyframes pl{50%{opacity:.45}}
 #pop{position:fixed;z-index:30;min-width:190px;background:var(--sf);border:1px solid var(--ln);border-radius:14px;box-shadow:0 18px 50px -12px rgba(0,0,0,.35);padding:6px;display:none}
 #pop button{display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:0 12px;border-radius:9px;text-align:start}#pop button:hover{background:var(--bg)}#pop .dg{color:var(--dg)}
-#m{position:fixed;inset:0;background:#050a1488;display:none;align-items:center;justify-content:center;padding:16px;z-index:40}#m.on{display:flex}
-.box{background:var(--sf);border-radius:20px;padding:22px;width:100%;max-width:440px;display:grid;gap:12px;box-shadow:0 30px 80px -20px #000a}.box h2{margin:0;font-size:18px}.box p{margin:0;color:var(--mu)}.row{display:flex;gap:8px}.row .btn{flex:1}
-#ov{position:fixed;inset:12px;z-index:35;border:3px dashed var(--pr);border-radius:24px;background:color-mix(in srgb,var(--pr) 14%,transparent);backdrop-filter:blur(3px);display:none;place-items:center;text-align:center;font-size:20px;font-weight:600;pointer-events:none}#ov.on{display:grid}
+#m{position:fixed;inset:0;background:#050a1488;display:flex;align-items:center;justify-content:center;padding:16px;z-index:40;opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s}#m.on{opacity:1;visibility:visible}
+.box{transform:translateY(18px) scale(.96);transition:transform .4s cubic-bezier(.2,.9,.3,1.15);background:var(--sf);border-radius:20px;padding:22px;width:100%;max-width:440px;display:grid;gap:12px;box-shadow:0 30px 80px -20px #000a}.box h2{margin:0;font-size:18px}.box p{margin:0;color:var(--mu)}.row{display:flex;gap:8px}.row .btn{flex:1}
+#ov{position:fixed;inset:12px;z-index:35;border:3px dashed var(--pr);border-radius:24px;background:color-mix(in srgb,var(--pr) 14%,transparent);display:none;place-items:center;text-align:center;font-size:20px;font-weight:600;pointer-events:none}#ov.on{display:grid}
 #tray{position:fixed;bottom:16px;inset-inline-start:16px;width:min(340px,calc(100% - 32px));display:grid;gap:8px;z-index:25}
 .up{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:10px 14px;box-shadow:var(--sh);font-size:14px}.up .r{display:flex;justify-content:space-between;gap:10px}.up .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.up .bar{height:5px;border-radius:9px;background:var(--ln);margin-top:8px;overflow:hidden}.up .bar i{display:block;height:100%;background:var(--pr);transition:width .2s}.up.er .bar i{background:var(--dg)}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:11px 18px;border-radius:12px;display:none;z-index:50;max-width:calc(100% - 32px)}#toast.er{background:var(--dg);color:#fff}
@@ -84,7 +82,7 @@ main{padding-top:18px}h1{font-size:22px}
 .tg::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--c)}
 button.tg:hover,.tg.on{background:var(--c);color:#fff;border-color:var(--c)}.tg.on::before{background:#fff}
 .tg button{width:18px;height:18px;border-radius:50%;line-height:1;font-size:15px;color:inherit}.tg button:hover{background:#0002}
-.tg.ai{--c:#7A4DFF;animation:sk 1.3s infinite;background-size:200% 100%;background-image:linear-gradient(90deg,transparent,#7A4DFF22,transparent)}
+.tg.ai{--c:#7A4DFF;animation:pl 1.2s ease-in-out infinite}
 .card .tgs{margin-top:10px}
 .sr{position:relative}#sg{position:absolute;top:46px;inset-inline:0;background:var(--sf);border:1px solid var(--ln);border-radius:14px;box-shadow:0 18px 50px -12px rgba(0,0,0,.35);padding:6px;z-index:15;display:none}
 #sg .h{display:flex;align-items:center;min-height:40px;padding:0 10px;border-radius:9px;gap:8px;width:100%;text-align:start}#sg .h:hover,#sg .h.a{background:var(--bg)}#sg .h span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#sg .h svg{width:16px;height:16px;color:var(--mu)}
@@ -96,37 +94,76 @@ button.tg:hover,.tg.on{background:var(--c);color:#fff;border-color:var(--c)}.tg.
 .sug{display:grid;gap:2px;margin-top:-4px}.sug button{display:flex;align-items:center;gap:10px;min-height:40px;padding:0 10px;border-radius:9px;text-align:start}.sug button:hover,.sug button.a{background:var(--bg)}.sug small{color:var(--mu);margin-inline-start:auto}
 .who{display:flex;align-items:center;gap:8px;color:var(--mu);font-size:13px;padding:0 8px;min-height:40px;border-radius:10px;width:100%;text-align:start}.who:hover{background:var(--bg)}.who b{color:var(--tx);font-weight:500}
 @media(max-width:820px){.who{width:auto;margin-inline-start:auto;order:2}}
+
+/* ---- button motion (transform/opacity only, compositor-friendly) ---- */
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn,.chip,.ib,.f,.seg button,button.tg{position:relative;overflow:hidden}
+.fab,.kb{overflow:hidden}
+.btn{isolation:isolate;transition:transform .15s,color .3s;--lq:var(--prs)}
+.btn.pr{--lq:#1E3FB5}.btn.dg{--lq:#A52A2A}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--lq);transform:translateY(102%);border-radius:50% 50% 0 0/45% 45% 0 0;transition:transform .45s cubic-bezier(.2,.8,.2,1),border-radius .45s}
+.btn:active{transform:scale(.97)}.btn:disabled{opacity:.6;pointer-events:none}
+.btn svg{transition:transform .25s cubic-bezier(.3,1.4,.5,1)}
+.chip,.f,.ib,.seg button,button.tg{transition:transform .15s,background .2s,color .2s}
+.chip:active,.f:active,.seg button:active,button.tg:active{transform:scale(.95)}.ib:active{transform:scale(.88)}
+.fab{transition:transform .2s cubic-bezier(.3,1.4,.5,1)}.fab:active{transform:scale(.92)}
+.rip{position:absolute;border-radius:50%;background:currentColor;opacity:.22;transform:scale(0);animation:rp .6s ease-out forwards;pointer-events:none}
+@keyframes rp{to{transform:scale(1);opacity:0}}
+@media(hover:hover){
+.btn:hover::before{transform:translateY(0);border-radius:0}
+.btn:hover svg{transform:scale(1.15) rotate(-6deg)}
+button.tg:hover{transform:translateY(-1px)}
+.fab:hover{transform:scale(1.07)}
+.ib:hover{transform:scale(1.08)}}
+
+#m.on .box{transform:none}
+@keyframes pin{from{opacity:0;transform:translateY(-6px) scale(.96)}}
+@keyframes tin{from{opacity:0;transform:translateY(10px)}}
+@keyframes fin{from{opacity:0}}
+#pop,#sg{animation:pin .22s cubic-bezier(.2,.9,.3,1.1)}
+#toast{animation:tin .3s ease-out}.up{animation:tin .3s ease-out}#ov.on{animation:fin .25s}
+#ls.sw>*{animation:tin .35s ease-out both}
+.chip,.f,.ib,.seg button,button.tg{transition:transform .15s,background .35s ease,color .35s ease,border-color .35s ease}
+#lang{margin-top:-10px}
+@media(max-width:820px){#lang{width:auto;order:2;margin:0}}
 </style>
 </head>
 <body>
 <div class="app">
 <aside>
-  <div class="brand"><span class="orb"></span><div><b>مكتبة المشروع</b><small>Flame in Freefall</small></div></div>
-  <div class="add"><button class="btn pr" id="bUp"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>رفع ملفات</button><button class="btn" id="bLk"><svg viewBox="0 0 24 24"><path d="M10 14a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1M14 10a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/></svg>إضافة رابط</button></div>
-  <div><div class="lab"><span>المجلدات</span><button class="ib" id="bNf" aria-label="مجلد جديد"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div><div id="fl"></div></div>
-  <button class="who" id="who" aria-label="تغيير الاسم"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg><span>أنت: <b id="wn"></b></span></button>
+  <div class="brand"><span class="orb"></span><div><b data-tx="title"></b><small>Flame in Freefall</small></div></div>
+  <div class="add"><button class="btn pr" id="bUp"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg><span data-tx="upload"></span></button><button class="btn" id="bLk"><svg viewBox="0 0 24 24"><path d="M10 14a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1M14 10a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/></svg><span data-tx="addlink"></span></button></div>
+  <div><div class="lab"><span data-tx="folders"></span><button class="ib" id="bNf" data-al="newfolder"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button></div><div id="fl"></div></div>
+  <button class="who" id="who" data-al="chname"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg><span><span data-tx="you"></span> <b id="wn"></b></span></button>
+  <button class="who" id="lang" aria-label="Language"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg><span id="ln"></span></button>
 </aside>
 <main>
-  <div class="hd"><h1 id="h1">كل العناصر</h1><span class="cn" id="cn"></span><span style="flex:1"></span><button class="ib" id="fm" aria-label="خيارات المجلد"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg></button></div>
+  <div class="hd"><h1 id="h1"></h1><span class="cn" id="cn"></span><span style="flex:1"></span><button class="ib" id="fm" data-al="folder_opts"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg></button></div>
   <div class="tb">
-    <div class="sr"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input class="in" id="q" placeholder="ابحث بالاسم أو الوسم أو الرابط" type="search" autocomplete="off"><div id="sg"></div></div>
-    <button class="btn fb" id="bFl"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>تصفية<span class="bg" id="fbg" hidden></span></button><div class="chips" id="chips"></div>
-    <select class="in" id="so" aria-label="الترتيب"><option value="new">الأحدث</option><option value="old">الأقدم</option><option value="name">الاسم</option></select>
-    <div class="seg"><button id="vg" class="on" aria-label="شبكة"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button><button id="vl" aria-label="قائمة"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
+    <div class="sr"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input class="in" id="q" data-ph="search_ph" type="search" autocomplete="off"><div id="sg"></div></div>
+    <button class="btn fb" id="bFl"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg><span data-tx="filter"></span><span class="bg" id="fbg" hidden></span></button><div class="chips" id="chips"><button class="chip" data-c="all" data-tx="all"></button><button class="chip" data-c="file" data-tx="files"></button><button class="chip" data-c="img" data-tx="images"></button><button class="chip" data-c="link" data-tx="links"></button></div>
+    <select class="in" id="so" data-al="sort"><option value="new" data-tx="newest"></option><option value="old" data-tx="oldest"></option><option value="name" data-tx="byname"></option></select>
+    <div class="seg"><button id="vg" class="on" data-al="grid"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></button><button id="vl" data-al="listv"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div>
   </div>
   <div class="act" id="act"></div>
   <div id="ls"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
 </main>
 </div>
-<button class="fab" id="fab" aria-label="إضافة"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+<button class="fab" id="fab" data-al="add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
 <input id="fi" type="file" multiple hidden>
-<div id="pop"></div><div id="m"><div class="box" id="mb"></div></div><div id="ov">أفلت الملفات هنا لرفعها</div><div id="tray"></div><div id="toast"></div>
+<div id="pop"></div><div id="m"><div class="box" id="mb"></div></div><div id="ov"></div><div id="tray"></div><div id="toast"></div>
 <script>
 const $=id=>document.getElementById(id);
 let folders=[],items=[],cur='all',q='',flt='all',sort='new',view='grid',last='',busy=0,loaded=false,sel=new Set(),mode='all',wsel='',aiBusy=new Set(),aiWarned=false;
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let me='';try{me=localStorage.getItem('me')||''}catch(e){}
 let hist=store.get('hist',[]);
+let LG=(()=>{try{const v=localStorage.getItem('lang');if(v==='ar'||v==='en')return v}catch(e){}return (navigator.language||'en').toLowerCase().startsWith('ar')?'ar':'en'})();
+const D={"title": {"ar": "مكتبة المشروع", "en": "Project Library"}, "upload": {"ar": "رفع ملفات", "en": "Upload files"}, "addlink": {"ar": "إضافة رابط", "en": "Add link"}, "folders": {"ar": "المجلدات", "en": "Folders"}, "newfolder": {"ar": "مجلد جديد", "en": "New folder"}, "chname": {"ar": "تغيير الاسم", "en": "Change name"}, "you": {"ar": "أنت:", "en": "You:"}, "all_items": {"ar": "كل العناصر", "en": "All items"}, "folder_opts": {"ar": "خيارات المجلد", "en": "Folder options"}, "search_ph": {"ar": "ابحث بالاسم أو الوسم أو الرابط", "en": "Search name, tag or link"}, "filter": {"ar": "تصفية", "en": "Filters"}, "sort": {"ar": "الترتيب", "en": "Sort"}, "newest": {"ar": "الأحدث", "en": "Newest"}, "oldest": {"ar": "الأقدم", "en": "Oldest"}, "byname": {"ar": "الاسم", "en": "Name"}, "grid": {"ar": "شبكة", "en": "Grid"}, "listv": {"ar": "قائمة", "en": "List"}, "add": {"ar": "إضافة", "en": "Add"}, "drop": {"ar": "أفلت الملفات هنا لرفعها", "en": "Drop files here to upload"}, "lang": {"ar": "English", "en": "العربية"}, "now": {"ar": "الآن", "en": "now"}, "min": {"ar": "قبل {n} د", "en": "{n}m ago"}, "hour": {"ar": "قبل {n} س", "en": "{n}h ago"}, "sheet": {"ar": "جدول", "en": "Sheet"}, "file": {"ar": "ملف", "en": "File"}, "err": {"ar": "خطأ", "en": "Error"}, "op_fail": {"ar": "تعذّر تنفيذ العملية", "en": "Action failed"}, "conn_fail": {"ar": "تعذّر الاتصال بالخادم", "en": "Cannot reach the server"}, "save": {"ar": "حفظ", "en": "Save"}, "cancel": {"ar": "إلغاء", "en": "Cancel"}, "nofolder": {"ar": "بدون مجلد", "en": "No folder"}, "welcome": {"ar": "أهلاً بك", "en": "Welcome"}, "welcome_t": {"ar": "اكتب اسمك مرة واحدة، وسيظهر بجانب كل ما تضيفه. لن نسألك مرة أخرى.", "en": "Enter your name once. It appears next to everything you add. We will not ask again."}, "yourname": {"ar": "اسمك", "en": "Your name"}, "cont": {"ar": "متابعة", "en": "Continue"}, "guest": {"ar": "زائر", "en": "Guest"}, "all": {"ar": "الكل", "en": "All"}, "files": {"ar": "ملفات", "en": "Files"}, "images": {"ar": "صور", "en": "Images"}, "links": {"ar": "روابط", "en": "Links"}, "from": {"ar": "من: {n} ×", "en": "By: {n} ×"}, "clear_all": {"ar": "مسح الكل", "en": "Clear all"}, "n_items": {"ar": "{n} عنصر", "en": "{n} items"}, "open": {"ar": "فتح", "en": "Open"}, "ai_busy": {"ar": "تحليل بالذكاء الاصطناعي...", "en": "AI analyzing..."}, "add_tag": {"ar": "إضافة وسم", "en": "Add tag"}, "options": {"ar": "خيارات", "en": "Options"}, "no_results": {"ar": "لا توجد نتائج", "en": "No results"}, "empty": {"ar": "هذا المكان فارغ", "en": "This place is empty"}, "empty_f": {"ar": "غيّر البحث أو امسح عوامل التصفية.", "en": "Change the search or clear the filters."}, "empty_h": {"ar": "اسحب ملفاتك إلى هنا، أو أضف رابطاً.", "en": "Drag your files here, or add a link."}, "clear_f": {"ar": "مسح التصفية", "en": "Clear filters"}, "hist": {"ar": "عمليات البحث السابقة", "en": "Recent searches"}, "clear_hist": {"ar": "مسح السجل", "en": "Clear history"}, "del": {"ar": "حذف", "en": "Delete"}, "match_tags": {"ar": "وسوم مطابقة", "en": "Matching tags"}, "all_tags": {"ar": "كل الوسوم", "en": "All tags"}, "any_tag": {"ar": "أي وسم", "en": "Any tag"}, "no_tags_yet": {"ar": "لا توجد وسوم بعد. ستظهر هنا بعد رفع ملفات أو إضافة وسوم.", "en": "No tags yet. They appear here after you upload files or add tags."}, "added_by": {"ar": "أضافه", "en": "Added by"}, "done": {"ar": "تم", "en": "Done"}, "tags_of": {"ar": "وسوم «{t}»", "en": "Tags for \"{t}\""}, "tag_ph": {"ar": "اكتب وسماً: C أو CO أو Cotton", "en": "Type a tag: C, CO, Cotton"}, "grp": {"ar": "المجموعة", "en": "Group"}, "ai_suggest": {"ar": "اقتراح بالذكاء الاصطناعي", "en": "Suggest with AI"}, "remove": {"ar": "إزالة", "en": "Remove"}, "no_tags": {"ar": "لا توجد وسوم", "en": "No tags"}, "analyzing": {"ar": "جارٍ التحليل...", "en": "Analyzing..."}, "sug_fail": {"ar": "تعذّر الاقتراح", "en": "Suggestion failed"}, "ai_off": {"ar": "الوسوم التلقائية متوقفة: أضف GEMINI_API_KEY في Vercel", "en": "Auto tags are off: add GEMINI_API_KEY in Vercel"}, "auto_fail": {"ar": "تعذّر التحليل التلقائي", "en": "Auto tagging failed"}, "tags": {"ar": "الوسوم", "en": "Tags"}, "ai_analyze": {"ar": "تحليل بالذكاء الاصطناعي", "en": "Analyze with AI"}, "copy_link": {"ar": "نسخ الرابط", "en": "Copy link"}, "copied": {"ar": "تم نسخ الرابط", "en": "Link copied"}, "copy_fail": {"ar": "تعذّر النسخ", "en": "Copy failed"}, "item_name": {"ar": "اسم العنصر", "en": "Item name"}, "move_to_folder": {"ar": "نقل إلى مجلد", "en": "Move to folder"}, "move_to": {"ar": "نقل إلى", "en": "Move to"}, "folder": {"ar": "المجلد", "en": "Folder"}, "move": {"ar": "نقل", "en": "Move"}, "del_q": {"ar": "حذف «{t}»؟", "en": "Delete \"{t}\"?"}, "del_txt": {"ar": "سيُحذف للجميع ولا يمكن التراجع.", "en": "This deletes it for everyone and cannot be undone."}, "ren_folder": {"ar": "تغيير اسم المجلد", "en": "Rename folder"}, "folder_name": {"ar": "اسم المجلد", "en": "Folder name"}, "auto_untagged": {"ar": "وسم العناصر غير الموسومة تلقائياً", "en": "Auto-tag untagged items"}, "analyzing_n": {"ar": "جارٍ تحليل {n} عنصر", "en": "Analyzing {n} items"}, "all_tagged": {"ar": "كل العناصر موسومة", "en": "All items are tagged"}, "del_folder": {"ar": "حذف المجلد", "en": "Delete folder"}, "del_folder_q": {"ar": "حذف المجلد «{t}»؟", "en": "Delete folder \"{t}\"?"}, "del_folder_t": {"ar": "ستنتقل عناصره إلى «بدون مجلد».", "en": "Its items will move to \"No folder\"."}, "create": {"ar": "إنشاء", "en": "Create"}, "link_ph": {"ar": "الرابط https://...", "en": "Link https://..."}, "link_name": {"ar": "اسم الرابط (اختياري)", "en": "Link name (optional)"}, "failed": {"ar": "فشل", "en": "Failed"}, "too_big": {"ar": "الملف أكبر من الحد المسموح", "en": "File is larger than the allowed size"}, "lost": {"ar": "انقطع الاتصال", "en": "Connection lost"}, "max4": {"ar": "الحد الأقصى 4 MB للملف", "en": "Maximum 4 MB per file"}, "drop_to": {"ar": "أفلت الملفات لرفعها إلى «{f}»", "en": "Drop files to upload to \"{f}\""}, "library": {"ar": "المكتبة", "en": "the library"}};
+const GL={"fire": ["أنواع الحريق", "Fire types"], "agent": ["مواد الإطفاء وCO2", "Extinguishing agents & CO2"], "material": ["المواد", "Materials"], "platform": ["المنصات والتجارب", "Platforms & experiments"], "condition": ["الظروف", "Conditions"], "topic": ["مواضيع المشروع", "Project topics"], "general": ["عام", "General"]};
+const tx=(k,p)=>{let v=(D[k]||{})[LG]??k;if(p)for(const x in p)v=v.replace('{'+x+'}',p[x]);return v};
+const gl=g=>(GL[g]||[])[LG==='ar'?0:1]||'';
+
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sub=(s,v)=>String(s).toLowerCase().includes(String(v).toLowerCase());
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -137,7 +174,6 @@ const PAL=['#E5484D','#F26B3A','#CB9A00','#12A57A','#0891B2','#2F6BFF','#7A4DFF'
 const hash=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h};
 const fc=id=>SPEC[hash(id)%SPEC.length];
 const tc=n=>PAL[hash(String(n).toLowerCase())%PAL.length];
-const G={fire:'أنواع الحريق',agent:'مواد الإطفاء وCO2',material:'المواد',platform:'المنصات والتجارب',condition:'الظروف',topic:'مواضيع المشروع',general:'عام'};
 const V=('fire:Diffusion flame,Premixed flame,Smoldering,Flame spread,Droplet combustion,Spherical flame,Opposed-flow flame,Concurrent-flow flame,Pool fire,Candle flame,Flame extinction,Ignition,Flammability limit,Soot;'+
 'agent:CO2,CO2 extinguisher,CO2 concentration,CO2 suppression,Water mist,Nitrogen,Foam,Oxygen concentration,Halon alternative;'+
 'material:Acrylic (PMMA),Cotton fabric,Paper,Wire coating,Nomex,Silicone,Polyethylene,Fuel droplet;'+
@@ -147,16 +183,16 @@ const V=('fire:Diffusion flame,Premixed flame,Smoldering,Flame spread,Droplet co
 function allTags(){const m=new Map();for(const i of items)for(const t of i.tags||[]){const k=t.n.toLowerCase(),e=m.get(k);e?e.c++:m.set(k,{n:t.n,g:t.g,c:1})}
   for(const t of V){const k=t.n.toLowerCase();if(!m.has(k))m.set(k,{n:t.n,g:t.g,c:0})}return m}
 const fmt=b=>b>1048576?(b/1048576).toFixed(1)+' MB':Math.max(1,Math.round(b/1024))+' KB';
-const rel=t=>{const d=(Date.now()-t)/1e3;return d<60?'الآن':d<3600?'قبل '+Math.floor(d/60)+' د':d<86400?'قبل '+Math.floor(d/3600)+' س':new Date(t).toLocaleDateString('ar',{day:'numeric',month:'short'})};
+const rel=ts=>{const d=(Date.now()-ts)/1e3;return d<60?tx('now'):d<3600?tx('min',{n:Math.floor(d/60)}):d<86400?tx('hour',{n:Math.floor(d/3600)}):new Date(ts).toLocaleDateString(LG,{day:'numeric',month:'short'})};
 const dom=u=>{try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return u}};
 function kind(i){if(i.type==='link')return{k:'link',c:'#2F6BFF'};const t=(i.contentType||'').toLowerCase(),n=(i.title||'').toLowerCase();
   if(t.includes('pdf')||n.endsWith('.pdf'))return{k:'file',c:'#E5484D',x:'PDF'};if(t.startsWith('image/'))return{k:'img',c:'#7A4DFF'};
-  if(/sheet|csv|excel/.test(t)||/\.(xlsx?|csv)$/.test(n))return{k:'sheet',c:'#12A57A',x:'جدول'};
-  const m=n.match(/\.([a-z0-9]{1,5})$/);return{k:'file',c:'#5E6B82',x:m?m[1].toUpperCase():'ملف'}}
+  if(/sheet|csv|excel/.test(t)||/\.(xlsx?|csv)$/.test(n))return{k:'sheet',c:'#12A57A',x:tx('sheet')};
+  const m=n.match(/\.([a-z0-9]{1,5})$/);return{k:'file',c:'#5E6B82',x:m?m[1].toUpperCase():tx('file')}}
 function toast(t,er){const e=$('toast');e.textContent=t;e.className=er?'er':'';e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',er?8000:2800)}
-async function api(b){const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'خطأ');return j}
-async function act(b){try{const r=await api(b);await refresh(true);return r}catch(e){toast('تعذّر تنفيذ العملية — '+e.message,1);await refresh(true)}}
-async function refresh(force){try{const d=await api({action:'list'});const s=JSON.stringify(d);loaded=true;if(s===last&&!force)return;last=s;folders=d.folders.sort((a,b)=>(a.at||0)-(b.at||0));items=d.items;if(cur!=='all'&&cur!==''&&!folders.find(f=>f.id===cur))cur='all';render()}catch(e){if(!loaded)toast('تعذّر الاتصال بالخادم — '+e.message,1)}}
+async function api(b){const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||tx('err'));return j}
+async function act(b){try{const r=await api(b);await refresh(true);return r}catch(e){toast(tx('op_fail')+' — '+e.message,1);await refresh(true)}}
+async function refresh(force){try{const d=await api({action:'list'});const s=JSON.stringify(d);loaded=true;if(s===last&&!force)return;last=s;folders=d.folders.sort((a,b)=>(a.at||0)-(b.at||0));items=d.items;if(cur!=='all'&&cur!==''&&!folders.find(f=>f.id===cur))cur='all';render()}catch(e){if(!loaded)toast(tx('conn_fail')+' — '+e.message,1)}}
 
 /* ---- dialogs ---- */
 function openBox(html,lg){busy++;const b=$('mb'),m=$('m');b.className='box'+(lg?' lg':'');b.innerHTML=html;m.classList.add('on');let d=false;
@@ -164,21 +200,21 @@ function openBox(html,lg){busy++;const b=$('mb'),m=$('m');b.className='box'+(lg?
 $('m').onmousedown=e=>{const m=$('m');if(e.target===m&&m._c&&!m._req)m._c()};
 addEventListener('keydown',e=>{const m=$('m');if(e.key==='Escape'&&m._c&&!m._req)m._c()});
 function ask(title,o={}){return new Promise(res=>{
-  const close=openBox(`<h2>${esc(title)}</h2>${o.text?`<p>${esc(o.text)}</p>`:''}`+(o.fields||[]).map((f,i)=>f.opts?`<select class="in" data-i="${i}" aria-label="${esc(f.ph||'')}">${f.opts.map(x=>`<option value="${esc(x[0])}" ${x[0]===f.v?'selected':''}>${esc(x[1])}</option>`).join('')}</select>`:`<input class="in" data-i="${i}" placeholder="${esc(f.ph||'')}" value="${esc(f.v||'')}">`).join('')+`<div class="row"><button class="btn ${o.danger?'dg':'pr'}" id="ok">${o.ok||'حفظ'}</button>${o.req?'':'<button class="btn" id="no">إلغاء</button>'}</div>`);
+  const close=openBox(`<h2>${esc(title)}</h2>${o.text?`<p>${esc(o.text)}</p>`:''}`+(o.fields||[]).map((f,i)=>f.opts?`<select class="in" data-i="${i}" aria-label="${esc(f.ph||'')}">${f.opts.map(x=>`<option value="${esc(x[0])}" ${x[0]===f.v?'selected':''}>${esc(x[1])}</option>`).join('')}</select>`:`<input class="in" data-i="${i}" placeholder="${esc(f.ph||'')}" value="${esc(f.v||'')}">`).join('')+`<div class="row"><button class="btn ${o.danger?'dg':'pr'}" id="ok">${o.ok||tx('save')}</button>${o.req?'':'<button class="btn" id="no">'+tx('cancel')+'</button>'}</div>`);
   const b=$('mb'),m=$('m'),ins=[...b.querySelectorAll('[data-i]')];(ins[0]||$('ok')).focus();m._req=!!o.req;
   const done=v=>{close();res(v)};m._c=()=>done(null);
   $('ok').onclick=()=>done(ins.map(x=>x.value.trim()));if($('no'))$('no').onclick=()=>done(null);
   b.onkeydown=e=>{if(e.key==='Enter'&&e.target.tagName!=='BUTTON')$('ok').click()}})}
-const fopts=()=>[['','بدون مجلد'],...folders.map(f=>[f.id,f.name])];
+const fopts=()=>[['',tx('nofolder')],...folders.map(f=>[f.id,f.name])];
 function pop(anchor,list){const p=$('pop');p.innerHTML=list.map((x,i)=>`<button data-p="${i}" class="${x.dg?'dg':''}">${svg(x.i)}${x.t}</button>`).join('');p.style.display='block';
   const r=anchor.getBoundingClientRect(),w=p.offsetWidth,h=p.offsetHeight;p.style.left=Math.max(8,Math.min(r.left,innerWidth-w-8))+'px';p.style.top=(r.bottom+6+h>innerHeight?Math.max(8,r.top-h-6):r.bottom+6)+'px';p._l=list}
 const closePop=()=>$('pop').style.display='none';
 
 /* ---- name (asked once) ---- */
 function showMe(){$('wn').textContent=me||'—'}
-async function askName(){while(!me){const r=await ask('أهلاً بك',{text:'اكتب اسمك مرة واحدة، وسيظهر بجانب كل ما تضيفه. لن نسألك مرة أخرى.',fields:[{ph:'اسمك'}],ok:'متابعة',req:1});if(r&&r[0]){me=r[0].slice(0,30);try{localStorage.setItem('me',me)}catch(e){}}}showMe()}
-$('who').onclick=async()=>{const r=await ask('تغيير الاسم',{fields:[{v:me,ph:'اسمك'}]});if(r&&r[0]){me=r[0].slice(0,30);try{localStorage.setItem('me',me)}catch(e){}showMe()}};
-const by=()=>me||'زائر';
+async function askName(){while(!me){const r=await ask(tx('welcome'),{text:tx('welcome_t'),fields:[{ph:tx('yourname')}],ok:tx('cont'),req:1});if(r&&r[0]){me=r[0].slice(0,30);try{localStorage.setItem('me',me)}catch(e){}}}showMe()}
+$('who').onclick=async()=>{const r=await ask(tx('chname'),{fields:[{v:me,ph:tx('yourname')}]});if(r&&r[0]){me=r[0].slice(0,30);try{localStorage.setItem('me',me)}catch(e){}showMe()}};
+const by=()=>me||tx('guest');
 
 /* ---- render ---- */
 const tagPill=(t,cls='')=>`<button class="tg ${cls}" style="--c:${tc(t.n)}" data-t="${esc(t.n)}">${esc(t.n)}</button>`;
@@ -192,25 +228,28 @@ function match(i){
 function render(){
   const cnt=id=>items.filter(i=>(i.folder||'')===id).length;
   const row=(id,n,c,col)=>`<button class="f ${cur===id?'on':''}" data-f="${esc(id)}"><span class="dot" style="background:${col}"></span><span class="n">${esc(n)}</span><span class="c">${c}</span></button>`;
-  $('fl').innerHTML=row('all','الكل',items.length,'var(--mu)')+row('','بدون مجلد',cnt(''),'var(--ln)')+folders.map(f=>row(f.id,f.name,cnt(f.id),fc(f.id))).join('');
-  const fo=folders.find(f=>f.id===cur);$('h1').textContent=cur==='all'?'كل العناصر':cur===''?'بدون مجلد':(fo?fo.name:'');
-  $('chips').innerHTML=[['all','الكل'],['file','ملفات'],['img','صور'],['link','روابط']].map(c=>`<button class="chip ${flt===c[0]?'on':''}" data-c="${c[0]}">${c[1]}</button>`).join('');
+  const fl=[['all',tx('all'),items.length,'var(--mu)'],['',tx('nofolder'),cnt(''),'var(--ln)'],...folders.map(f=>[f.id,f.name,cnt(f.id),fc(f.id)])],sig=JSON.stringify(fl);
+  if($('fl')._s!==sig){$('fl')._s=sig;$('fl').innerHTML=fl.map(x=>row(x[0],x[1],x[2],x[3])).join('')}
+  $('fl').querySelectorAll('.f').forEach(b=>b.classList.toggle('on',b.dataset.f===cur));
+  const fo=folders.find(f=>f.id===cur);$('h1').textContent=cur==='all'?tx('all_items'):cur===''?tx('nofolder'):(fo?fo.name:'');
+  $('chips').querySelectorAll('.chip').forEach(b=>b.classList.toggle('on',b.dataset.c===flt));
   const nf=sel.size+(wsel?1:0);$('fbg').hidden=!nf;$('fbg').textContent=nf;
   const names=new Map([...allTags()].map(([k,v])=>[k,v.n]));
-  $('act').innerHTML=nf||flt!=='all'?[...sel].map(k=>`<button class="tg on" style="--c:${tc(k)}" data-t="${esc(names.get(k)||k)}">${esc(names.get(k)||k)} ×</button>`).join('')+(wsel?`<button class="tg on" data-w="">من: ${esc(wsel)} ×</button>`:'')+`<button class="clr" data-clr>مسح الكل</button>`:'';
+  $('act').innerHTML=nf||flt!=='all'?[...sel].map(k=>`<button class="tg on" style="--c:${tc(k)}" data-t="${esc(names.get(k)||k)}">${esc(names.get(k)||k)} ×</button>`).join('')+(wsel?`<button class="tg on" data-w="">${tx('from',{n:esc(wsel)})}</button>`:'')+`<button class="clr" data-clr>${tx('clear_all')}</button>`:'';
   let l=items.filter(match);
   l.sort(sort==='name'?(a,b)=>(a.title||'').localeCompare(b.title||'','ar'):sort==='old'?(a,b)=>a.at-b.at:(a,b)=>b.at-a.at);
-  $('cn').textContent=l.length?l.length+' عنصر':'';$('ls').className=view==='list'?'list':'';
+  $('cn').textContent=l.length?tx('n_items',{n:l.length}):'';$('ls').className=view==='list'?'list':'';
   const filtered=q||flt!=='all'||nf;
   $('ls').innerHTML=l.length?l.map(i=>{const k=kind(i),href=i.type==='link'?i.url:i.fileUrl,f=folders.find(x=>x.id===i.folder),tg=i.tags||[];
     const th=k.k==='img'?`<img src="${esc(href)}" alt="" loading="lazy">`:i.type==='link'?`<span class="big">${esc(dom(i.url).charAt(0).toUpperCase())}</span>`:svg(k.k);
-    return `<article class="card"><a class="th" href="${esc(href)}" target="_blank" rel="noopener" style="background:${k.c}" aria-label="فتح">${th}${k.x?`<span class="ext">${k.x}</span>`:''}</a>
+    return `<article class="card"><a class="th" href="${esc(href)}" target="_blank" rel="noopener" style="background:${k.c}" aria-label="${tx('open')}">${th}${k.x?`<span class="ext">${k.x}</span>`:''}</a>
     <div class="bd"><a class="ti" href="${esc(href)}" target="_blank" rel="noopener">${esc(i.title)}</a><div class="mt">${i.type==='link'?`<span>${esc(dom(i.url))}</span>`:`<span>${fmt(i.size||0)}</span>`}<span>${esc(i.by||'')}</span><span>${rel(i.at||0)}</span>${f&&cur==='all'?`<span style="display:inline-flex;align-items:center;gap:5px"><i class="dot" style="background:${fc(f.id)}"></i>${esc(f.name)}</span>`:''}</div>
-    <div class="tgs">${aiBusy.has(i.id)?'<span class="tg ai">تحليل بالذكاء الاصطناعي...</span>':''}${tg.slice(0,3).map(t=>tagPill(t,sel.has(t.n.toLowerCase())?'on':'')).join('')}${tg.length>3?`<button class="tg" data-et="${esc(i.id)}" style="--c:#5E6B82">+${tg.length-3}</button>`:''}${!tg.length&&!aiBusy.has(i.id)?`<button class="tg" data-et="${esc(i.id)}" style="--c:#5E6B82">إضافة وسم</button>`:''}</div></div>
-    <button class="kb" data-k="${esc(i.id)}" aria-label="خيارات"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg></button></article>`}).join('')
-  :`<div class="empty"><b>${filtered?'لا توجد نتائج':'هذا المكان فارغ'}</b>${filtered?'غيّر البحث أو امسح عوامل التصفية.':'اسحب ملفاتك إلى هنا، أو أضف رابطاً.'}${filtered?'<br><button class="btn" data-clr>مسح التصفية</button>':'<br><button class="btn pr" data-go="up">رفع ملفات</button>'}</div>`;
+    <div class="tgs">${aiBusy.has(i.id)?'<span class="tg ai">'+tx('ai_busy')+'</span>':''}${tg.slice(0,3).map(t=>tagPill(t,sel.has(t.n.toLowerCase())?'on':'')).join('')}${tg.length>3?`<button class="tg" data-et="${esc(i.id)}" style="--c:#5E6B82">+${tg.length-3}</button>`:''}${!tg.length&&!aiBusy.has(i.id)?`<button class="tg" data-et="${esc(i.id)}" style="--c:#5E6B82">${tx('add_tag')}</button>`:''}</div></div>
+    <button class="kb" data-k="${esc(i.id)}" aria-label="${tx('options')}"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg></button></article>`}).join('')
+  :`<div class="empty"><b>${filtered?tx('no_results'):tx('empty')}</b>${filtered?tx('empty_f'):tx('empty_h')}${filtered?'<br><button class="btn" data-clr>'+tx('clear_f')+'</button>':'<br><button class="btn pr" data-go="up">'+tx('upload')+'</button>'}</div>`;
   $('vg').className=view==='grid'?'on':'';$('vl').className=view==='list'?'on':'';
 }
+function swap(){const e=$('ls');e.classList.remove('sw');void e.offsetWidth;e.classList.add('sw')}
 const toggleTag=n=>{const k=n.toLowerCase();sel.has(k)?sel.delete(k):sel.add(k);render()};
 const clearAll=()=>{sel.clear();wsel='';flt='all';render()};
 
@@ -220,10 +259,10 @@ function drawSg(){const sg=$('sg'),v=$('q').value.trim();
   const h=hist.filter(x=>!v||(sub(x,v)&&x.toLowerCase()!==v.toLowerCase())).slice(0,6);
   const tg=v?[...allTags().values()].filter(t=>t.c&&sub(t.n,v)).sort((a,b)=>b.c-a.c).slice(0,6):[];
   if(!h.length&&!tg.length){sg.style.display='none';return}
-  sg.innerHTML=(h.length?`<div class="t"><span>عمليات البحث السابقة</span>${v?'':'<button data-hc>مسح السجل</button>'}</div>`+h.map(x=>`<div class="h" role="button" tabindex="0" data-h="${esc(x)}">${svg('clock')}<span>${esc(x)}</span><button class="ib" data-hx="${esc(x)}" aria-label="حذف" style="width:28px;height:28px">×</button></div>`).join(''):'')
-   +(tg.length?`<div class="t"><span>وسوم مطابقة</span></div><div class="tgs">${tg.map(t=>`<button class="tg" style="--c:${tc(t.n)}" data-st="${esc(t.n)}">${esc(t.n)}</button>`).join('')}</div>`:'');
+  sg.innerHTML=(h.length?`<div class="t"><span>${tx('hist')}</span>${v?'':'<button data-hc>'+tx('clear_hist')+'</button>'}</div>`+h.map(x=>`<div class="h" role="button" tabindex="0" data-h="${esc(x)}">${svg('clock')}<span>${esc(x)}</span><button class="ib" data-hx="${esc(x)}" aria-label="${tx('del')}" style="width:28px;height:28px">×</button></div>`).join(''):'')
+   +(tg.length?`<div class="t"><span>${tx('match_tags')}</span></div><div class="tgs">${tg.map(t=>`<button class="tg" style="--c:${tc(t.n)}" data-st="${esc(t.n)}">${esc(t.n)}</button>`).join('')}</div>`:'');
   sg.style.display='block'}
-$('q').onfocus=drawSg;$('q').oninput=e=>{q=e.target.value.trim();render();drawSg()};
+$('q').onfocus=drawSg;let qt;$('q').oninput=e=>{q=e.target.value.trim();clearTimeout(qt);qt=setTimeout(render,120);drawSg()};
 $('q').onchange=e=>saveHist(e.target.value);
 $('q').onkeydown=e=>{if(e.key==='Enter'){saveHist($('q').value);$('sg').style.display='none'}};
 
@@ -231,22 +270,25 @@ $('q').onkeydown=e=>{if(e.key==='Enter'){saveHist($('q').value);$('sg').style.di
 function openFilters(){
   const close=openBox('',1);const paint=()=>{const all=[...allTags().values()].filter(t=>t.c),by={};all.forEach(t=>(by[t.g]=by[t.g]||[]).push(t));
     const ppl=[...new Set(items.map(i=>i.by).filter(Boolean))];
-    $('mb').innerHTML=`<h2>تصفية</h2><div class="seg" style="width:fit-content"><button class="${mode==='all'?'on':''}" data-md="all" style="width:auto;padding:0 14px">كل الوسوم</button><button class="${mode==='any'?'on':''}" data-md="any" style="width:auto;padding:0 14px">أي وسم</button></div>`
-    +(all.length?Object.keys(G).filter(g=>by[g]).map(g=>`<div class="grp"><h3>${G[g]}</h3><div class="tgs">${by[g].sort((a,b)=>b.c-a.c).map(t=>`<button class="tg ${sel.has(t.n.toLowerCase())?'on':''}" style="--c:${tc(t.n)}" data-ft="${esc(t.n)}">${esc(t.n)} <span style="opacity:.7">${t.c}</span></button>`).join('')}</div></div>`).join(''):'<p>لا توجد وسوم بعد. ستظهر هنا بعد رفع ملفات أو إضافة وسوم.</p>')
-    +(ppl.length>1?`<div class="grp"><h3>أضافه</h3><div class="tgs">${ppl.map(p=>`<button class="tg ${wsel===p?'on':''}" style="--c:#5E6B82" data-fw="${esc(p)}">${esc(p)}</button>`).join('')}</div></div>`:'')
-    +'<div class="row" style="margin-top:8px"><button class="btn" id="fc">مسح الكل</button><button class="btn pr" id="fd">تم</button></div>'};
+    $('mb').innerHTML=`<h2>${tx('filter')}</h2><div class="seg" style="width:fit-content"><button class="${mode==='all'?'on':''}" data-md="all" style="width:auto;padding:0 14px">${tx('all_tags')}</button><button class="${mode==='any'?'on':''}" data-md="any" style="width:auto;padding:0 14px">${tx('any_tag')}</button></div>`
+    +(all.length?Object.keys(GL).filter(g=>by[g]).map(g=>`<div class="grp"><h3>${gl(g)}</h3><div class="tgs">${by[g].sort((a,b)=>b.c-a.c).map(t=>`<button class="tg ${sel.has(t.n.toLowerCase())?'on':''}" style="--c:${tc(t.n)}" data-ft="${esc(t.n)}">${esc(t.n)} <span style="opacity:.7">${t.c}</span></button>`).join('')}</div></div>`).join(''):'<p>'+tx('no_tags_yet')+'</p>')
+    +(ppl.length>1?`<div class="grp"><h3>${tx('added_by')}</h3><div class="tgs">${ppl.map(p=>`<button class="tg ${wsel===p?'on':''}" style="--c:#5E6B82" data-fw="${esc(p)}">${esc(p)}</button>`).join('')}</div></div>`:'')
+    +'<div class="row" style="margin-top:8px"><button class="btn" id="fc">'+tx('clear_all')+'</button><button class="btn pr" id="fd">'+tx('done')+'</button></div>'};
   paint();const b=$('mb');
   b.onclick=e=>{const t=e.target.closest('button');if(!t)return;const d=t.dataset;
-    if(d.md){mode=d.md}else if(d.ft){const k=d.ft.toLowerCase();sel.has(k)?sel.delete(k):sel.add(k)}else if(d.fw!==undefined){wsel=wsel===d.fw?'':d.fw}else if(t.id==='fc'){sel.clear();wsel=''}else if(t.id==='fd'){close();return}else return;
-    paint();render()}}
+    if(d.md){mode=d.md;b.querySelectorAll('[data-md]').forEach(x=>x.classList.toggle('on',x.dataset.md===mode))}
+    else if(d.ft){const k=d.ft.toLowerCase();sel.has(k)?sel.delete(k):sel.add(k);t.classList.toggle('on',sel.has(k))}
+    else if(d.fw!==undefined){wsel=wsel===d.fw?'':d.fw;b.querySelectorAll('[data-fw]').forEach(x=>x.classList.toggle('on',x.dataset.fw===wsel))}
+    else if(t.id==='fc'){sel.clear();wsel='';paint()}else if(t.id==='fd'){close();return}else return;
+    render();swap()}}
 
 /* ---- tag editor ---- */
 function openTags(id){const it=items.find(x=>x.id===id);if(!it)return;let d=(it.tags||[]).map(x=>({...x})),ai=-1,sg=[];
-  const close=openBox(`<h2>وسوم «${esc(it.title)}»</h2><div class="tgs" id="te"></div><div class="row"><input class="in" id="ti" placeholder="اكتب وسماً: C أو CO أو Cotton" autocomplete="off"><select class="in" id="tgp" style="width:auto" aria-label="المجموعة">${Object.keys(G).map(g=>`<option value="${g}">${G[g]}</option>`).join('')}</select></div><div class="sug" id="ts"></div><button class="btn" id="aib">${svg('spark')}اقتراح بالذكاء الاصطناعي</button><div class="row"><button class="btn pr" id="sv">حفظ</button><button class="btn" id="cx">إلغاء</button></div>`,1);
-  const paint=()=>{$('te').innerHTML=d.length?d.map((t,i)=>`<span class="tg" style="--c:${tc(t.n)}">${esc(t.n)}<button data-rm="${i}" aria-label="إزالة">×</button></span>`).join(''):'<span style="color:var(--mu)">لا توجد وسوم</span>'};
+  const close=openBox(`<h2>${esc(tx('tags_of',{t:it.title}))}</h2><div class="tgs" id="te"></div><div class="row"><input class="in" id="ti" placeholder="${tx('tag_ph')}" autocomplete="off"><select class="in" id="tgp" style="width:auto" aria-label="${tx('grp')}">${Object.keys(GL).map(g=>`<option value="${g}">${gl(g)}</option>`).join('')}</select></div><div class="sug" id="ts"></div><button class="btn" id="aib">${svg('spark')}${tx('ai_suggest')}</button><div class="row"><button class="btn pr" id="sv">${tx('save')}</button><button class="btn" id="cx">${tx('cancel')}</button></div>`,1);
+  const paint=()=>{$('te').innerHTML=d.length?d.map((t,i)=>`<span class="tg" style="--c:${tc(t.n)}">${esc(t.n)}<button data-rm="${i}" aria-label="${tx('remove')}">×</button></span>`).join(''):'<span style="color:var(--mu)">'+tx('no_tags')+'</span>'};
   const has=n=>d.some(x=>x.n.toLowerCase()===n.toLowerCase());
   const sug=()=>{const v=$('ti').value.trim();sg=v?[...allTags().values()].filter(t=>sub(t.n,v)&&!has(t.n)).sort((a,b)=>(sub(b.n,v)&&b.n.toLowerCase().startsWith(v.toLowerCase()))-(a.n.toLowerCase().startsWith(v.toLowerCase()))||b.c-a.c).slice(0,8):[];ai=-1;draw()};
-  const draw=()=>{$('ts').innerHTML=sg.map((t,i)=>`<button class="${i===ai?'a':''}" data-sg="${i}"><i class="dot" style="background:${tc(t.n)}"></i>${esc(t.n)}<small>${G[t.g]||''}</small></button>`).join('')};
+  const draw=()=>{$('ts').innerHTML=sg.map((t,i)=>`<button class="${i===ai?'a':''}" data-sg="${i}"><i class="dot" style="background:${tc(t.n)}"></i>${esc(t.n)}<small>${gl(t.g)}</small></button>`).join('')};
   const add=(n,g)=>{n=n.trim().slice(0,40);if(!n||has(n)||d.length>=12)return;const k=allTags().get(n.toLowerCase());d.push({n:k?k.n:n,g:k?k.g:g});$('ti').value='';sg=[];paint();draw();$('ti').focus()};
   paint();$('ti').focus();$('ti').oninput=sug;
   $('ti').onkeydown=e=>{if(e.key==='ArrowDown'){e.preventDefault();ai=Math.min(sg.length-1,ai+1);draw()}else if(e.key==='ArrowUp'){e.preventDefault();ai=Math.max(-1,ai-1);draw()}
@@ -254,7 +296,7 @@ function openTags(id){const it=items.find(x=>x.id===id);if(!it)return;let d=(it.
   $('mb').onclick=async e=>{const t=e.target.closest('button');if(!t)return;
     if(t.dataset.rm!==undefined){d.splice(+t.dataset.rm,1);paint()}else if(t.dataset.sg!==undefined){const x=sg[+t.dataset.sg];add(x.n,x.g)}
     else if(t.id==='cx')close();else if(t.id==='sv'){close();act({action:'setTags',id,tags:d})}
-    else if(t.id==='aib'){t.disabled=true;t.textContent='جارٍ التحليل...';try{(await callTags(id,false)).forEach(x=>add(x.n,x.g))}catch(er){toast('تعذّر الاقتراح — '+er.message,1)}t.disabled=false;t.innerHTML=svg('spark')+'اقتراح بالذكاء الاصطناعي'}}}
+    else if(t.id==='aib'){t.disabled=true;t.textContent=tx('analyzing');try{(await callTags(id,false)).forEach(x=>add(x.n,x.g))}catch(er){toast(tx('sug_fail')+' — '+er.message,1)}t.disabled=false;t.innerHTML=svg('spark')+tx('ai_suggest')}}}
 
 /* ---- Gemini auto-tag queue ---- */
 async function callTags(id,save){const vocab=[...allTags().values()].map(t=>t.n);const r=await fetch('/api/tags',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,vocab,save})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'HTTP '+r.status);return j.tags||[]}
@@ -262,23 +304,23 @@ const aq=[];let aqRun=false;
 function autoTag(id){if(!id||aiBusy.has(id))return;aq.push(id);aiBusy.add(id);render();runAq()}
 async function runAq(){if(aqRun)return;aqRun=true;
   while(aq.length){const id=aq.shift();
-    try{await callTags(id,true)}catch(e){if(/GEMINI_API_KEY/.test(e.message)){aq.forEach(x=>aiBusy.delete(x));aq.length=0;if(!aiWarned){aiWarned=true;toast('الوسوم التلقائية متوقفة: أضف GEMINI_API_KEY في Vercel',1)}}else toast('تعذّر التحليل التلقائي — '+e.message,1)}
+    try{await callTags(id,true)}catch(e){if(/GEMINI_API_KEY/.test(e.message)){aq.forEach(x=>aiBusy.delete(x));aq.length=0;if(!aiWarned){aiWarned=true;toast(tx('ai_off'),1)}}else toast(tx('auto_fail')+' — '+e.message,1)}
     aiBusy.delete(id);await refresh(true);await sleep(2000)}
   aqRun=false}
 
 /* ---- menus & actions ---- */
 function itemMenu(b,id){const i=items.find(x=>x.id===id);if(!i)return;const href=i.type==='link'?i.url:i.fileUrl;
-  pop(b,[{i:'open',t:'فتح',f:()=>window.open(href,'_blank','noopener')},{i:'tag',t:'الوسوم',f:()=>openTags(id)},{i:'spark',t:'تحليل بالذكاء الاصطناعي',f:()=>autoTag(id)},{i:'copy',t:'نسخ الرابط',f:async()=>{try{await navigator.clipboard.writeText(href);toast('تم نسخ الرابط')}catch(e){toast('تعذّر النسخ',1)}}},
-  {i:'edit',t:'تغيير الاسم',f:async()=>{const r=await ask('اسم العنصر',{fields:[{v:i.title}]});if(r&&r[0])act({action:'updateItem',id,title:r[0]})}},
-  {i:'move',t:'نقل إلى مجلد',f:async()=>{const r=await ask('نقل إلى',{fields:[{opts:fopts(),v:i.folder||'',ph:'المجلد'}],ok:'نقل'});if(r)act({action:'updateItem',id,folder:r[0]})}},
-  {i:'del',t:'حذف',dg:1,f:async()=>{if(await ask('حذف «'+i.title+'»؟',{text:'سيُحذف للجميع ولا يمكن التراجع.',ok:'حذف',danger:1}))act({action:'deleteItem',id})}}])}
+  pop(b,[{i:'open',t:tx('open'),f:()=>window.open(href,'_blank','noopener')},{i:'tag',t:tx('tags'),f:()=>openTags(id)},{i:'spark',t:tx('ai_analyze'),f:()=>autoTag(id)},{i:'copy',t:tx('copy_link'),f:async()=>{try{await navigator.clipboard.writeText(href);toast(tx('copied'))}catch(e){toast(tx('copy_fail'),1)}}},
+  {i:'edit',t:tx('chname'),f:async()=>{const r=await ask(tx('item_name'),{fields:[{v:i.title}]});if(r&&r[0])act({action:'updateItem',id,title:r[0]})}},
+  {i:'move',t:tx('move_to_folder'),f:async()=>{const r=await ask(tx('move_to'),{fields:[{opts:fopts(),v:i.folder||'',ph:tx('folder')}],ok:tx('move')});if(r)act({action:'updateItem',id,folder:r[0]})}},
+  {i:'del',t:tx('del'),dg:1,f:async()=>{if(await ask(tx('del_q',{t:i.title}),{text:tx('del_txt'),ok:tx('del'),danger:1}))act({action:'deleteItem',id})}}])}
 function folderMenu(b){const f=folders.find(x=>x.id===cur),L=[];
-  if(f)L.push({i:'edit',t:'تغيير اسم المجلد',f:async()=>{const r=await ask('اسم المجلد',{fields:[{v:f.name}]});if(r&&r[0])act({action:'renameFolder',id:f.id,name:r[0]})}});
-  L.push({i:'spark',t:'وسم العناصر غير الموسومة تلقائياً',f:()=>{const u=items.filter(i=>!(i.tags||[]).length);u.forEach(i=>autoTag(i.id));toast(u.length?'جارٍ تحليل '+u.length+' عنصر':'كل العناصر موسومة')}});
-  if(f)L.push({i:'del',t:'حذف المجلد',dg:1,f:async()=>{if(await ask('حذف المجلد «'+f.name+'»؟',{text:'ستنتقل عناصره إلى «بدون مجلد».',ok:'حذف',danger:1})){cur='all';act({action:'deleteFolder',id:f.id})}}});
+  if(f)L.push({i:'edit',t:tx('ren_folder'),f:async()=>{const r=await ask(tx('folder_name'),{fields:[{v:f.name}]});if(r&&r[0])act({action:'renameFolder',id:f.id,name:r[0]})}});
+  L.push({i:'spark',t:tx('auto_untagged'),f:()=>{const u=items.filter(i=>!(i.tags||[]).length);u.forEach(i=>autoTag(i.id));toast(u.length?tx('analyzing_n',{n:u.length}):tx('all_tagged'))}});
+  if(f)L.push({i:'del',t:tx('del_folder'),dg:1,f:async()=>{if(await ask(tx('del_folder_q',{t:f.name}),{text:tx('del_folder_t'),ok:tx('del'),danger:1})){cur='all';act({action:'deleteFolder',id:f.id})}}});
   pop(b,L)}
-async function newFolder(){const r=await ask('مجلد جديد',{fields:[{ph:'اسم المجلد'}],ok:'إنشاء'});if(r&&r[0]){const j=await act({action:'addFolder',name:r[0]});if(j&&j.id){cur=j.id;render()}}}
-async function addLink(pre){const r=await ask('إضافة رابط',{fields:[{ph:'الرابط https://...',v:pre||''},{ph:'اسم الرابط (اختياري)'},{opts:fopts(),v:cur==='all'?'':cur,ph:'المجلد'}],ok:'إضافة'});
+async function newFolder(){const r=await ask(tx('newfolder'),{fields:[{ph:tx('folder_name')}],ok:tx('create')});if(r&&r[0]){const j=await act({action:'addFolder',name:r[0]});if(j&&j.id){cur=j.id;render()}}}
+async function addLink(pre){const r=await ask(tx('addlink'),{fields:[{ph:tx('link_ph'),v:pre||''},{ph:tx('link_name')},{opts:fopts(),v:cur==='all'?'':cur,ph:tx('folder')}],ok:tx('add')});
   if(!r||!r[0])return;let u=r[0];if(!/^https?:\/\//i.test(u))u='https://'+u;const j=await act({action:'addLink',url:u,title:r[1]||dom(u),folder:r[2]||'',by:by()});if(j&&j.id)autoTag(j.id)}
 const pick=()=>$('fi').click();
 document.addEventListener('click',e=>{const t=e.target.closest('button,[data-h]');const p=e.target.closest('#pop');
@@ -289,39 +331,53 @@ document.addEventListener('click',e=>{const t=e.target.closest('button,[data-h]'
   else if(d.h!==undefined){q=d.h;$('q').value=q;saveHist(q);$('sg').style.display='none';render()}
   else if(d.hc!==undefined){hist=[];store.set('hist',hist);$('sg').style.display='none'}
   else if(d.st){toggleTag(d.st);q='';$('q').value='';$('sg').style.display='none'}
-  else if(d.t)toggleTag(d.t);
+  else if(d.t){toggleTag(d.t);swap()}
   else if(d.w!==undefined){wsel='';render()}
   else if(d.clr!==undefined)clearAll();
   else if(d.et)openTags(d.et);
-  else if(d.f!==undefined){cur=d.f;render()}else if(d.c){flt=d.c;render()}else if(d.k)setTimeout(()=>itemMenu(t,d.k))
+  else if(d.f!==undefined){cur=d.f;render();swap()}else if(d.c){flt=d.c;render();swap()}else if(d.k)setTimeout(()=>itemMenu(t,d.k))
   else if(d.go==='up')pick()});
 $('fm').onclick=e=>{e.stopPropagation();setTimeout(()=>folderMenu($('fm')))};
 $('bFl').onclick=openFilters;$('bUp').onclick=pick;$('bLk').onclick=()=>addLink();$('bNf').onclick=newFolder;
-$('fab').onclick=e=>{e.stopPropagation();setTimeout(()=>pop($('fab'),[{i:'up',t:'رفع ملفات',f:pick},{i:'link',t:'إضافة رابط',f:()=>addLink()},{i:'fold',t:'مجلد جديد',f:newFolder}]))};
-$('so').onchange=e=>{sort=e.target.value;render()};
-$('vg').onclick=()=>{view='grid';render()};$('vl').onclick=()=>{view='list';render()};
+$('fab').onclick=e=>{e.stopPropagation();setTimeout(()=>pop($('fab'),[{i:'up',t:tx('upload'),f:pick},{i:'link',t:tx('addlink'),f:()=>addLink()},{i:'fold',t:tx('newfolder'),f:newFolder}]))};
+$('so').onchange=e=>{sort=e.target.value;render();swap()};
+$('vg').onclick=()=>{view='grid';render();swap()};$('vl').onclick=()=>{view='list';render();swap()};
 $('fi').onchange=e=>{upl([...e.target.files]);e.target.value=''};
 
 /* ---- upload ---- */
-const tray=[];function drawTray(){$('tray').innerHTML=tray.map(u=>`<div class="up ${u.er?'er':''}"><div class="r"><span class="nm">${esc(u.name)}</span><span>${u.er?'فشل':u.pct>=100?'تم':u.pct+'%'}</span></div>${u.er?`<div style="color:var(--dg);font-size:13px;margin-top:4px">${esc(u.er)}</div>`:''}<div class="bar"><i style="width:${u.pct}%"></i></div></div>`).join('')}
+const tray=[];function drawTray(){$('tray').innerHTML=tray.map(u=>`<div class="up ${u.er?'er':''}"><div class="r"><span class="nm">${esc(u.name)}</span><span>${u.er?tx('failed'):u.pct>=100?tx('done'):u.pct+'%'}</span></div>${u.er?`<div style="color:var(--dg);font-size:13px;margin-top:4px">${esc(u.er)}</div>`:''}<div class="bar"><i style="width:${u.pct}%"></i></div></div>`).join('')}
 function xhr(f,u){return new Promise((ok,no)=>{const x=new XMLHttpRequest();x.open('POST','/api/upload?name='+encodeURIComponent(f.name)+'&type='+encodeURIComponent(f.type||'application/octet-stream'));x.setRequestHeader('Content-Type','application/octet-stream');
   x.upload.onprogress=e=>{if(e.lengthComputable){u.pct=Math.min(99,Math.round(e.loaded/e.total*100));drawTray()}};
-  x.onload=()=>{let j={};try{j=JSON.parse(x.responseText)}catch(e){}x.status<300&&j.url?ok(j.url):no(new Error(j.error||(x.status===413?'الملف أكبر من الحد المسموح':'HTTP '+x.status)))};x.onerror=()=>no(new Error('انقطع الاتصال'));x.send(f)})}
+  x.onload=()=>{let j={};try{j=JSON.parse(x.responseText)}catch(e){}x.status<300&&j.url?ok(j.url):no(new Error(j.error||(x.status===413?tx('too_big'):'HTTP '+x.status)))};x.onerror=()=>no(new Error(tx('lost')));x.send(f)})}
 async function upl(fs){const dest=cur==='all'?'':cur;busy++;const ids=[];
   for(const f of fs){const u={name:f.name,pct:0};tray.push(u);drawTray();
-    try{if(f.size>4.4e6)throw new Error('الحد الأقصى 4 MB للملف');const url=await xhr(f,u);
+    try{if(f.size>4.4e6)throw new Error(tx('max4'));const url=await xhr(f,u);
       const j=await api({action:'addFile',fileUrl:url,title:f.name,size:f.size,contentType:f.type,folder:dest,by:by()});ids.push(j.id);u.pct=100;drawTray();setTimeout(()=>{tray.splice(tray.indexOf(u),1);drawTray()},1800)}
     catch(e){u.er=e.message;drawTray();setTimeout(()=>{tray.splice(tray.indexOf(u),1);drawTray()},9000)}}
   busy--;await refresh(true);ids.forEach(autoTag)}
 let dc=0;const hasF=e=>[...(e.dataTransfer?.types||[])].includes('Files');
-addEventListener('dragenter',e=>{if(hasF(e)){dc++;const f=folders.find(x=>x.id===cur);$('ov').textContent='أفلت الملفات لرفعها إلى «'+(f?f.name:cur===''?'بدون مجلد':'المكتبة')+'»';$('ov').classList.add('on')}});
+addEventListener('dragenter',e=>{if(hasF(e)){dc++;const f=folders.find(x=>x.id===cur);$('ov').textContent=tx('drop_to',{f:f?f.name:cur===''?tx('nofolder'):tx('library')});$('ov').classList.add('on')}});
 addEventListener('dragleave',e=>{if(hasF(e)&&--dc<=0){dc=0;$('ov').classList.remove('on')}});
 addEventListener('dragover',e=>{if(hasF(e))e.preventDefault()});
 addEventListener('drop',e=>{if(hasF(e)){e.preventDefault();dc=0;$('ov').classList.remove('on');upl([...e.dataTransfer.files])}});
 addEventListener('paste',e=>{if(busy||/INPUT|SELECT/.test(document.activeElement.tagName))return;const fs=[...(e.clipboardData?.files||[])];if(fs.length){upl(fs);return}
   const t=(e.clipboardData?.getData('text')||'').trim();if(/^https?:\/\/\S+$/i.test(t))addLink(t)});
 addEventListener('scroll',closePop,true);addEventListener('resize',closePop);
-showMe();render();refresh(true);if(!me)askName();
+/* ---- ripple on press ---- */
+const RM=matchMedia('(prefers-reduced-motion:reduce)');
+document.addEventListener('pointerdown',e=>{if(RM.matches)return;const b=e.target.closest('.btn,.chip,.ib,.fab,.kb,.f,.seg button,button.tg');if(!b||b.disabled)return;
+  b.querySelectorAll(':scope>.rip').forEach((o,i,a)=>{if(a.length>2)o.remove()});
+  const r=b.getBoundingClientRect(),z=Math.max(r.width,r.height)*2,o=document.createElement('span');
+  o.className='rip';o.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;
+  b.appendChild(o);o.addEventListener('animationend',()=>o.remove(),{once:true})},{passive:true});
+/* ---- language ---- */
+function applyLang(){const h=document.documentElement;h.lang=LG;h.dir=LG==='ar'?'rtl':'ltr';document.title=tx('title');
+  document.querySelectorAll('[data-tx]').forEach(e=>e.textContent=tx(e.dataset.tx));
+  document.querySelectorAll('[data-ph]').forEach(e=>e.placeholder=tx(e.dataset.ph));
+  document.querySelectorAll('[data-al]').forEach(e=>e.setAttribute('aria-label',tx(e.dataset.al)));
+  $('ln').textContent=tx('lang');$('ov').textContent=tx('drop');showMe();render()}
+$('lang').onclick=()=>{LG=LG==='ar'?'en':'ar';try{localStorage.setItem('lang',LG)}catch(e){}applyLang();last=''; refresh(true)};
+applyLang();refresh(true);if(!me)askName();
 setInterval(()=>{if(!busy&&!document.hidden)refresh()},5000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!busy)refresh()});
 </script>
