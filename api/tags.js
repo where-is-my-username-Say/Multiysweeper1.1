@@ -61,10 +61,10 @@ async function gemini(parts, key) {
 export default async function handler(req, res) {
   try {
     const key = process.env.GEMINI_API_KEY;
-    if (!key) return res.status(503).json({ error: 'GEMINI_API_KEY غير مضبوط في Vercel' });
+    if (!key) return res.status(503).json({ error: 'GEMINI_API_KEY is not set in Vercel' });
     const { id, vocab = [], save = true } = req.body || {};
     const it = await findItem(String(id));
-    if (!it) return res.status(404).json({ error: 'العنصر غير موجود' });
+    if (!it) return res.status(404).json({ error: 'Item not found' });
     const d = it.data;
     const parts = [{ text: PROMPT + '\n\nEXISTING tags: ' + vocab.slice(0, 120).join(', ') + '\n\nItem title: ' + d.title + '\nType: ' + d.type }];
     if (d.type === 'link') {
