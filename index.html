@@ -126,6 +126,14 @@ button.tg:hover{transform:translateY(-1px)}
 .chip,.f,.ib,.seg button,button.tg{transition:transform .15s,background .35s ease,color .35s ease,border-color .35s ease}
 #lang{margin-top:-10px}
 @media(max-width:820px){#lang{width:auto;order:2;margin:0}}
+
+.th.im{height:auto;min-height:110px;background:var(--bg)}
+.th.im img{display:block;width:100%;height:auto;max-height:260px;object-fit:contain}
+.th.pv{height:150px}
+.th.pv .pvi{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+.th .ext{z-index:1}
+.list .th.im,.list .th.pv{height:68px;min-height:0}.list .th.im img{height:100%;object-fit:cover}
+.card .tgs{gap:5px}
 </style>
 </head>
 <body>
@@ -192,7 +200,7 @@ function kind(i){if(i.type==='link')return{k:'link',c:'#2F6BFF'};const t=(i.cont
 function toast(t,er){const e=$('toast');e.textContent=t;e.className=er?'er':'';e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',er?8000:2800)}
 async function api(b){const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||tx('err'));return j}
 async function act(b){try{const r=await api(b);await refresh(true);return r}catch(e){toast(tx('op_fail')+' — '+e.message,1);await refresh(true)}}
-async function refresh(force){try{const d=await api({action:'list'});const s=JSON.stringify(d);loaded=true;if(s===last&&!force)return;last=s;folders=d.folders.sort((a,b)=>(a.at||0)-(b.at||0));items=d.items;if(cur!=='all'&&cur!==''&&!folders.find(f=>f.id===cur))cur='all';render()}catch(e){if(!loaded)toast(tx('conn_fail')+' — '+e.message,1)}}
+async function refresh(force){try{const d=await api({action:'list'});const s=JSON.stringify(d);loaded=true;if(s===last&&!force)return;last=s;folders=d.folders.sort((a,b)=>(a.at||0)-(b.at||0));items=d.items;if(cur!=='all'&&cur!==''&&!folders.find(f=>f.id===cur))cur='all';render();queueThumbs()}catch(e){if(!loaded)toast(tx('conn_fail')+' — '+e.message,1)}}
 
 /* ---- dialogs ---- */
 function openBox(html,lg){busy++;const b=$('mb'),m=$('m');b.className='box'+(lg?' lg':'');b.innerHTML=html;m.classList.add('on');let d=false;
@@ -241,10 +249,10 @@ function render(){
   $('cn').textContent=l.length?tx('n_items',{n:l.length}):'';$('ls').className=view==='list'?'list':'';
   const filtered=q||flt!=='all'||nf;
   $('ls').innerHTML=l.length?l.map(i=>{const k=kind(i),href=i.type==='link'?i.url:i.fileUrl,f=folders.find(x=>x.id===i.folder),tg=i.tags||[];
-    const th=k.k==='img'?`<img src="${esc(href)}" alt="" loading="lazy">`:i.type==='link'?`<span class="big">${esc(dom(i.url).charAt(0).toUpperCase())}</span>`:svg(k.k);
-    return `<article class="card"><a class="th" href="${esc(href)}" target="_blank" rel="noopener" style="background:${k.c}" aria-label="${tx('open')}">${th}${k.x?`<span class="ext">${k.x}</span>`:''}</a>
+    const pv=i.thumb||'',full=k.k==='img',fb=i.type==='link'?`<span class="big">${esc(dom(i.url).charAt(0).toUpperCase())}</span>`:svg(k.k);const th=full?`<img src="${esc(href)}" alt="" loading="lazy" decoding="async">`:fb+(pv?`<img class="pvi" src="${esc(pv)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">`:'');
+    return `<article class="card"><a class="th ${full?'im':pv?'pv':''}" href="${esc(href)}" target="_blank" rel="noopener" style="background:${full?'var(--bg)':k.c}" aria-label="${tx('open')}">${th}${k.x?`<span class="ext">${k.x}</span>`:''}</a>
     <div class="bd"><a class="ti" href="${esc(href)}" target="_blank" rel="noopener">${esc(i.title)}</a><div class="mt">${i.type==='link'?`<span>${esc(dom(i.url))}</span>`:`<span>${fmt(i.size||0)}</span>`}<span>${esc(i.by||'')}</span><span>${rel(i.at||0)}</span>${f&&cur==='all'?`<span style="display:inline-flex;align-items:center;gap:5px"><i class="dot" style="background:${fc(f.id)}"></i>${esc(f.name)}</span>`:''}</div>
-    <div class="tgs">${aiBusy.has(i.id)?'<span class="tg ai">'+tx('ai_busy')+'</span>':''}${tg.slice(0,3).map(t=>tagPill(t,sel.has(t.n.toLowerCase())?'on':'')).join('')}${tg.length>3?`<button class="tg" data-et="${esc(i.id)}" style="--c:#5E6B82">+${tg.length-3}</button>`:''}${!tg.length&&!aiBusy.has(i.id)?`<button class="tg" data-et="${esc(i.id)}" style="--c:#5E6B82">${tx('add_tag')}</button>`:''}</div></div>
+    <div class="tgs">${aiBusy.has(i.id)?'<span class="tg ai">'+tx('ai_busy')+'</span>':''}${tg.slice(0,10).map(t=>tagPill(t,sel.has(t.n.toLowerCase())?'on':'')).join('')}${tg.length>10?`<button class="tg" data-et="${esc(i.id)}" style="--c:#5E6B82">+${tg.length-10}</button>`:''}${!tg.length&&!aiBusy.has(i.id)?`<button class="tg" data-et="${esc(i.id)}" style="--c:#5E6B82">${tx('add_tag')}</button>`:''}</div></div>
     <button class="kb" data-k="${esc(i.id)}" aria-label="${tx('options')}"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/></svg></button></article>`}).join('')
   :`<div class="empty"><b>${filtered?tx('no_results'):tx('empty')}</b>${filtered?tx('empty_f'):tx('empty_h')}${filtered?'<br><button class="btn" data-clr>'+tx('clear_f')+'</button>':'<br><button class="btn pr" data-go="up">'+tx('upload')+'</button>'}</div>`;
   $('vg').className=view==='grid'?'on':'';$('vl').className=view==='list'?'on':'';
@@ -299,7 +307,7 @@ function openTags(id){const it=items.find(x=>x.id===id);if(!it)return;let d=(it.
     else if(t.id==='aib'){t.disabled=true;t.textContent=tx('analyzing');try{(await callTags(id,false)).forEach(x=>add(x.n,x.g))}catch(er){toast(tx('sug_fail')+' — '+er.message,1)}t.disabled=false;t.innerHTML=svg('spark')+tx('ai_suggest')}}}
 
 /* ---- Gemini auto-tag queue ---- */
-async function callTags(id,save){const vocab=[...allTags().values()].map(t=>t.n);const r=await fetch('/api/tags',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,vocab,save})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'HTTP '+r.status);return j.tags||[]}
+async function callTags(id,save){const vocab=[...allTags().values()].sort((a,b)=>b.c-a.c).map(t=>({n:t.n,g:t.g}));const r=await fetch('/api/tags',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,vocab,save})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'HTTP '+r.status);return j.tags||[]}
 const aq=[];let aqRun=false;
 function autoTag(id){if(!id||aiBusy.has(id))return;aq.push(id);aiBusy.add(id);render();runAq()}
 async function runAq(){if(aqRun)return;aqRun=true;
@@ -344,6 +352,19 @@ $('so').onchange=e=>{sort=e.target.value;render();swap()};
 $('vg').onclick=()=>{view='grid';render();swap()};$('vl').onclick=()=>{view='list';render();swap()};
 $('fi').onchange=e=>{upl([...e.target.files]);e.target.value=''};
 
+/* ---- previews: PDF first page + link image ---- */
+let pdfP;function loadPdf(){return pdfP||(pdfP=new Promise((ok,no)=>{const e=document.createElement('script');e.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';e.onload=()=>{pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';ok(window.pdfjsLib)};e.onerror=()=>{pdfP=null;no(new Error('pdf.js'))};document.head.appendChild(e)}))}
+async function pdfThumb(src){const lib=await loadPdf();const data=typeof src==='string'?await (await fetch(src)).arrayBuffer():await src.arrayBuffer();
+  const doc=await lib.getDocument({data}).promise,pg=await doc.getPage(1),v0=pg.getViewport({scale:1}),vp=pg.getViewport({scale:420/v0.width}),c=document.createElement('canvas');
+  c.width=vp.width;c.height=vp.height;await pg.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;doc.destroy();return new Promise(r=>c.toBlob(r,'image/jpeg',.8))}
+async function putBlob(b,name,type){const r=await fetch('/api/upload?name='+encodeURIComponent(name)+'&type='+encodeURIComponent(type),{method:'POST',headers:{'Content-Type':'application/octet-stream'},body:b});const j=await r.json().catch(()=>({}));if(!r.ok||!j.url)throw new Error(j.error||'HTTP '+r.status);return j.url}
+const isPdf=i=>(i.contentType||'').includes('pdf')||/\.pdf$/i.test(i.title||i.name||'');
+async function pdfFor(id,src){try{const b=await pdfThumb(src);await api({action:'setThumb',id,thumb:b?await putBlob(b,'thumb.jpg','image/jpeg'):''})}catch(e){try{await api({action:'setThumb',id,thumb:''})}catch(_){}}}
+const tried=new Set(),tq=[];let tqRun=false;
+function queueThumbs(){const need=items.filter(i=>!tried.has(i.id)&&i.thumb===undefined&&(i.type==='link'||(i.type==='file'&&isPdf(i))));need.forEach(i=>{tried.add(i.id);tq.push(i)});runTq()}
+async function runTq(){if(tqRun||!tq.length)return;tqRun=true;
+  while(tq.length){const i=tq.shift();if(i.type==='link'){try{await api({action:'fixThumb',id:i.id})}catch(e){}}else await pdfFor(i.id,i.fileUrl);await sleep(500)}
+  tqRun=false;refresh(true)}
 /* ---- upload ---- */
 const tray=[];function drawTray(){$('tray').innerHTML=tray.map(u=>`<div class="up ${u.er?'er':''}"><div class="r"><span class="nm">${esc(u.name)}</span><span>${u.er?tx('failed'):u.pct>=100?tx('done'):u.pct+'%'}</span></div>${u.er?`<div style="color:var(--dg);font-size:13px;margin-top:4px">${esc(u.er)}</div>`:''}<div class="bar"><i style="width:${u.pct}%"></i></div></div>`).join('')}
 function xhr(f,u){return new Promise((ok,no)=>{const x=new XMLHttpRequest();x.open('POST','/api/upload?name='+encodeURIComponent(f.name)+'&type='+encodeURIComponent(f.type||'application/octet-stream'));x.setRequestHeader('Content-Type','application/octet-stream');
@@ -352,7 +373,7 @@ function xhr(f,u){return new Promise((ok,no)=>{const x=new XMLHttpRequest();x.op
 async function upl(fs){const dest=cur==='all'?'':cur;busy++;const ids=[];
   for(const f of fs){const u={name:f.name,pct:0};tray.push(u);drawTray();
     try{if(f.size>4.4e6)throw new Error(tx('max4'));const url=await xhr(f,u);
-      const j=await api({action:'addFile',fileUrl:url,title:f.name,size:f.size,contentType:f.type,folder:dest,by:by()});ids.push(j.id);u.pct=100;drawTray();setTimeout(()=>{tray.splice(tray.indexOf(u),1);drawTray()},1800)}
+      const j=await api({action:'addFile',fileUrl:url,title:f.name,size:f.size,contentType:f.type,folder:dest,by:by()});ids.push(j.id);if(isPdf(f)){tried.add(j.id);pdfFor(j.id,f).then(()=>refresh(true))}u.pct=100;drawTray();setTimeout(()=>{tray.splice(tray.indexOf(u),1);drawTray()},1800)}
     catch(e){u.er=e.message;drawTray();setTimeout(()=>{tray.splice(tray.indexOf(u),1);drawTray()},9000)}}
   busy--;await refresh(true);ids.forEach(autoTag)}
 let dc=0;const hasF=e=>[...(e.dataTransfer?.types||[])].includes('Files');
