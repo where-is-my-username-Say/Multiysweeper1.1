@@ -110,7 +110,8 @@ export default async function handler(req, res) {
         await write(`items/${id}.json`, {
           type: 'link', url: clean(b.url, 2000), title: clean(b.title || b.url, 200),
           folder: clean(b.folder, 40), by: clean(b.by, 40) || 'زائر', at: Date.now(),
-          thumb: await linkThumb(b.url)
+          thumb: typeof b.thumb === 'string' && /^https:\/\//.test(b.thumb) ? b.thumb.slice(0, 1500) : (b.thumb === '' ? '' : await linkThumb(b.url)),
+          tags: cleanTags(b.tags)
         });
         return res.json({ id });
       }
