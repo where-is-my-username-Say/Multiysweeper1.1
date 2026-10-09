@@ -1,4 +1,5 @@
-import { put, list, del } from '@vercel/blob';
+let B;
+const blob = async () => B || (B = await import('@vercel/blob'));
 
 const rid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 const okUrl = u => typeof u === 'string' && /^https:\/\/[a-z0-9-]+\.public\.blob\.vercel-storage\.com\//.test(u);
@@ -15,8 +16,8 @@ const cleanTags = a => {
   return out;
 };
 
-const write = (path, obj) =>
-  put(path, JSON.stringify(obj), {
+const write = async (path, obj) =>
+  (await blob()).put(path, JSON.stringify(obj), {
     access: 'public', contentType: 'application/json',
     addRandomSuffix: false, allowOverwrite: true, cacheControlMaxAge: 60
   });
@@ -53,7 +54,7 @@ async function linkThumb(url) {
 async function listBlobs(prefix) {
   const out = []; let cursor;
   do {
-    const r = await list({ prefix, cursor, limit: 1000 });
+    const r = await (await blob()).list({ prefix, cursor, limit: 1000 });
     out.push(...r.blobs); cursor = r.cursor;
   } while (cursor);
   return out;
@@ -100,7 +101,7 @@ export default async function handler(req, res) {
           const { id, ...rest } = i;
           await write(`items/${id}.json`, { ...rest, folder: '' });
         }
-        if (o) await del(o.url);
+        if (o) await (await blob()).del(o.url);
         return res.json({ ok: true });
       }
       case 'addLink': {
@@ -154,7 +155,7 @@ export default async function handler(req, res) {
       }
       case 'deleteItem': {
         const o = await readOne(`items/${b.id}.json`);
-        if (o) await del([o.url, ...(okUrl(o.data.fileUrl) ? [o.data.fileUrl] : [])]);
+        if (o) await (await blob()).del([o.url, ...(okUrl(o.data.fileUrl) ? [o.data.fileUrl] : [])]);
         return res.json({ ok: true });
       }
       default:
