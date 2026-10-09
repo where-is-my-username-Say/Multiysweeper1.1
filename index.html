@@ -134,6 +134,22 @@ button.tg:hover{transform:translateY(-1px)}
 .th .ext{z-index:1}
 .list .th.im,.list .th.pv{height:68px;min-height:0}.list .th.im img{height:100%;object-fit:cover}
 .card .tgs{gap:5px}
+
+#cbub{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));inset-inline-end:20px;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#7A4DFF,#2F5BEA);color:#fff;display:grid;place-items:center;box-shadow:0 12px 30px -8px #5B3FE0aa;z-index:22;overflow:hidden;transition:transform .2s cubic-bezier(.3,1.4,.5,1)}
+#cbub svg{width:26px;height:26px}#cbub:active{transform:scale(.92)}
+@media(hover:hover){#cbub:hover{transform:scale(1.07)}}
+#cpanel{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom,0px));inset-inline-end:20px;width:390px;height:min(580px,calc(100vh - 120px));background:var(--sf);border:1px solid var(--ln);border-radius:22px;box-shadow:0 30px 80px -20px #0008;z-index:28;display:none;flex-direction:column;overflow:hidden;transform-origin:bottom}
+#cpanel.on{display:flex;animation:pin .28s cubic-bezier(.2,.9,.3,1.1)}
+#chead{display:flex;align-items:center;gap:4px;padding:12px 14px;border-bottom:1px solid var(--ln);font-weight:600}
+#cmsgs{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.bu{align-self:flex-end;background:var(--pr);color:#fff;padding:9px 13px;border-radius:16px;max-width:85%;word-break:break-word}
+.ba{align-self:flex-start;background:var(--bg);padding:10px 13px;border-radius:16px;max-width:94%;word-break:break-word}.ba.er{color:var(--dg)}
+.ri{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--ln);border-radius:12px;background:var(--sf);color:var(--tx);text-decoration:none;margin-top:6px}.ri:hover{border-color:var(--pr)}
+.ri .t{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}.ri small{color:var(--mu);white-space:nowrap}
+.dots i{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:var(--mu);animation:pl 1s infinite}.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+#csug{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 8px}#csug:empty{display:none}
+.cin{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--ln)}
+@media(max-width:820px){#cbub{inset-inline-end:auto;inset-inline-start:20px}#cpanel{inset-inline:0;bottom:0;width:auto;height:86vh;border-radius:22px 22px 0 0}}
 </style>
 </head>
 <body>
@@ -159,6 +175,8 @@ button.tg:hover{transform:translateY(-1px)}
 </div>
 <button class="fab" id="fab" data-al="add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
 <input id="fi" type="file" multiple hidden>
+<button id="cbub" aria-label="Assistant"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/><path d="M9 11h6M9 14h4"/></svg></button>
+<section id="cpanel" aria-label="Assistant"><header id="chead"><b data-tx="chat_title"></b><span style="flex:1"></span><button class="ib" id="cnew" data-al="chat_new"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="ib" id="cclose" data-al="chat_close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header><div id="cmsgs"></div><div id="csug"></div><div class="cin"><input class="in" id="cinp" data-ph="chat_ph" autocomplete="off"><button class="btn pr" id="csend" data-tx="chat_send"></button></div></section>
 <div id="pop"></div><div id="m"><div class="box" id="mb"></div></div><div id="ov"></div><div id="tray"></div><div id="toast"></div>
 <script>
 const $=id=>document.getElementById(id);
@@ -227,6 +245,7 @@ const by=()=>me||tx('guest');
 /* ---- render ---- */
 const tagPill=(t,cls='')=>`<button class="tg ${cls}" style="--c:${tc(t.n)}" data-t="${esc(t.n)}">${esc(t.n)}</button>`;
 function match(i){
+  if(aiSet&&!aiSet.has(i.id))return false;
   if(cur!=='all'&&(i.folder||'')!==cur)return false;
   if(flt!=='all'&&!(flt==='link'?i.type==='link':flt==='img'?kind(i).k==='img':i.type==='file'&&kind(i).k!=='img'))return false;
   if(wsel&&i.by!==wsel)return false;
@@ -243,11 +262,11 @@ function render(){
   $('chips').querySelectorAll('.chip').forEach(b=>b.classList.toggle('on',b.dataset.c===flt));
   const nf=sel.size+(wsel?1:0);$('fbg').hidden=!nf;$('fbg').textContent=nf;
   const names=new Map([...allTags()].map(([k,v])=>[k,v.n]));
-  $('act').innerHTML=nf||flt!=='all'?[...sel].map(k=>`<button class="tg on" style="--c:${tc(k)}" data-t="${esc(names.get(k)||k)}">${esc(names.get(k)||k)} ×</button>`).join('')+(wsel?`<button class="tg on" data-w="">${tx('from',{n:esc(wsel)})}</button>`:'')+`<button class="clr" data-clr>${tx('clear_all')}</button>`:'';
+  $('act').innerHTML=nf||aiSet||flt!=='all'?[...sel].map(k=>`<button class="tg on" style="--c:${tc(k)}" data-t="${esc(names.get(k)||k)}">${esc(names.get(k)||k)} ×</button>`).join('')+(wsel?`<button class="tg on" data-w="">${tx('from',{n:esc(wsel)})}</button>`:'')+(aiSet?`<button class="tg on" style="--c:#7A4DFF" data-ai0>${tx('chat_res',{n:aiSet.size})}</button>`:'')+`<button class="clr" data-clr>${tx('clear_all')}</button>`:'';
   let l=items.filter(match);
   l.sort(sort==='name'?(a,b)=>(a.title||'').localeCompare(b.title||'','ar'):sort==='old'?(a,b)=>a.at-b.at:(a,b)=>b.at-a.at);
   $('cn').textContent=l.length?tx('n_items',{n:l.length}):'';$('ls').className=view==='list'?'list':'';
-  const filtered=q||flt!=='all'||nf;
+  const filtered=q||flt!=='all'||nf||aiSet;
   $('ls').innerHTML=l.length?l.map(i=>{const k=kind(i),href=i.type==='link'?i.url:i.fileUrl,f=folders.find(x=>x.id===i.folder),tg=i.tags||[];
     const pv=i.thumb||'',full=k.k==='img',fb=i.type==='link'?`<span class="big">${esc(dom(i.url).charAt(0).toUpperCase())}</span>`:svg(k.k);const th=full?`<img src="${esc(href)}" alt="" loading="lazy" decoding="async">`:fb+(pv?`<img class="pvi" src="${esc(pv)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">`:'');
     return `<article class="card"><a class="th ${full?'im':pv?'pv':''}" href="${esc(href)}" target="_blank" rel="noopener" style="background:${full?'var(--bg)':k.c}" aria-label="${tx('open')}">${th}${k.x?`<span class="ext">${k.x}</span>`:''}</a>
@@ -259,7 +278,7 @@ function render(){
 }
 function swap(){const e=$('ls');e.classList.remove('sw');void e.offsetWidth;e.classList.add('sw')}
 const toggleTag=n=>{const k=n.toLowerCase();sel.has(k)?sel.delete(k):sel.add(k);render()};
-const clearAll=()=>{sel.clear();wsel='';flt='all';render()};
+const clearAll=()=>{sel.clear();wsel='';flt='all';aiSet=null;render()};
 
 /* ---- search + history ---- */
 function saveHist(v){v=(v||'').trim();if(v.length<2)return;hist=[v,...hist.filter(x=>x!==v)].slice(0,10);store.set('hist',hist)}
@@ -341,6 +360,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('button,[data-h]'
   else if(d.st){toggleTag(d.st);q='';$('q').value='';$('sg').style.display='none'}
   else if(d.t){toggleTag(d.t);swap()}
   else if(d.w!==undefined){wsel='';render()}
+  else if(d.ai0!==undefined){aiSet=null;render();swap()}
   else if(d.clr!==undefined)clearAll();
   else if(d.et)openTags(d.et);
   else if(d.f!==undefined){cur=d.f;render();swap()}else if(d.c){flt=d.c;render();swap()}else if(d.k)setTimeout(()=>itemMenu(t,d.k))
@@ -391,12 +411,39 @@ document.addEventListener('pointerdown',e=>{if(RM.matches)return;const b=e.targe
   const r=b.getBoundingClientRect(),z=Math.max(r.width,r.height)*2,o=document.createElement('span');
   o.className='rip';o.style.cssText=`width:${z}px;height:${z}px;left:${e.clientX-r.left-z/2}px;top:${e.clientY-r.top-z/2}px`;
   b.appendChild(o);o.addEventListener('animationend',()=>o.remove(),{once:true})},{passive:true});
+/* ---- chat assistant ---- */
+Object.assign(D,{"chat_title": {"ar": "مساعد المكتبة", "en": "Library assistant"}, "chat_ph": {"ar": "اسأل عن ملفاتك وروابطك...", "en": "Ask about your files and links..."}, "chat_send": {"ar": "إرسال", "en": "Send"}, "chat_new": {"ar": "محادثة جديدة", "en": "New chat"}, "chat_close": {"ar": "إغلاق", "en": "Close"}, "chat_fail": {"ar": "تعذّر الرد", "en": "Could not answer"}, "chat_show": {"ar": "عرض النتائج في المكتبة ({n})", "en": "Show results in the library ({n})"}, "chat_res": {"ar": "نتائج المساعد ({n}) ×", "en": "Assistant results ({n}) ×"}, "chat_s1": {"ar": "أين أجد ملفات CO2؟", "en": "Where are the CO2 files?"}, "chat_s2": {"ar": "اعرض كل الروابط", "en": "Show all links"}, "chat_s3": {"ar": "ماذا أُضيف مؤخراً؟", "en": "What was added recently?"}, "chat_hello": {"ar": "أنا أعرف كل ملفاتك وروابطك ومجلداتك ووسومها. اسألني: أين أجد...؟ أو اجمع لي كل الملفات عن...", "en": "I know all your files, links, folders and tags. Ask me: where can I find...? or gather all files about..."}});
+const chat=[];let chatBusy=false,aiSet=null;
+const cmd=x=>esc(x).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');
+function drawChat(){const m=$('cmsgs');
+  const row=id=>{const i=items.find(x=>x.id===id);if(!i)return '';const k=kind(i),href=i.type==='link'?i.url:i.fileUrl,f=folders.find(x=>x.id===i.folder);return `<a class="ri" href="${esc(href)}" target="_blank" rel="noopener"><i class="dot" style="background:${k.c}"></i><span class="t">${esc(i.title)}</span><small>${esc(f?f.name:tx('nofolder'))}</small></a>`};
+  m.innerHTML=(chat.length?'':`<div class="ba">${esc(tx('chat_hello'))}</div>`)+chat.map((x,n)=>{
+    if(x.role==='user')return `<div class="bu">${esc(x.content)}</div>`;
+    const ids=(x.ids||[]).filter(id=>items.some(i=>i.id===id));
+    return `<div class="ba${x.err?' er':''}">${cmd(x.content)}${ids.slice(0,8).map(row).join('')}${ids.length>8?`<small style="display:block;margin-top:6px">+${ids.length-8}</small>`:''}${ids.length>1?`<button class="btn" data-cshow="${n}" style="min-height:38px;margin-top:8px;width:100%">${esc(tx('chat_show',{n:ids.length}))}</button>`:''}</div>`}).join('')
+    +(chatBusy?'<div class="ba"><span class="dots"><i></i><i></i><i></i></span></div>':'');
+  $('csug').innerHTML=chat.length?'':[1,2,3].map(n=>`<button class="chip" data-cs="${n}">${esc(tx('chat_s'+n))}</button>`).join('');
+  m.scrollTop=m.scrollHeight}
+async function sendChat(text){text=(text||$('cinp').value).trim();if(!text||chatBusy)return;$('cinp').value='';chat.push({role:'user',content:text});chatBusy=true;drawChat();
+  try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chat.slice(-12).map(m=>({role:m.role,content:m.content})),lang:LG})});
+    const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'HTTP '+r.status);chat.push({role:'assistant',content:j.answer,ids:j.ids||[]})}
+  catch(e){chat.push({role:'assistant',content:tx('chat_fail')+' — '+e.message,err:1,ids:[]})}
+  chatBusy=false;drawChat()}
+const cp=$('cpanel');
+$('cbub').onclick=()=>{cp.classList.toggle('on');if(cp.classList.contains('on')){drawChat();setTimeout(()=>$('cinp').focus(),60)}};
+$('cclose').onclick=()=>cp.classList.remove('on');
+$('cnew').onclick=()=>{chat.length=0;chatBusy=false;drawChat()};
+$('csend').onclick=()=>sendChat();
+$('cinp').onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing)sendChat()};
+$('csug').onclick=e=>{const b=e.target.closest('[data-cs]');if(b)sendChat(tx('chat_s'+b.dataset.cs))};
+$('cmsgs').onclick=e=>{const b=e.target.closest('[data-cshow]');if(!b)return;const x=chat[+b.dataset.cshow];aiSet=new Set((x.ids||[]).filter(id=>items.some(i=>i.id===id)));cur='all';flt='all';render();swap();cp.classList.remove('on')};
+addEventListener('keydown',e=>{if(e.key==='Escape'&&cp.classList.contains('on')&&!$('m')._c)cp.classList.remove('on')});
 /* ---- language ---- */
 function applyLang(){const h=document.documentElement;h.lang=LG;h.dir=LG==='ar'?'rtl':'ltr';document.title=tx('title');
   document.querySelectorAll('[data-tx]').forEach(e=>e.textContent=tx(e.dataset.tx));
   document.querySelectorAll('[data-ph]').forEach(e=>e.placeholder=tx(e.dataset.ph));
   document.querySelectorAll('[data-al]').forEach(e=>e.setAttribute('aria-label',tx(e.dataset.al)));
-  $('ln').textContent=tx('lang');$('ov').textContent=tx('drop');showMe();render()}
+  $('ln').textContent=tx('lang');drawChat();$('ov').textContent=tx('drop');showMe();render()}
 $('lang').onclick=()=>{LG=LG==='ar'?'en':'ar';try{localStorage.setItem('lang',LG)}catch(e){}applyLang();last=''; refresh(true)};
 applyLang();refresh(true);if(!me)askName();
 setInterval(()=>{if(!busy&&!document.hidden)refresh()},5000);
