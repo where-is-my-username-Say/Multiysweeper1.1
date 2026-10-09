@@ -76,7 +76,9 @@ async function meta(url) {
   return o;
 }
 
-async function gemini(system, contents, key) {
+const geminiKeys = () => [...new Set(Object.keys(process.env).filter(k => /^GEMINI_API_KEY(_\d+)?$/.test(k)).sort().map(k => process.env[k]).filter(Boolean))];
+
+async function gemini(system, contents, keys) {
   const TAG = { type: 'OBJECT', properties: { n: { type: 'STRING' }, g: { type: 'STRING', enum: GROUPS } }, required: ['n', 'g'] };
   const schema = { type: 'OBJECT', required: ['answer', 'ids', 'links', 'moves'], properties: {
     answer: { type: 'STRING' }, ids: { type: 'ARRAY', items: { type: 'STRING' } },
@@ -84,7 +86,10 @@ async function gemini(system, contents, key) {
     moves: { type: 'ARRAY', items: { type: 'OBJECT', required: ['id', 'folder'], properties: { id: { type: 'STRING' }, folder: { type: 'STRING' } } } }
   } };
   let last = 'no model';
-  for (const m of MODELS) {
+  const start = Math.floor(Math.random() * keys.length);
+  for (let n = 0; n < keys.length; n++) {
+   const key = keys[(start + n) % keys.length];
+   for (const m of MODELS) {
     const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`, {
       method: 'POST', headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
       body: JSON.stringify({ systemInstruction: { parts: [{ text: system }] }, contents,
@@ -93,7 +98,8 @@ async function gemini(system, contents, key) {
     const j = await r.json().catch(() => ({}));
     if (r.ok) return JSON.parse((j.candidates?.[0]?.content?.parts || []).map(p => p.text || '').join(''));
     last = `${m}: ${j.error?.message || r.status}`;
-    if ([401, 403, 429].includes(r.status)) break;
+    if ([401, 403, 429].includes(r.status)) break;   // this key is limited or invalid: try the next key
+   }
   }
   throw new Error(last.slice(0, 220));
 }
@@ -101,8 +107,8 @@ async function gemini(system, contents, key) {
 /* ---------- handler ---------- */
 export default async function handler(req, res) {
   try {
-    const key = process.env.GEMINI_API_KEY;
-    if (!key) return res.status(503).json({ error: 'GEMINI_API_KEY is not set in Vercel' });
+    const keys = geminiKeys();
+    if (!keys.length) return res.status(503).json({ error: 'GEMINI_API_KEY is not set in Vercel' });
     const { messages = [], lang = 'en' } = req.body || {};
     let contents = messages.slice(-12).map(m => ({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: String(m.content || '').slice(0, 6000) }] }));
     while (contents.length && contents[0].role !== 'user') contents.shift();
@@ -145,7 +151,7 @@ Rules:
 - Only when the user asks to organize / move / sort / clean up files: return "moves" ({id, folder}) using the same folder rules, and only for items that are unfiled or clearly in the wrong folder. Otherwise "moves" must be [].
 - Otherwise "links" and "moves" must be [].`;
 
-    const out = await gemini(system, contents, key);
+    const out = await gemini(system, contents, keys);
 
     // ----- resolve folders deterministically (reuse existing, create only when nothing matches) -----
     const exF = folders.map(f => ({ id: f.id, name: f.name })), newF = [];

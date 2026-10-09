@@ -17,6 +17,8 @@ Return 4 to 10 precise tags describing what the item is REALLY about. Groups:
 - general: anything else.
 Rules: FIRST choose every suitable tag from the EXISTING list and copy its name exactly. Create a NEW tag ONLY when no existing tag fits that aspect of the content. New tags: short English technical names (max 3 words), specific, no duplicates or near-duplicates of existing ones. Never invent facts not supported by the content; if the content is unclear, return fewer tags.`;
 
+const geminiKeys = () => [...new Set(Object.keys(process.env).filter(k => /^GEMINI_API_KEY(_\d+)?$/.test(k)).sort().map(k => process.env[k]).filter(Boolean))];
+
 async function findItem(id) {
   const path = `items/${id}.json`;
   const r = await (await blob()).list({ prefix: path, limit: 5 });
@@ -34,9 +36,12 @@ async function pageText(url) {
   } catch { return ''; }
 }
 
-async function gemini(parts, key) {
+async function gemini(parts, keys) {
   let lastErr = 'no model';
-  for (const m of MODELS) {
+  const start = Math.floor(Math.random() * keys.length);
+  for (let n = 0; n < keys.length; n++) {
+   const key = keys[(start + n) % keys.length];
+   for (const m of MODELS) {
     const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
@@ -55,15 +60,16 @@ async function gemini(parts, key) {
       return JSON.parse(txt).tags || [];
     }
     lastErr = `${m}: ${j.error?.message || r.status}`;
-    if (r.status === 429 || r.status === 401 || r.status === 403) break;
+    if (r.status === 429 || r.status === 401 || r.status === 403) break;   // this key is limited or invalid: try the next key
+   }
   }
   throw new Error(lastErr.slice(0, 220));
 }
 
 export default async function handler(req, res) {
   try {
-    const key = process.env.GEMINI_API_KEY;
-    if (!key) return res.status(503).json({ error: 'GEMINI_API_KEY is not set in Vercel' });
+    const keys = geminiKeys();
+    if (!keys.length) return res.status(503).json({ error: 'GEMINI_API_KEY is not set in Vercel' });
     const { id, vocab = [], save = true } = req.body || {};
     const norm = x => String(x).toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]/g, '');
     const known = new Map();
@@ -83,7 +89,7 @@ export default async function handler(req, res) {
         parts.push({ text: (await (await fetch(d.fileUrl)).text()).slice(0, 8000) });
       }
     }
-    const raw = await gemini(parts, key);
+    const raw = await gemini(parts, keys);
     const tags = []; const seen = new Set();
     for (const t of raw) {
       let n = String(t.n || '').trim().slice(0, 40), g = GROUPS.includes(t.g) ? t.g : 'general';
