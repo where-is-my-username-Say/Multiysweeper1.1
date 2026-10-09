@@ -176,7 +176,7 @@ button.tg:hover{transform:translateY(-1px)}
 <button class="fab" id="fab" data-al="add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
 <input id="fi" type="file" multiple hidden>
 <button id="cbub" aria-label="Assistant"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/><path d="M9 11h6M9 14h4"/></svg></button>
-<section id="cpanel" aria-label="Assistant"><header id="chead"><b data-tx="chat_title"></b><span style="flex:1"></span><button class="ib" id="cnew" data-al="chat_new"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="ib" id="cclose" data-al="chat_close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header><div id="cmsgs"></div><div id="csug"></div><div class="cin"><input class="in" id="cinp" data-ph="chat_ph" autocomplete="off"><button class="btn pr" id="csend" data-tx="chat_send"></button></div></section>
+<section id="cpanel" aria-label="Assistant"><header id="chead"><b data-tx="chat_title"></b><span style="flex:1"></span><button class="ib" id="cnew" data-al="chat_new"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button class="ib" id="cclose" data-al="chat_close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header><div id="cmsgs"></div><div class="cin"><input class="in" id="cinp" data-ph="chat_ph" autocomplete="off"><button class="btn pr" id="csend" data-tx="chat_send"></button></div></section>
 <div id="pop"></div><div id="m"><div class="box" id="mb"></div></div><div id="ov"></div><div id="tray"></div><div id="toast"></div>
 <script>
 const $=id=>document.getElementById(id);
@@ -413,30 +413,56 @@ document.addEventListener('pointerdown',e=>{if(RM.matches)return;const b=e.targe
   b.appendChild(o);o.addEventListener('animationend',()=>o.remove(),{once:true})},{passive:true});
 /* ---- chat assistant ---- */
 Object.assign(D,{"chat_title": {"ar": "مساعد المكتبة", "en": "Library assistant"}, "chat_ph": {"ar": "اسأل عن ملفاتك وروابطك...", "en": "Ask about your files and links..."}, "chat_send": {"ar": "إرسال", "en": "Send"}, "chat_new": {"ar": "محادثة جديدة", "en": "New chat"}, "chat_close": {"ar": "إغلاق", "en": "Close"}, "chat_fail": {"ar": "تعذّر الرد", "en": "Could not answer"}, "chat_show": {"ar": "عرض النتائج في المكتبة ({n})", "en": "Show results in the library ({n})"}, "chat_res": {"ar": "نتائج المساعد ({n}) ×", "en": "Assistant results ({n}) ×"}, "chat_s1": {"ar": "أين أجد ملفات CO2؟", "en": "Where are the CO2 files?"}, "chat_s2": {"ar": "اعرض كل الروابط", "en": "Show all links"}, "chat_s3": {"ar": "ماذا أُضيف مؤخراً؟", "en": "What was added recently?"}, "chat_hello": {"ar": "أنا أعرف كل ملفاتك وروابطك ومجلداتك ووسومها. اسألني: أين أجد...؟ أو اجمع لي كل الملفات عن...", "en": "I know all your files, links, folders and tags. Ask me: where can I find...? or gather all files about..."}});
-const chat=[];let chatBusy=false,aiSet=null;
+Object.assign(D,{"chat_working": {"ar": "جارٍ تنظيم المكتبة...", "en": "Organizing the library..."}, "sum_added": {"ar": "أُضيف {n} رابط", "en": "Added {n} links"}, "sum_moved": {"ar": "نُقل {n} عنصر", "en": "Moved {n} items"}, "sum_fail": {"ar": "تعذّر تنفيذ {n} عملية", "en": "{n} actions failed"}, "sum_exists": {"ar": "موجود مسبقاً في المكتبة: {n}", "en": "Already in the library: {n}"}, "sum_dead": {"ar": "روابط لا تعمل (تم تخطيها): {n}", "en": "Dead links skipped: {n}"}, "sum_over": {"ar": "زائد عن الحد (أرسلها مرة أخرى): {n}", "en": "Over the limit, send them again: {n}"}, "isnew": {"ar": "جديد", "en": "new"}, "chat_undo": {"ar": "تراجع عن هذه العملية", "en": "Undo this"}, "chat_undone": {"ar": "تم التراجع.", "en": "Undone."}, "chat_s4": {"ar": "نظّم العناصر غير المصنّفة", "en": "Organize unfiled items"}, "chat_hello": {"ar": "أعرف كل ملفاتك وروابطك. اسألني: أين أجد...؟ الصق لي مجموعة روابط وسأحللها وأضعها في المجلدات المناسبة، أو قل: نظّم العناصر غير المصنّفة.", "en": "I know all your files and links. Ask me where something is, paste a bunch of links and I will analyze them and file them in the right folders, or say: organize the unfiled items."}});
+const chat=[];let chatBusy=false,aiSet=null,chatStatus='';
 const cmd=x=>esc(x).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>');
 function drawChat(){const m=$('cmsgs');
   const row=id=>{const i=items.find(x=>x.id===id);if(!i)return '';const k=kind(i),href=i.type==='link'?i.url:i.fileUrl,f=folders.find(x=>x.id===i.folder);return `<a class="ri" href="${esc(href)}" target="_blank" rel="noopener"><i class="dot" style="background:${k.c}"></i><span class="t">${esc(i.title)}</span><small>${esc(f?f.name:tx('nofolder'))}</small></a>`};
   m.innerHTML=(chat.length?'':`<div class="ba">${esc(tx('chat_hello'))}</div>`)+chat.map((x,n)=>{
     if(x.role==='user')return `<div class="bu">${esc(x.content)}</div>`;
     const ids=(x.ids||[]).filter(id=>items.some(i=>i.id===id));
-    return `<div class="ba${x.err?' er':''}">${cmd(x.content)}${ids.slice(0,8).map(row).join('')}${ids.length>8?`<small style="display:block;margin-top:6px">+${ids.length-8}</small>`:''}${ids.length>1?`<button class="btn" data-cshow="${n}" style="min-height:38px;margin-top:8px;width:100%">${esc(tx('chat_show',{n:ids.length}))}</button>`:''}</div>`}).join('')
-    +(chatBusy?'<div class="ba"><span class="dots"><i></i><i></i><i></i></span></div>':'');
-  $('csug').innerHTML=chat.length?'':[1,2,3].map(n=>`<button class="chip" data-cs="${n}">${esc(tx('chat_s'+n))}</button>`).join('');
+    return `<div class="ba${x.err?' er':''}">${cmd(x.content)}${ids.slice(0,8).map(row).join('')}${ids.length>8?`<small style="display:block;margin-top:6px">+${ids.length-8}</small>`:''}${ids.length>1?`<button class="btn" data-cshow="${n}" style="min-height:38px;margin-top:8px;width:100%">${esc(tx('chat_show',{n:ids.length}))}</button>`:''}${x.undo&&!x.undo.done?`<button class="btn" data-undo="${n}" style="min-height:38px;margin-top:8px;width:100%">${esc(tx('chat_undo'))}</button>`:''}</div>`}).join('')
+    +(chatBusy?`<div class="ba"><span class="dots"><i></i><i></i><i></i></span>${chatStatus?' '+esc(chatStatus):''}</div>`:'');
   m.scrollTop=m.scrollHeight}
-async function sendChat(text){text=(text||$('cinp').value).trim();if(!text||chatBusy)return;$('cinp').value='';chat.push({role:'user',content:text});chatBusy=true;drawChat();
+const pool=async(arr,n,fn)=>{let i=0;await Promise.all(Array.from({length:Math.min(n,arr.length)},async()=>{while(i<arr.length)await fn(arr[i++])}))};
+const nrm=x=>String(x).toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
+async function applyPlan(plan){
+  const made={},undo={items:[],folders:[],moved:[],done:false},fresh=new Set(),added=[],moved=[],by_={};let fail=0,k=0;
+  const total=(plan.links||[]).length+(plan.moves||[]).length;
+  for(const nf of plan.newFolders||[]){const ex=folders.find(f=>nrm(f.name)===nrm(nf.name));if(ex){made[nf.ref]=ex.id;continue}
+    try{const j=await api({action:'addFolder',name:nf.name});made[nf.ref]=j.id;undo.folders.push(j.id);fresh.add(nrm(nf.name));folders.push({id:j.id,name:nf.name,at:Date.now()})}catch(e){fail++}}
+  const fid=x=>x.folderId||made[x.folderRef]||'';
+  const note=(id,title)=>{const name=(folders.find(f=>f.id===id)||{}).name||tx('nofolder'),o=by_[name]||(by_[name]={nw:fresh.has(nrm(name)),t:[]});o.t.push(title)};
+  const tick=()=>{chatStatus=tx('chat_working')+' '+(++k)+'/'+total;drawChat()};
+  await pool(plan.links||[],3,async l=>{try{const j=await api({action:'addLink',url:l.url,title:l.title,folder:fid(l),by:by(),thumb:l.thumb||'',tags:l.tags});undo.items.push(j.id);added.push(j.id);note(fid(l),l.title)}catch(e){fail++}tick()});
+  for(const m of plan.moves||[]){const it=items.find(x=>x.id===m.id);if(!it){tick();continue}
+    try{await api({action:'updateItem',id:m.id,folder:fid(m)});undo.moved.push({id:m.id,prev:it.folder||''});moved.push(m.id);note(fid(m),it.title)}catch(e){fail++}tick()}
+  const L=[];if(added.length)L.push(tx('sum_added',{n:added.length}));if(moved.length)L.push(tx('sum_moved',{n:moved.length}));
+  for(const [n,o] of Object.entries(by_))L.push(`**${n}**${o.nw?' ('+tx('isnew')+')':''}: ${o.t.slice(0,5).join(', ')}${o.t.length>5?' +'+(o.t.length-5):''}`);
+  if(fail)L.push(tx('sum_fail',{n:fail}));
+  await refresh(true);return{extra:L.join('\n'),ids:[...added,...moved],undo}}
+const skipLines=sk=>{const c=w=>sk.filter(x=>x.why===w).length;return [c('exists')&&tx('sum_exists',{n:c('exists')}),c('dead')&&tx('sum_dead',{n:c('dead')}),c('over')&&tx('sum_over',{n:c('over')})].filter(Boolean).join('\n')};
+async function undoPlan(n){const m=chat[n],u=m&&m.undo;if(!u||u.done)return;u.done=true;drawChat();
+  for(const x of u.moved){try{await api({action:'updateItem',id:x.id,folder:x.prev})}catch(e){}}
+  for(const id of u.items){try{await api({action:'deleteItem',id})}catch(e){}}
+  for(const id of u.folders){try{await api({action:'deleteFolder',id})}catch(e){}}
+  m.content+='\n'+tx('chat_undone');m.ids=[];await refresh(true);drawChat()}
+async function sendChat(text){text=(text||$('cinp').value).trim();if(!text||chatBusy)return;$('cinp').value='';chat.push({role:'user',content:text});chatBusy=true;chatStatus='';drawChat();
   try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chat.slice(-12).map(m=>({role:m.role,content:m.content})),lang:LG})});
-    const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'HTTP '+r.status);chat.push({role:'assistant',content:j.answer,ids:j.ids||[]})}
+    const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'HTTP '+r.status);
+    const msg={role:'assistant',content:j.answer||'',ids:j.ids||[]},p=j.plan;
+    if(p&&((p.links||[]).length||(p.moves||[]).length)){chatStatus=tx('chat_working');drawChat();const a=await applyPlan(p);msg.content=[msg.content,a.extra].filter(Boolean).join('\n');msg.ids=a.ids;msg.undo=a.undo}
+    if(j.skipped&&j.skipped.length)msg.content=[msg.content,skipLines(j.skipped)].filter(Boolean).join('\n');
+    chat.push(msg)}
   catch(e){chat.push({role:'assistant',content:tx('chat_fail')+' — '+e.message,err:1,ids:[]})}
-  chatBusy=false;drawChat()}
+  chatBusy=false;chatStatus='';drawChat()}
 const cp=$('cpanel');
 $('cbub').onclick=()=>{cp.classList.toggle('on');if(cp.classList.contains('on')){drawChat();setTimeout(()=>$('cinp').focus(),60)}};
 $('cclose').onclick=()=>cp.classList.remove('on');
 $('cnew').onclick=()=>{chat.length=0;chatBusy=false;drawChat()};
 $('csend').onclick=()=>sendChat();
 $('cinp').onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing)sendChat()};
-$('csug').onclick=e=>{const b=e.target.closest('[data-cs]');if(b)sendChat(tx('chat_s'+b.dataset.cs))};
-$('cmsgs').onclick=e=>{const b=e.target.closest('[data-cshow]');if(!b)return;const x=chat[+b.dataset.cshow];aiSet=new Set((x.ids||[]).filter(id=>items.some(i=>i.id===id)));cur='all';flt='all';render();swap();cp.classList.remove('on')};
+$('cmsgs').onclick=e=>{const u=e.target.closest('[data-undo]');if(u){undoPlan(+u.dataset.undo);return}const b=e.target.closest('[data-cshow]');if(!b)return;const x=chat[+b.dataset.cshow];aiSet=new Set((x.ids||[]).filter(id=>items.some(i=>i.id===id)));cur='all';flt='all';render();swap();cp.classList.remove('on')};
 addEventListener('keydown',e=>{if(e.key==='Escape'&&cp.classList.contains('on')&&!$('m')._c)cp.classList.remove('on')});
 /* ---- language ---- */
 function applyLang(){const h=document.documentElement;h.lang=LG;h.dir=LG==='ar'?'rtl':'ltr';document.title=tx('title');
