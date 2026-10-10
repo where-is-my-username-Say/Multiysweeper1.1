@@ -15,7 +15,7 @@ async function indexUrl() {
   if (CACHED) return CACHED;
   const { head } = await blob();
   try { CACHED = (await head(PATH, { token: pickToken() })).url; return CACHED; }
-  catch (e) { if (e && (e.name === 'BlobNotFoundError' || /not.?found/i.test(e.message || ''))) return null; throw e; }
+  catch (e) { if (e && (e.name === 'BlobNotFoundError' || e.constructor?.name === 'BlobNotFoundError' || /not.?found|does not exist/i.test(e.message || ''))) return null; throw e; }
 }
 const fetchIdx = async (url, fresh) => {
   const r = await fetch(fresh ? url + '?t=' + Date.now() : url, { cache: fresh ? 'no-store' : 'default' });
