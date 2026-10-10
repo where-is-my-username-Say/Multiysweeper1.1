@@ -66,10 +66,12 @@ const geminiKeys = () => [...new Set(Object.keys(process.env).filter(k => /^GEMI
 
 async function gemini(system, contents, keys) {
   const TAG = { type: 'OBJECT', properties: { n: { type: 'STRING' }, g: { type: 'STRING', enum: GROUPS } }, required: ['n', 'g'] };
-  const schema = { type: 'OBJECT', required: ['answer', 'ids', 'links', 'moves'], properties: {
+  const schema = { type: 'OBJECT', required: ['answer', 'ids', 'links', 'moves', 'tagOps', 'analyze'], properties: {
     answer: { type: 'STRING' }, ids: { type: 'ARRAY', items: { type: 'STRING' } },
     links: { type: 'ARRAY', items: { type: 'OBJECT', required: ['url', 'title', 'folder', 'tags'], properties: { url: { type: 'STRING' }, title: { type: 'STRING' }, folder: { type: 'STRING' }, tags: { type: 'ARRAY', items: TAG } } } },
-    moves: { type: 'ARRAY', items: { type: 'OBJECT', required: ['id', 'folder'], properties: { id: { type: 'STRING' }, folder: { type: 'STRING' } } } }
+    moves: { type: 'ARRAY', items: { type: 'OBJECT', required: ['id', 'folder'], properties: { id: { type: 'STRING' }, folder: { type: 'STRING' } } } },
+    tagOps: { type: 'ARRAY', items: { type: 'OBJECT', required: ['id', 'tags'], properties: { id: { type: 'STRING' }, tags: { type: 'ARRAY', items: TAG } } } },
+    analyze: { type: 'ARRAY', items: { type: 'STRING' } }
   } };
   let last = 'no model';
   const start = Math.floor(Math.random() * keys.length);
@@ -135,7 +137,9 @@ Rules:
 - "ids": only items that DIRECTLY match what was asked, best match first. Never pad with loosely related items. If nothing matches, return [] and say so.
 - If NEW LINKS are given: return one entry in "links" for every one of them (url exactly as given). Give a clean title (max 70 chars, no site boilerplate), 3-8 tags and the best folder. FOLDERS: use an EXISTING folder name exactly whenever one covers the topic. Propose a NEW folder name (1-3 words, same language style as the existing folders, English if none) only when no existing folder fits, and reuse that same new name for every link of the same topic. TAGS: reuse EXISTING TAGS names exactly when they fit; create a new tag only if none fits.
 - Only when the user asks to organize / move / sort / clean up files: return "moves" ({id, folder}) using the same folder rules, and only for items that are unfiled or clearly in the wrong folder. Otherwise "moves" must be [].
-- Otherwise "links" and "moves" must be [].`;
+- TAGS: you CAN manage tags. (a) When the user asks to tag / label items automatically (for example the untagged ones), put those item ids in "analyze" (max 20); the app then reads each file or page and tags it. (b) When the user asks for specific tags to be added, removed or renamed on items, return "tagOps" with the item id and its FULL final tag list (keep its current tags unless told to remove them; reuse EXISTING TAGS names). Never say you cannot edit tags.
+- You can also add links, create folders and move items. Say so if asked what you can do.
+- Otherwise "links", "moves", "tagOps" and "analyze" must be [].`;
 
     const out = await gemini(system, contents, keys);
 
@@ -172,11 +176,19 @@ Rules:
       if (f.folderId && f.folderId === (it.folder || '')) continue;
       moves.push({ id: m.id, ...f });
     }
+    const tagOps = [];
+    for (const t of out.tagOps || []) {
+      const it = valid.get(t.id); if (!it) continue;
+      const tags = canon(t.tags); if (!tags.length) continue;
+      const same = (it.tags || []).map(x => x.n.toLowerCase()).sort().join('|') === tags.map(x => x.n.toLowerCase()).sort().join('|');
+      if (!same) tagOps.push({ id: t.id, tags });
+    }
+    const analyze = [...new Set((out.analyze || []).filter(x => valid.has(x)))].slice(0, 20);
     const usedRefs = new Set([...links, ...moves].map(x => x.folderRef).filter(Boolean));
-    const plan = { newFolders: newF.filter(f => usedRefs.has(f.ref)), links, moves };
+    const plan = { newFolders: newF.filter(f => usedRefs.has(f.ref)), links, moves, tags: tagOps, analyze };
 
     const wantAll = /\b(all|every|everything|each)\b|كل|جميع|الكل/i.test(lastText);
-    const acting = links.length || moves.length;
+    const acting = links.length || moves.length || tagOps.length || analyze.length;
     const ids = acting ? [] : [...new Set((out.ids || []).filter(x => valid.has(x)))].slice(0, wantAll ? 40 : 8);
     res.status(200).json({ answer: String(out.answer || '').slice(0, 1500), ids, plan, skipped: [...skipped, ...over.map(u => ({ url: u, why: 'over' }))] });
   } catch (e) {
