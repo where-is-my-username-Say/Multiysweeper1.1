@@ -7,8 +7,9 @@ export default async function handler(req, res) {
     const body = Buffer.isBuffer(req.body) ? req.body : Buffer.from(req.body || '');
     if (!body.length) return res.status(400).json({ error: 'empty file' });
     const { put } = await import('@vercel/blob');
+    const { pickTokenExport } = await import('./_store.js');
     const b = await put('files/' + Date.now().toString(36) + '/' + name, body, {
-      access: 'public', addRandomSuffix: true, contentType: type
+      access: 'public', addRandomSuffix: true, contentType: type, token: pickTokenExport()
     });
     res.status(200).json({ url: b.url });
   } catch (e) {

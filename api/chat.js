@@ -1,22 +1,8 @@
-let B;
-const blob = async () => B || (B = await import('@vercel/blob'));
 export const config = { maxDuration: 60 };
 
 const GROUPS = ['fire', 'agent', 'material', 'platform', 'condition', 'topic', 'general'];
 const MODELS = [process.env.GEMINI_MODEL, 'gemini-3.5-flash', 'gemini-3-flash-preview', 'gemini-2.5-flash'].filter(Boolean);
 const MAX_LINKS = 20;
-
-/* ---------- storage ---------- */
-async function readAll(prefix) {
-  const { list } = await blob();
-  const blobs = []; let cursor;
-  do { const r = await list({ prefix, cursor, limit: 1000 }); blobs.push(...r.blobs); cursor = r.cursor; } while (cursor);
-  const rows = await Promise.all(blobs.map(async b => {
-    try { const r = await fetch(b.url + '?t=' + Date.now(), { cache: 'no-store' }); return { ...(await r.json()), id: b.pathname.slice(prefix.length, -5) }; }
-    catch { return null; }
-  }));
-  return rows.filter(Boolean);
-}
 
 /* ---------- helpers ---------- */
 const host = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
@@ -115,7 +101,7 @@ export default async function handler(req, res) {
     if (!contents.length || contents[contents.length - 1].role !== 'user') return res.status(400).json({ error: 'No question' });
     const lastText = messages[messages.length - 1].content || '';
 
-    const [folders, items] = await Promise.all([readAll('folders/'), readAll('items/')]);
+    const { folders, items } = await (await import('./_store.js')).readIndex();
     items.sort((a, b) => (b.at || 0) - (a.at || 0));
     const fname = Object.fromEntries(folders.map(f => [f.id, f.name]));
     const count = Object.fromEntries(folders.map(f => [f.id, items.filter(i => i.folder === f.id).length]));

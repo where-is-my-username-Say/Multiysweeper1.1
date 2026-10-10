@@ -1,5 +1,3 @@
-let B;
-const blob = async () => B || (B = await import('@vercel/blob'));
 export const config = { maxDuration: 30 };
 
 const GROUPS = ['fire', 'agent', 'material', 'platform', 'condition', 'topic', 'general'];
@@ -20,11 +18,9 @@ Rules: FIRST choose every suitable tag from the EXISTING list and copy its name 
 const geminiKeys = () => [...new Set(Object.keys(process.env).filter(k => /^GEMINI_API_KEY(_\d+)?$/.test(k)).sort().map(k => process.env[k]).filter(Boolean))];
 
 async function findItem(id) {
-  const path = `items/${id}.json`;
-  const r = await (await blob()).list({ prefix: path, limit: 5 });
-  const b = r.blobs.find(x => x.pathname === path);
-  if (!b) return null;
-  return { data: await (await fetch(b.url + '?t=' + Date.now(), { cache: 'no-store' })).json(), path };
+  const { readIndex } = await import('./_store.js');
+  const it = (await readIndex()).items.find(x => x.id === id);
+  return it ? { data: it } : null;
 }
 
 async function pageText(url) {
@@ -99,13 +95,6 @@ export default async function handler(req, res) {
       if (!n || seen.has(k)) continue; seen.add(k);
       tags.push({ n, g });
       if (tags.length >= 10) break;
-    }
-    if (save) {
-      const merged = [...(d.tags || [])];
-      for (const t of tags) if (!merged.some(x => x.n.toLowerCase() === t.n.toLowerCase())) merged.push(t);
-      await (await blob()).put(it.path, JSON.stringify({ ...d, tags: merged.slice(0, 12) }), {
-        access: 'public', contentType: 'application/json', addRandomSuffix: false, allowOverwrite: true, cacheControlMaxAge: 60
-      });
     }
     res.status(200).json({ tags });
   } catch (e) {
