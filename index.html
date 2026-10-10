@@ -216,9 +216,10 @@ function kind(i){if(i.type==='link')return{k:'link',c:'#2F6BFF'};const t=(i.cont
   if(/sheet|csv|excel/.test(t)||/\.(xlsx?|csv)$/.test(n))return{k:'sheet',c:'#12A57A',x:tx('sheet')};
   const m=n.match(/\.([a-z0-9]{1,5})$/);return{k:'file',c:'#5E6B82',x:m?m[1].toUpperCase():tx('file')}}
 function toast(t,er){const e=$('toast');e.textContent=t;e.className=er?'er':'';e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',er?8000:2800)}
-async function api(b){const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||tx('err'));return j}
-async function act(b){try{const r=await api(b);await refresh(true);return r}catch(e){toast(tx('op_fail')+' — '+e.message,1);await refresh(true)}}
-async function refresh(force){try{const d=await api({action:'list'});const s=JSON.stringify(d);loaded=true;if(s===last&&!force)return;last=s;folders=d.folders.sort((a,b)=>(a.at||0)-(b.at||0));items=d.items;if(cur!=='all'&&cur!==''&&!folders.find(f=>f.id===cur))cur='all';render();queueThumbs()}catch(e){if(!loaded)toast(tx('conn_fail')+' — '+e.message,1)}}
+function setIndex(d){const k=JSON.stringify([d.folders,d.items]);if(k===last)return;last=k;folders=d.folders.slice().sort((a,b)=>(a.at||0)-(b.at||0));items=d.items;if(cur!=='all'&&cur!==''&&!folders.find(f=>f.id===cur))cur='all';render();queueThumbs()}
+async function api(b){const r=await fetch('/api/data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||tx('err'));if(j.folders&&j.items)setIndex(j);return j}
+async function act(b){try{return await api(b)}catch(e){toast(tx('op_fail')+' — '+e.message,1);refresh()}}
+async function refresh(){try{await api({action:'list'});loaded=true}catch(e){if(!loaded)toast(tx('conn_fail')+' — '+e.message,1)}}
 
 /* ---- dialogs ---- */
 function openBox(html,lg){busy++;const b=$('mb'),m=$('m');b.className='box'+(lg?' lg':'');b.innerHTML=html;m.classList.add('on');let d=false;
@@ -329,11 +330,13 @@ function openTags(id){const it=items.find(x=>x.id===id);if(!it)return;let d=(it.
 async function callTags(id,save){const vocab=[...allTags().values()].sort((a,b)=>b.c-a.c).map(t=>({n:t.n,g:t.g}));const r=await fetch('/api/tags',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,vocab,save})});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'HTTP '+r.status);return j.tags||[]}
 const aq=[];let aqRun=false;
 function autoTag(id){if(!id||aiBusy.has(id))return;aq.push(id);aiBusy.add(id);render();runAq()}
-async function runAq(){if(aqRun)return;aqRun=true;
+async function flushTags(res){if(!res.length)return;const ops=res.splice(0).map(r=>{const it=items.find(x=>x.id===r.id),cur_=(it&&it.tags)||[],have=new Set(cur_.map(t=>t.n.toLowerCase()));
+  return{a:'setTags',id:r.id,tags:[...cur_,...r.tags.filter(t=>!have.has(t.n.toLowerCase()))].slice(0,12)}});try{await api({action:'batch',ops})}catch(e){}}
+async function runAq(){if(aqRun)return;aqRun=true;const res=[];
   while(aq.length){const id=aq.shift();
-    try{await callTags(id,true)}catch(e){if(/GEMINI_API_KEY/.test(e.message)){aq.forEach(x=>aiBusy.delete(x));aq.length=0;if(!aiWarned){aiWarned=true;toast(tx('ai_off'),1)}}else toast(tx('auto_fail')+' — '+e.message,1)}
-    aiBusy.delete(id);await refresh(true);await sleep(2000)}
-  aqRun=false}
+    try{res.push({id,tags:await callTags(id,false)})}catch(e){if(/GEMINI_API_KEY/.test(e.message)){aq.forEach(x=>aiBusy.delete(x));aq.length=0;if(!aiWarned){aiWarned=true;toast(tx('ai_off'),1)}}else toast(tx('auto_fail')+' — '+e.message,1)}
+    aiBusy.delete(id);render();if(res.length>=6)await flushTags(res);await sleep(2000)}
+  await flushTags(res);aqRun=false}
 
 /* ---- menus & actions ---- */
 function itemMenu(b,id){const i=items.find(x=>x.id===id);if(!i)return;const href=i.type==='link'?i.url:i.fileUrl;
@@ -382,9 +385,12 @@ const isPdf=i=>(i.contentType||'').includes('pdf')||/\.pdf$/i.test(i.title||i.na
 async function pdfFor(id,src){try{const b=await pdfThumb(src);await api({action:'setThumb',id,thumb:b?await putBlob(b,'thumb.jpg','image/jpeg'):''})}catch(e){try{await api({action:'setThumb',id,thumb:''})}catch(_){}}}
 const tried=new Set(),tq=[];let tqRun=false;
 function queueThumbs(){const need=items.filter(i=>!tried.has(i.id)&&i.thumb===undefined&&(i.type==='link'||(i.type==='file'&&isPdf(i))));need.forEach(i=>{tried.add(i.id);tq.push(i)});runTq()}
-async function runTq(){if(tqRun||!tq.length)return;tqRun=true;
-  while(tq.length){const i=tq.shift();if(i.type==='link'){try{await api({action:'fixThumb',id:i.id})}catch(e){}}else await pdfFor(i.id,i.fileUrl);await sleep(500)}
-  tqRun=false;refresh(true)}
+async function runTq(){if(tqRun||!tq.length)return;tqRun=true;const batch=tq.splice(0),links=batch.filter(i=>i.type==='link'),pdfs=batch.filter(i=>i.type!=='link'),ops=[];
+  try{for(let k=0;k<links.length;k+=6)await api({action:'fixThumbs',ids:links.slice(k,k+6).map(i=>i.id)});
+    for(const i of pdfs){let t='';try{const b=await pdfThumb(i.fileUrl);if(b)t=await putBlob(b,'thumb.jpg','image/jpeg')}catch(e){}ops.push({a:'setThumb',id:i.id,thumb:t});await sleep(300)}
+    if(ops.length)await api({action:'batch',ops})}catch(e){}
+  tqRun=false}
+
 /* ---- upload ---- */
 const tray=[];function drawTray(){$('tray').innerHTML=tray.map(u=>`<div class="up ${u.er?'er':''}"><div class="r"><span class="nm">${esc(u.name)}</span><span>${u.er?tx('failed'):u.pct>=100?tx('done'):u.pct+'%'}</span></div>${u.er?`<div style="color:var(--dg);font-size:13px;margin-top:4px">${esc(u.er)}</div>`:''}<div class="bar"><i style="width:${u.pct}%"></i></div></div>`).join('')}
 function xhr(f,u){return new Promise((ok,no)=>{const x=new XMLHttpRequest();x.open('POST','/api/upload?name='+encodeURIComponent(f.name)+'&type='+encodeURIComponent(f.type||'application/octet-stream'));x.setRequestHeader('Content-Type','application/octet-stream');
@@ -393,9 +399,10 @@ function xhr(f,u){return new Promise((ok,no)=>{const x=new XMLHttpRequest();x.op
 async function upl(fs){const dest=cur==='all'?'':cur;busy++;const ids=[];
   for(const f of fs){const u={name:f.name,pct:0};tray.push(u);drawTray();
     try{if(f.size>4.4e6)throw new Error(tx('max4'));const url=await xhr(f,u);
-      const j=await api({action:'addFile',fileUrl:url,title:f.name,size:f.size,contentType:f.type,folder:dest,by:by()});ids.push(j.id);if(isPdf(f)){tried.add(j.id);pdfFor(j.id,f).then(()=>refresh(true))}u.pct=100;drawTray();setTimeout(()=>{tray.splice(tray.indexOf(u),1);drawTray()},1800)}
+      let thumb;if(isPdf(f)){thumb='';try{const tb=await pdfThumb(f);if(tb)thumb=await putBlob(tb,'thumb.jpg','image/jpeg')}catch(e){}}
+      const j=await api({action:'addFile',fileUrl:url,title:f.name,size:f.size,contentType:f.type,folder:dest,by:by(),thumb});ids.push(j.id);u.pct=100;drawTray();setTimeout(()=>{tray.splice(tray.indexOf(u),1);drawTray()},1800)}
     catch(e){u.er=e.message;drawTray();setTimeout(()=>{tray.splice(tray.indexOf(u),1);drawTray()},9000)}}
-  busy--;await refresh(true);ids.forEach(autoTag)}
+  busy--;ids.forEach(autoTag)}
 let dc=0;const hasF=e=>[...(e.dataTransfer?.types||[])].includes('Files');
 addEventListener('dragenter',e=>{if(hasF(e)){dc++;const f=folders.find(x=>x.id===cur);$('ov').textContent=tx('drop_to',{f:f?f.name:cur===''?tx('nofolder'):tx('library')});$('ov').classList.add('on')}});
 addEventListener('dragleave',e=>{if(hasF(e)&&--dc<=0){dc=0;$('ov').classList.remove('on')}});
@@ -427,26 +434,27 @@ function drawChat(){const m=$('cmsgs');
 const pool=async(arr,n,fn)=>{let i=0;await Promise.all(Array.from({length:Math.min(n,arr.length)},async()=>{while(i<arr.length)await fn(arr[i++])}))};
 const nrm=x=>String(x).toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
 async function applyPlan(plan){
-  const made={},undo={items:[],folders:[],moved:[],done:false},fresh=new Set(),added=[],moved=[],by_={};let fail=0,k=0;
-  const total=(plan.links||[]).length+(plan.moves||[]).length;
-  for(const nf of plan.newFolders||[]){const ex=folders.find(f=>nrm(f.name)===nrm(nf.name));if(ex){made[nf.ref]=ex.id;continue}
-    try{const j=await api({action:'addFolder',name:nf.name});made[nf.ref]=j.id;undo.folders.push(j.id);fresh.add(nrm(nf.name));folders.push({id:j.id,name:nf.name,at:Date.now()})}catch(e){fail++}}
-  const fid=x=>x.folderId||made[x.folderRef]||'';
-  const note=(id,title)=>{const name=(folders.find(f=>f.id===id)||{}).name||tx('nofolder'),o=by_[name]||(by_[name]={nw:fresh.has(nrm(name)),t:[]});o.t.push(title)};
-  const tick=()=>{chatStatus=tx('chat_working')+' '+(++k)+'/'+total;drawChat()};
-  await pool(plan.links||[],3,async l=>{try{const j=await api({action:'addLink',url:l.url,title:l.title,folder:fid(l),by:by(),thumb:l.thumb||'',tags:l.tags});undo.items.push(j.id);added.push(j.id);note(fid(l),l.title)}catch(e){fail++}tick()});
-  for(const m of plan.moves||[]){const it=items.find(x=>x.id===m.id);if(!it){tick();continue}
-    try{await api({action:'updateItem',id:m.id,folder:fid(m)});undo.moved.push({id:m.id,prev:it.folder||''});moved.push(m.id);note(fid(m),it.title)}catch(e){fail++}tick()}
+  const ops=[],meta=[],prev={};
+  for(const nf of plan.newFolders||[]){ops.push({a:'addFolder',name:nf.name,ref:nf.ref,reuse:true});meta.push({})}
+  for(const l of plan.links||[]){ops.push({a:'addLink',url:l.url,title:l.title,folder:l.folderId||'',folderRef:l.folderRef,by:by(),thumb:l.thumb||'',tags:l.tags});meta.push({title:l.title})}
+  for(const m of plan.moves||[]){const it=items.find(x=>x.id===m.id);if(!it)continue;prev[m.id]=it.folder||'';ops.push(m.folderRef?{a:'updateItem',id:m.id,folderRef:m.folderRef}:{a:'updateItem',id:m.id,folder:m.folderId||''});meta.push({title:it.title})}
+  chatStatus=tx('chat_working');drawChat();
+  const j=await api({action:'batch',ops}),R=j.results||[],undo={items:[],folders:[],moved:[],done:false},by_={},added=[],moved=[],refId={},fresh=new Set();let fail=0;
+  ops.forEach((op,i)=>{const r=R[i]||{};if(r.error){fail++;return}if(op.a==='addFolder'){refId[op.ref]=r.id;if(!r.existed){undo.folders.push(r.id);fresh.add(r.id)}}});
+  const fname=id=>(folders.find(f=>f.id===id)||{}).name||tx('nofolder');
+  const note=(fid,title)=>{const n=fname(fid||''),o=by_[n]||(by_[n]={nw:false,t:[]});if(fresh.has(fid))o.nw=true;o.t.push(title)};
+  ops.forEach((op,i)=>{const r=R[i]||{};if(r.error)return;const fid=op.folderRef?refId[op.folderRef]:op.folder;
+    if(op.a==='addLink'){undo.items.push(r.id);added.push(r.id);note(fid,meta[i].title)}
+    if(op.a==='updateItem'){undo.moved.push({id:op.id,prev:prev[op.id]});moved.push(op.id);note(fid,meta[i].title)}});
   const L=[];if(added.length)L.push(tx('sum_added',{n:added.length}));if(moved.length)L.push(tx('sum_moved',{n:moved.length}));
   for(const [n,o] of Object.entries(by_))L.push(`**${n}**${o.nw?' ('+tx('isnew')+')':''}: ${o.t.slice(0,5).join(', ')}${o.t.length>5?' +'+(o.t.length-5):''}`);
   if(fail)L.push(tx('sum_fail',{n:fail}));
-  await refresh(true);return{extra:L.join('\n'),ids:[...added,...moved],undo}}
+  return{extra:L.join('\n'),ids:[...added,...moved],undo}}
 const skipLines=sk=>{const c=w=>sk.filter(x=>x.why===w).length;return [c('exists')&&tx('sum_exists',{n:c('exists')}),c('dead')&&tx('sum_dead',{n:c('dead')}),c('over')&&tx('sum_over',{n:c('over')})].filter(Boolean).join('\n')};
 async function undoPlan(n){const m=chat[n],u=m&&m.undo;if(!u||u.done)return;u.done=true;drawChat();
-  for(const x of u.moved){try{await api({action:'updateItem',id:x.id,folder:x.prev})}catch(e){}}
-  for(const id of u.items){try{await api({action:'deleteItem',id})}catch(e){}}
-  for(const id of u.folders){try{await api({action:'deleteFolder',id})}catch(e){}}
-  m.content+='\n'+tx('chat_undone');m.ids=[];await refresh(true);drawChat()}
+  const ops=[...u.moved.map(x=>({a:'updateItem',id:x.id,folder:x.prev})),...u.items.map(id=>({a:'deleteItem',id})),...u.folders.map(id=>({a:'deleteFolder',id}))];
+  try{if(ops.length)await api({action:'batch',ops})}catch(e){}
+  m.content+='\n'+tx('chat_undone');m.ids=[];drawChat()}
 async function sendChat(text){text=(text||$('cinp').value).trim();if(!text||chatBusy)return;$('cinp').value='';chat.push({role:'user',content:text});chatBusy=true;chatStatus='';drawChat();
   try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:chat.slice(-12).map(m=>({role:m.role,content:m.content})),lang:LG})});
     const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'HTTP '+r.status);
@@ -472,7 +480,7 @@ function applyLang(){const h=document.documentElement;h.lang=LG;h.dir=LG==='ar'?
   $('ln').textContent=tx('lang');drawChat();$('ov').textContent=tx('drop');showMe();render()}
 $('lang').onclick=()=>{LG=LG==='ar'?'en':'ar';try{localStorage.setItem('lang',LG)}catch(e){}applyLang();last=''; refresh(true)};
 applyLang();refresh(true);if(!me)askName();
-setInterval(()=>{if(!busy&&!document.hidden)refresh()},5000);
+setInterval(()=>{if(!busy&&!document.hidden)refresh()},45000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!busy)refresh()});
 </script>
 </body>
